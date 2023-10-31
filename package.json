@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "kraftbase project backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mayurjadhav2002/kanban-boards.git"
+  },
+  "keywords": [
+    "kanban",
+    "backend"
+  ],
+  "author": "Mayur Jadhav",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mayurjadhav2002/kanban-boards/issues"
+  },
+  "homepage": "https://github.com/mayurjadhav2002/kanban-boards#readme"
+}
