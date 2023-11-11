@@ -1,38 +1,56 @@
-.App {
-  text-align: center;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+/* Your existing styles */
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.custom-scrollbar {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #BFE1D4 #F5F6FD;
+
+  /* Chrome, Edge, and Safari */
+  &::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background-color: #F5F6FD;
+  }
+
+  &::-webkit-scrollbar-track:hover {
+    background-color: #DFE2E5;
+  }
+
+  &::-webkit-scrollbar-track:active {
+    background-color: #c2c2c2;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: #bfc9e1;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #A3B4D6;
+  }
+
+  &::-webkit-scrollbar-thumb:active {
+    background-color: #373FA3;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+.custom-scrollbar2::-webkit-scrollbar {
+  display: none;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Hide scrollbar for IE, Edge and Firefox */
+.custom-scrollbar2 {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
