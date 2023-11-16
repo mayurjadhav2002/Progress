@@ -14,8 +14,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import data2 from '../../../data/data'
 
-function Board() {
-  const [data, setData] = useState(data2);
+function Board(props) {
+  const [data, setData] = useState(props.board);
 
   const defaultDark = window.matchMedia(
     "(prefers-colors-scheme: dark)"

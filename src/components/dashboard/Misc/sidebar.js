@@ -19,6 +19,7 @@ import {
     InboxIcon,
     PowerIcon,
 } from "@heroicons/react/24/solid";
+import {BsFolder2Open} from 'react-icons/bs'
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Link } from 'react-router-dom';
 
@@ -30,7 +31,7 @@ export function Sidebar() {
     };
 
     return (
-        <Card className="h-[calc(100vh-6rem)] z-4 w-full max-w-[20rem] p-4 ">
+        <Card className="h-[calc(100vh-6rem)] z-4 w-full max-w-[20rem] p-4 lg:block hidden">
 
             <List>
                 <Accordion
@@ -41,31 +42,45 @@ export function Sidebar() {
                             className={`mx-auto h-4 w-4 transition-transform ${open === 1 ? "rotate-180" : ""}`}
                         />
                     }
+
                 >
-                    <Link to="/user/project">
-                    <ListItem as={Link} >
-                        <ListItemPrefix>
-                            <InboxIcon className="h-5 w-5" />
-                        </ListItemPrefix>
-                        Project
-                        <ListItemSuffix>
-                            <Chip value="14" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
-                        </ListItemSuffix>
-                    </ListItem>
+
+                    <Link to="/dashboard/">
+                        <ListItem className="p-0" selected={open === 1}>
+                            <AccordionHeader onClick={() => handleOpen(1)} className="border-b-0 p-3">
+                                <ListItemPrefix>
+                                    <PresentationChartBarIcon className="h-5 w-5" />
+                                </ListItemPrefix>
+                                <Typography color="blue-gray" className="mr-auto font-normal">
+                                    Dashboard
+                                </Typography>
+                            </AccordionHeader>
+                        </ListItem>
                     </Link>
-                    
-
-
-                    <ListItem className="p-0" selected={open === 1}>
-                        <AccordionHeader onClick={() => handleOpen(1)} className="border-b-0 p-3">
+                    <Link to="/dashboard/user/project">
+                        <ListItem as={Link} >
                             <ListItemPrefix>
-                                <PresentationChartBarIcon className="h-5 w-5" />
+                                <BsFolder2Open className="h-5 w-5" />
                             </ListItemPrefix>
-                            <Typography color="blue-gray" className="mr-auto font-normal">
-                                Dashboard
-                            </Typography>
-                        </AccordionHeader>
-                    </ListItem>
+                            Project
+                            <ListItemSuffix>
+                                <Chip value="14" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
+                            </ListItemSuffix>
+                        </ListItem>
+                    </Link>
+{/* /dashboard/user/project/documentation/ */}
+<Link to="/dashboard/user/project/documentation">
+                        <ListItem as={Link} >
+                            <ListItemPrefix>
+                                <InboxIcon className="h-5 w-5" />
+                            </ListItemPrefix>
+                            Write Documentation
+                            <ListItemSuffix>
+                                <Chip value="14" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
+                            </ListItemSuffix>
+                        </ListItem>
+                    </Link>
+
                     <AccordionBody className="py-1">
                         <List className="p-0">
                             <ListItem>

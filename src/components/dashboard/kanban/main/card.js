@@ -14,6 +14,7 @@ import {
     DialogFooter,
 } from "@material-tailwind/react";
 const Card = (props) => {
+    console.log("card prps", props)
     const [dropdown, setDropdown] = useState(false);
     const [modalShow, setModalShow] = useState(false);
     const [open, setOpen] = React.useState(false);

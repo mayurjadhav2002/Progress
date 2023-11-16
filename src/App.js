@@ -9,6 +9,9 @@ import KanbanBoard from './pages/app/dashboard/kanbanBoard';
 import Project from './pages/app/dashboard/Project';
 import { UserContextProvider } from './utils/UserContext/UserContext';
 import axios from 'axios';
+import Dashboard from './pages/app/dashboard/dashboard';
+import Confluence from './pages/app/dashboard/confluence';
+import CreateProject from './pages/app/dashboard/CreateProject';
 
 function App() {
   
@@ -19,8 +22,13 @@ return (
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/board" element={<KanbanBoard />} />
-        <Route path="/user/project" element={<Project />} />
+        <Route path="/dashboard/user/board/:id" element={<KanbanBoard />} />
+        <Route path="/dashboard" element={<Dashboard/> } />
+        <Route path="/dashboard/user/project" element={<Project />} />
+        <Route path="/dashboard/user/project/new" element={<CreateProject />} />
+
+        <Route path="/dashboard/user/project/documentation/" element={<Confluence/>} />
+
       </Routes>
     </UserContextProvider>
 

@@ -7,9 +7,11 @@ import { ThemeProvider } from '@material-tailwind/react';
 import { BrowserRouter } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.headers.common['Authorization'] = `${Cookies.get('access_token')}`;
 
 root.render(
 

@@ -1,7 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineStar, AiOutlineClockCircle, AiOutlineShareAlt, AiOutlineFullscreen } from 'react-icons/ai'
 import Settings from './settings'
-function Header({onButtonClick}) {
+import { differenceInDays } from 'date-fns';
+
+function Countdown({ targetDate }) {
+    const [remainingDays, setRemainingDays] = useState(null);
+  
+    useEffect(() => {
+      const calculateRemainingDays = () => {
+        const daysRemaining = differenceInDays(new Date(targetDate), new Date());
+        setRemainingDays(Math.max(0, daysRemaining));
+      };
+  
+      calculateRemainingDays();
+  
+      // You may want to update the remaining days periodically, for example, every minute
+      const intervalId = setInterval(calculateRemainingDays, 60000);
+  
+      return () => clearInterval(intervalId);
+    }, [targetDate]);
+  
+    return (
+      <div>
+        {remainingDays !== null ? (
+          <p>{remainingDays === 0 ? 'Today is the deadline' : `${remainingDays} days remaining`}</p>
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
+    );
+  }
+  
+function Header(props) {
     return (
         <div className='flex flex-row items-end justify-between'>
             <div className='flex flex-col gap-2'>
@@ -66,13 +96,15 @@ function Header({onButtonClick}) {
                     </li>
                 </ol>
 
-                <h1 className='text-2xl font-bold '>Kanban project 1</h1>
+                <h1 className='text-2xl font-bold '>{props?.title}</h1>
             </div>
             <div className='flex items-center gap-3'>
                 <AiOutlineStar className='w-6 h-6 hover:text-yellow-700 dark:text-white' />
-                <span className='flex items-center gap-2 hover:bg-gray-50 p-2 rounded-lg'><AiOutlineClockCircle className='w-6 h-6  dark:text-white' /> Days remaining</span>
+                <span className='flex items-center gap-2 hover:bg-gray-50 p-2 rounded-lg'><AiOutlineClockCircle className='w-6 h-6  dark:text-white' />    
+                   <Countdown targetDate={props.timeline} />
+</span>
                 <AiOutlineShareAlt className='w-6 h-6 hover:text-blue-700 dark:text-white' />
-                <AiOutlineFullscreen className='w-6 h-6 hover:text-blue-700 dark:text-white cursor-pointer' onClick={onButtonClick} />
+                <AiOutlineFullscreen className='w-6 h-6 hover:text-blue-700 dark:text-white cursor-pointer'  />
 
 <Settings/>
             </div>
