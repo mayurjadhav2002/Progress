@@ -5,32 +5,33 @@ import { differenceInDays } from 'date-fns';
 
 function Countdown({ targetDate }) {
     const [remainingDays, setRemainingDays] = useState(null);
-  
+
     useEffect(() => {
-      const calculateRemainingDays = () => {
-        const daysRemaining = differenceInDays(new Date(targetDate), new Date());
-        setRemainingDays(Math.max(0, daysRemaining));
-      };
-  
-      calculateRemainingDays();
-  
-      // You may want to update the remaining days periodically, for example, every minute
-      const intervalId = setInterval(calculateRemainingDays, 60000);
-  
-      return () => clearInterval(intervalId);
+        const calculateRemainingDays = () => {
+            const daysRemaining = differenceInDays(new Date(targetDate), new Date());
+            setRemainingDays(Math.max(0, daysRemaining));
+        };
+
+        calculateRemainingDays();
+
+        // You may want to update the remaining days periodically, for example, every minute
+        const intervalId = setInterval(calculateRemainingDays, 60000);
+
+        return () => clearInterval(intervalId);
     }, [targetDate]);
-  
+
     return (
-      <div>
-        {remainingDays !== null ? (
-          <p>{remainingDays === 0 ? 'Today is the deadline' : `${remainingDays} days remaining`}</p>
-        ) : (
-          <p>Loading...</p>
-        )}
-      </div>
+        <div>
+            {remainingDays !== null ? (
+                <p>{remainingDays === 0 ? 'Today is the deadline' : `${remainingDays} days remaining`}</p>
+            ) : (
+                <p>Loading...</p>
+            )}
+        </div>
     );
-  }
-  
+}
+
+
 function Header(props) {
     return (
         <div className='flex flex-row items-end justify-between'>
@@ -96,17 +97,17 @@ function Header(props) {
                     </li>
                 </ol>
 
-                <h1 className='text-2xl font-bold '>{props?.title}</h1>
+                <h1 className='text-2xl font-bold '>{props?.alldata?.title}</h1>
             </div>
             <div className='flex items-center gap-3'>
                 <AiOutlineStar className='w-6 h-6 hover:text-yellow-700 dark:text-white' />
-                <span className='flex items-center gap-2 hover:bg-gray-50 p-2 rounded-lg'><AiOutlineClockCircle className='w-6 h-6  dark:text-white' />    
-                   <Countdown targetDate={props.timeline} />
-</span>
+                <span className='flex items-center gap-2 hover:bg-gray-50 p-2 rounded-lg'><AiOutlineClockCircle className='w-6 h-6  dark:text-white' />
+                    <Countdown targetDate={props?.alldata?.timeline} />
+                </span>
                 <AiOutlineShareAlt className='w-6 h-6 hover:text-blue-700 dark:text-white' />
-                <AiOutlineFullscreen className='w-6 h-6 hover:text-blue-700 dark:text-white cursor-pointer'  />
+                <AiOutlineFullscreen className='w-6 h-6 hover:text-blue-700 dark:text-white cursor-pointer' />
 
-<Settings/>
+                <Settings data={props.alldata}/>
             </div>
         </div>
     )

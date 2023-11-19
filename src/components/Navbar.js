@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./navbar.css"
 import { Link } from "react-router-dom"
 import { Button } from '@material-tailwind/react'
@@ -13,6 +13,7 @@ import {
   } from "@material-tailwind/react";
 function Navbar() {
     const { loggedin,user } = useUserContext()
+    console.log(user)
     return (
         <div className='shadow-sm top-0  z-50 sm:relative  md:sticky'>
 

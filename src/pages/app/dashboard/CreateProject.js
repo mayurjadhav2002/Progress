@@ -3,10 +3,24 @@ import { Sidebar } from '../../../components/dashboard/Misc/sidebar'
 import { Button, Input, Typography } from '@material-tailwind/react'
 import { useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
+import { useUserContext } from '../../../utils/UserContext/UserContext';
+import { createProject } from '../../../utils/Queries';
 
 function CreateProject() {
     const [selected, setSelected] = useState();
     const [date, setDate] = useState()
+    const {user }= useUserContext()
+    const [props, setProps] = useState({created_by: user?._id, title: '', description: '', timeline: '', keyword: '' })
+
+    const OnSubmit = async() => {
+        const response = await createProject(props);
+        if(response){
+            alert("project created")
+        }
+        else{
+            console.log("error", response)
+        }
+    }
 
     return (
         <div className='flex items-start gap-5'>
@@ -21,6 +35,11 @@ function CreateProject() {
                             Project Name
                         </Typography>
                         <input type="text" id="default-input"
+                        onChange={(e)=>{ 
+                            setProps((prevProps) => ({
+                            ...prevProps,
+                            title: e.target.value,
+                          }))}}
                             placeholder='e.g. frontend-google-chrome'
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
      dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
@@ -33,6 +52,11 @@ function CreateProject() {
                             Project Description
                         </Typography>
                         <input type="text" id="default-input"
+                        onChange={(e)=>{ 
+                            setProps((prevProps) => ({
+                            ...prevProps,
+                            description: e.target.value,
+                          }))}}
                             placeholder='e.g. refer this for frontend work of chrome'
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
      dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
@@ -46,6 +70,11 @@ function CreateProject() {
                                 Project Deadline
                             </Typography>
                             <input type="date" id="default-input"
+                            onChange={(e)=>{ 
+                                setProps((prevProps) => ({
+                                ...prevProps,
+                                timeline: e.target.value,
+                              }))}}
                                 placeholder='e.g. refer this for frontend work of chrome'
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
      dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
@@ -80,6 +109,11 @@ function CreateProject() {
                                 Team
                             </Typography>
                             <input type="text" id="default-input"
+                            onChange={(e)=>{ 
+                                setProps((prevProps) => ({
+                                ...prevProps,
+                                keyword: e.target.value,
+                              }))}}
                                 placeholder='e.g. Marketing, Frontend etc'
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
@@ -88,7 +122,7 @@ dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         </div>
                     </div>
 
-                    <Button type='button' variant='gradient' color='blue' size='lg'>Create Project</Button>
+                    <Button onClick={OnSubmit} type='button' variant='gradient' color='blue' size='lg'>Create Project</Button>
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { Calendar, CheckSquare, Clock, MoreHorizontal } from "react-feather";
 import Dropdown from "./Dropdown";
@@ -6,20 +6,127 @@ import Tag from "./Tag";
 import CardDetails from "./CardDetails";
 import { RxDotFilled } from 'react-icons/rx'
 import { HiOutlineCalendarDays } from 'react-icons/hi2'
+import { v4 as uuidv4 } from "uuid";
+
 import {
+    Drawer,
     Button,
-    Dialog,
-    DialogHeader,
-    DialogBody,
-    DialogFooter,
+    Typography,
+    IconButton,
+    Input,
 } from "@material-tailwind/react";
+import { FaPencilAlt } from "react-icons/fa";
+
 const Card = (props) => {
     console.log("card prps", props)
-    const [dropdown, setDropdown] = useState(false);
-    const [modalShow, setModalShow] = useState(false);
-    const [open, setOpen] = React.useState(false);
+    useEffect(() => {
+        document.addEventListener("keypress", (e) => {
+          if (e.code === "Enter") setShow(false);
+        });
+        return () => {
+          document.removeEventListener("keypress", (e) => {
+            if (e.code === "Enter") setShow(false);
+          });
+        };
+      });
+    const [show, setShow] = React.useState('');
+    const [openRight, setOpenRight] = React.useState(false);
+    const [text, setText] = useState('')
+    const openDrawerRight = () => setOpenRight(true);
+    const closeDrawerRight = () => setOpenRight(false);
+    const colors = ["#61bd4f", "#f2d600", "#ff9f1a", "#eb5a46", "#c377e0"];
 
-    const handleOpen = () => setOpen(!open);
+    const [values, setValues] = useState({ ...props.card });
+    const [input, setInput] = useState(false);
+    const [labelShow, setLabelShow] = useState(false);
+    // const Input = (props) => {
+    //   return (
+    //     <div className="">
+    //       <input
+    //         autoFocus
+    //         defaultValue={text}
+    //         type={"text"}
+    //         onChange={(e) => {
+    //           setText(e.target.value);
+    //         }}
+    //       />
+    //     </div>
+    //   );
+    // };
+    const addTask = (value) => {
+      values.task.push({
+        id: uuidv4(),
+        task: value,
+        completed: false,
+      });
+      setValues({ ...values });
+    };
+  
+    const removeTask = (id) => {
+      const remaningTask = values.task.filter((item) => item.id !== id);
+      setValues({ ...values, task: remaningTask });
+    };
+  
+    const deleteAllTask = () => {
+      setValues({
+        ...values,
+        task: [],
+      });
+    };
+  
+    const updateTask = (id) => {
+      const taskIndex = values.task.findIndex((item) => item.id === id);
+      values.task[taskIndex].completed = !values.task[taskIndex].completed;
+      setValues({ ...values });
+    };
+    const updateTitle = (value) => {
+      setValues({ ...values, title: value });
+    };
+  
+    const calculatePercent = () => {
+      const totalTask = values.task.length;
+      const completedTask = values.task.filter(
+        (item) => item.completed === true
+      ).length;
+  
+      return Math.floor((completedTask * 100) / totalTask) || 0;
+    };
+  
+    const removeTag = (id) => {
+      const tempTag = values.tags.filter((item) => item.id !== id);
+      setValues({
+        ...values,
+        tags: tempTag,
+      });
+    };
+  
+    const addTag = (value, color) => {
+      values.tags.push({
+        id: uuidv4(),
+        tagName: value,
+        color: color,
+      });
+  
+      setValues({ ...values });
+    };
+  
+    const handelClickListner = (e) => {
+      if (e.code === "Enter") {
+        setInput(false);
+        updateTitle(text === "" ? values.title : text);
+      } else return;
+    };
+  
+    useEffect(() => {
+      document.addEventListener("keypress", handelClickListner);
+      return () => {
+        document.removeEventListener("keypress", handelClickListner);
+      };
+    });
+    useEffect(() => {
+      if (props.updateCard) props.updateCard(props.bid, values.id, values);
+    }, [values]);
+    
     return (
 
         <Draggable
@@ -60,7 +167,7 @@ const Card = (props) => {
                             </Button>
                         </DialogFooter>
                     </Dialog> */}
-                    <div className="rounded-xl border-2 border-gray-100 bg-white"
+                    <div onClick={openDrawerRight} className="rounded-xl border-2 border-gray-100 bg-white"
 
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
@@ -82,9 +189,9 @@ const Card = (props) => {
                                     ))}
                                 </div>
                                 <p className="line-clamp-2 text-sm text-gray-700">
-                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus, a a a a a
+                                    {props.description || `  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus, a a a a a
                                     accusantium temporibus iure delectus ut totam natus nesciunt ex?
-                                    Ducimus, enim.
+                                    Ducimus, enim.`}
                                 </p>
 
                                 <div className="mt-2 sm:flex sm:items-center sm:gap-2 justify-between">
@@ -134,14 +241,70 @@ const Card = (props) => {
                 <Clock />
                 <span>Sun 12:30</span>
               </div> */}
-                                   
+
                                 </div>
 
 
                                 {provided.placeholder}
                             </div>
                         </div>
-                    </div>
+
+                    </div> 
+                    <Drawer
+                        placement="right"
+                        overlay={false}
+                        open={openRight}
+                        onClose={closeDrawerRight}
+                        className="p-4"
+                    >
+                        <div className="mb-6 flex items-center justify-between">
+                      
+                                <Typography variant="h5" color="blue-gray">
+                                        {props.title}
+                                    </Typography>
+
+                          
+
+
+                            <IconButton
+                                variant="text"
+                                color="blue-gray"
+                                onClick={closeDrawerRight}
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2}
+                                    stroke="currentColor"
+                                    className="h-5 w-5"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </IconButton>
+                        <hr/>
+                        </div>
+                      
+                        <Input 
+                           autoFocus
+            defaultValue={text}
+            type={"text"}
+            onChange={(e) => {
+              setText(e.target.value);
+            }} label="Project title" value={props.title} />
+
+                        <div className="flex gap-2">
+                            <Button size="sm" variant="outlined">
+                                Documentation
+                            </Button>
+                            <Button size="sm">Get Started</Button>
+                        </div>
+                    </Drawer>
+
                 </>
             )}
         </Draggable>

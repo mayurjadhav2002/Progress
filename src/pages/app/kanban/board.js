@@ -1,39 +1,29 @@
 import React, { useState, useEffect } from 'react'
-
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import { Link } from 'react-router-dom';
-import Header from '../../../components/dashboard/kanban/header';
-import Search from '../../../components/dashboard/kanban/search';
-import Kanban from '../../../components/dashboard/kanban/kanban';
-import Users from '../../../components/dashboard/kanban/users';
 import useLocalStorage from "use-local-storage";
 import { DragDropContext } from 'react-beautiful-dnd';
 import KanbanBoard from '../../../components/dashboard/kanban/main/Board';
 import Editable from '../../../components/dashboard/kanban/main/Editable';
 import { v4 as uuidv4 } from "uuid";
-
-import data2 from '../../../data/data'
+import { useUserContext } from '../../../utils/UserContext/UserContext';
+import axios from 'axios';
 
 function Board(props) {
   const [data, setData] = useState(props.board);
+  const [updated, setUpdated] = useState(false)
+  const { user } = useUserContext()
+  const id = props.id;
+  const HandleSetUpdated = () => {
+    setUpdated(true)
+  }
 
-  const defaultDark = window.matchMedia(
-    "(prefers-colors-scheme: dark)"
-  ).matches;
-  const [theme, setTheme] = useLocalStorage(
-    "theme",
-    defaultDark ? "dark" : "light"
-  );
-
-  const switchTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-  };
 
   const setName = (title, bid) => {
     const index = data.findIndex((item) => item.id === bid);
     const tempData = [...data];
     tempData[index].boardName = title;
+
     setData(tempData);
+    HandleSetUpdated()
   };
 
   const dragCardInBoard = (source, destination) => {
@@ -50,8 +40,10 @@ function Board(props) {
       tempData[sourceBoardIdx].card[source.index]
     );
     tempData[sourceBoardIdx].card.splice(source.index, 1);
+    HandleSetUpdated()
 
     return tempData;
+
   };
 
   // const dragCardInSameBoard = (source, destination) => {
@@ -66,16 +58,23 @@ function Board(props) {
   //   setData(tempData);
   // };
 
-  const addCard = (title, bid) => {
+  const addCard = async (title, bid) => {
     const index = data.findIndex((item) => item.id === bid);
     const tempData = [...data];
     tempData[index].card.push({
-      id: uuidv4(),
-      title: title,
+      id: await uuidv4(),
+      bid: await uuidv4(),
+      title: title.title,
+      description: title.description,
+      user_avatar: user.avatar,
+      user_id: user._id,
       tags: [],
       task: [],
+
     });
     setData(tempData);
+    HandleSetUpdated()
+
   };
 
   const removeCard = (boardId, cardId) => {
@@ -85,6 +84,8 @@ function Board(props) {
 
     tempData[index].card.splice(cardIndex, 1);
     setData(tempData);
+    HandleSetUpdated()
+
   };
 
   const addBoard = (title) => {
@@ -95,6 +96,8 @@ function Board(props) {
       card: [],
     });
     setData(tempData);
+    HandleSetUpdated()
+
   };
 
   const removeBoard = (bid) => {
@@ -102,6 +105,8 @@ function Board(props) {
     const index = data.findIndex((item) => item.id === bid);
     tempData.splice(index, 1);
     setData(tempData);
+    HandleSetUpdated()
+
   };
 
   const onDragEnd = (result) => {
@@ -111,6 +116,8 @@ function Board(props) {
     if (source.droppableId === destination.droppableId) return;
 
     setData(dragCardInBoard(source, destination));
+    HandleSetUpdated()
+
   };
 
   const updateCard = (bid, cid, card) => {
@@ -126,50 +133,76 @@ function Board(props) {
     tempBoards[index].card[cardIndex] = card;
     console.log(tempBoards);
     setData(tempBoards);
+    HandleSetUpdated()
+
   };
 
   useEffect(() => {
     localStorage.setItem("kanban-board", JSON.stringify(data));
+    console.log("Data set")
   }, [data]);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (updated) {
+        // Make Axios request to update data
+        const updateData = async () => {
+          try {
+            const response = await axios.put('/kanban/updateboard', {
+              projectid: id, // Replace with the actual projectId
+              board: data,
+            });
 
-  const handle = useFullScreenHandle();
-  handle.active = true;
+            if (response.status === 200) {
+              console.log('Data updated successfully');
+              setUpdated(false); // Reset the updated state after successful update
+            }
+          } catch (error) {
+            console.error('Error updating data:', error);
+          }
+        };
+
+        updateData();
+      }
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [data, updated, id]);
   return (
     <div className='max-w-[calc(100vw-20rem)]'>
 
 
-    <DragDropContext onDragEnd={onDragEnd}>
-   
-      <div className='w-[calc(100vw-24rem)] overflow-x-scroll custom-scrollbar2 '>
-        <div className='grid grid-flow-col gap-12  items-start mt-8'>
-          {data.map((item) => (
-            <div key={item.id} className='kanban-board-wrapper'>
-              <KanbanBoard
-                id={item.id}
-                name={item.boardName}
-                card={item.card}
-                setName={setName}
-                addCard={addCard}
-                removeCard={removeCard}
-                removeBoard={removeBoard}
-                updateCard={updateCard}
+      <DragDropContext onDragEnd={onDragEnd}>
+
+        <div className='w-[calc(100vw-24rem)] overflow-x-scroll custom-scrollbar2 '>
+          <div className='flex flex-row gap-5  items-start mt-8'>
+            {data.map((item) => (
+              <div key={item.id} className='kanban-board-wrapper'>
+                <KanbanBoard
+                  id={item.id}
+                  name={item.boardName}
+                  card={item.card}
+                  setName={setName}
+                  addCard={addCard}
+                  removeCard={removeCard}
+                  removeBoard={removeBoard}
+                  updateCard={updateCard}
+                />
+              </div>
+            ))}
+            <div className=''>
+              <Editable
+                class={"add__board"}
+                name={"Add Board"}
+                btnName={"Add Board"}
+                onSubmit={addBoard}
+                placeholder={"Enter Board  Title"}
               />
             </div>
-          ))}
-          <div className='editable-wrapper'>
-            <Editable
-              class={"add__board"}
-              name={"Add Board"}
-              btnName={"Add Board"}
-              onSubmit={addBoard}
-              placeholder={"Enter Board  Title"}
-            />
           </div>
         </div>
-      </div>
-  </DragDropContext>
-  </div>
+      </DragDropContext>
+    </div>
 
   )
 }

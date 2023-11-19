@@ -34,19 +34,20 @@ function KanbanBoard() {
     };
   }, [params]);
   console.log(board.data?.projectId)
+  console.log(board.data)
   return (
     <div className='flex items-start gap-5'>
       <Sidebar />
       <div className='w-[calc(100vw-24rem)] overflow-x-hidden p-5'>
-        <Header  title={board.data?.projectId?.title} timeline={board.data?.projectId?.timeline} />
+        <Header  title={board.data?.projectId?.title} timeline={board.data?.projectId?.timeline} alldata={board.data?.projectId} />
         <div className='flex gap-4 justify-start items-center'>
           {/* Menu bars */}
           <Search />
-          <Users />
+          <Users alldata={board?.data?.projectId?.collaborators}/>
         </div>
         {/* Check if board.data and board.data.board exist before rendering */}
         {board.data && board.data.board && board.data.board.length > 0 &&
-          <Board board={board.data.board} />
+          <Board board={board.data.board} id={params.id}/>
         }
       </div>
     </div>
