@@ -14,6 +14,7 @@ function Board(props) {
   const id = props.id;
   const HandleSetUpdated = () => {
     setUpdated(true)
+    props.setSaving(true)
   }
 
 
@@ -58,16 +59,20 @@ function Board(props) {
   //   setData(tempData);
   // };
 
-  const addCard = async (title, bid) => {
+  const addCard = async (props, bid) => {
     const index = data.findIndex((item) => item.id === bid);
     const tempData = [...data];
     tempData[index].card.push({
       id: await uuidv4(),
       bid: await uuidv4(),
-      title: title.title,
-      description: title.description,
+      title: props.title,
+      description: props.description,
       user_avatar: user.avatar,
       user_id: user._id,
+      assignee: null,
+      reporter: null,
+      documentation: null,
+      priority: "low",
       tags: [],
       task: [],
 
@@ -134,7 +139,6 @@ function Board(props) {
     console.log(tempBoards);
     setData(tempBoards);
     HandleSetUpdated()
-
   };
 
   useEffect(() => {
@@ -156,6 +160,8 @@ function Board(props) {
             if (response.status === 200) {
               console.log('Data updated successfully');
               setUpdated(false); // Reset the updated state after successful update
+              props.setSaving(false)
+
             }
           } catch (error) {
             console.error('Error updating data:', error);
@@ -187,6 +193,7 @@ function Board(props) {
                   removeCard={removeCard}
                   removeBoard={removeBoard}
                   updateCard={updateCard}
+                  
                 />
               </div>
             ))}

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Card,
     Input,
@@ -7,16 +7,15 @@ import {
     Typography,
 } from "@material-tailwind/react";
 import { GoogleLogin } from '@react-oauth/google';
-import { registerUser, registerWithGoogle } from '../../utils/Queries';
+import { LoginWithGoogle, LoginWithoutGoogle, registerUser, registerWithGoogle } from '../../utils/Queries';
 import { useUserContext } from '../../utils/UserContext/UserContext';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
-    const [name, setName] = useState('');
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
     const [tc, setTc] = useState(false)
-    const { loggedin, handleLoggedin, setUser, setAccessToken } = useUserContext()
+    const { loggedin, handleLoggedin, setUser, handleAccessToken } = useUserContext()
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,12 +25,14 @@ function Login() {
     }, [loggedin])
 
     const responseMessage = async (response) => {
-        const result = await registerWithGoogle(response)
+        const result = await LoginWithGoogle(response)
         console.log("Result: ", result.data)
         if (result.data.success) {
-            setUser(result.data.data)
-            setAccessToken(result.data.access_token)
-            handleLoggedin(true)
+            const userData = result.data.data; // Assuming user information is in data
+
+            await setUser(userData)
+            await handleAccessToken({ access_token: result.data.data.access_token, user: userData });
+            await handleLoggedin(true)
         }
         else {
             console.log("Some Unexpected error occured")
@@ -46,7 +47,7 @@ function Login() {
     const handleSubmit = async () => {
         try {
             if (tc) {
-                const res = await registerUser({ name: name, email: email, password: password, tc: tc })
+                const res = await LoginWithoutGoogle({ email: email, password: password })
                 console.log(res)
             }
             else {
@@ -125,7 +126,7 @@ function Login() {
                             </div>
                             <form className="mt-8 mb-2 w-full">
                                 <div className="mb-1 flex flex-col gap-6">
-                             
+
                                     <Typography variant="h6" color="blue-gray" className="-mb-3">
                                         Your Email
                                     </Typography>

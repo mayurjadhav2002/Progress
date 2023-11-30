@@ -5,52 +5,40 @@ import { Sidebar } from '../../../components/dashboard/Misc/sidebar';
 import Header from '../../../components/dashboard/kanban/header';
 import Search from '../../../components/dashboard/kanban/search';
 import Users from '../../../components/dashboard/kanban/users';
-import { getKanban } from '../../../utils/Queries';
+import { useProjectContext } from '../../../utils/ProjectContext/ProjectContext';
 
 function KanbanBoard() {
   const params = useParams();
-  const [board, setBoard] = useState({ data: { board: [] } });
 
-  useEffect(() => {
-    let isMounted = true;
+  const { board, saving, setSaving, loading, error,HandleFetchBoard } = useProjectContext()
+useEffect(()=>{
+  HandleFetchBoard({ id: params.id });
 
-    if (params.id) {
-      getKanban(params.id)
-        .then(data => {
-          if (isMounted && data && data.data) {
-            setBoard(data);
-          } else {
-            console.error("Invalid data received:", data);
-          }
-        })
-        .catch(error => {
-          console.error("Error retrieving projects: ", error);
-        });
-    }
-
-    // Cleanup function to avoid memory leaks
-    return () => {
-      isMounted = false;
-    };
-  }, [params]);
-  console.log(board.data?.projectId)
-  console.log(board.data)
+}, [])
+  if (loading) {
+    return "Loading..."
+  }
+  if (error) {
+    return "Some error occured"
+  }
   return (
-    <div className='flex items-start gap-5'>
-      <Sidebar />
-      <div className='w-[calc(100vw-24rem)] overflow-x-hidden p-5'>
-        <Header  title={board.data?.projectId?.title} timeline={board.data?.projectId?.timeline} alldata={board.data?.projectId} />
+
+
+    <>
+      <div className='w-full lg:w-[calc(100vw-24rem)] overflow-x-hidden p-5'>
+        <Header />
         <div className='flex gap-4 justify-start items-center'>
           {/* Menu bars */}
           <Search />
-          <Users alldata={board?.data?.projectId?.collaborators}/>
+          <Users />
         </div>
         {/* Check if board.data and board.data.board exist before rendering */}
         {board.data && board.data.board && board.data.board.length > 0 &&
-          <Board board={board.data.board} id={params.id}/>
-        }
+          <Board board={board.data.board} id={params.id} setSaving={setSaving}/>
+        }        
       </div>
-    </div>
+    </>
+
   );
 }
 

@@ -65,7 +65,7 @@ function Navbar() {
                         </h3>
                     </Link>
                 </div>
-                <nav className="hidden items-center space-x-2 text-sm font-medium text-gray-800 md:flex">
+                {/* <nav className="hidden items-center space-x-2 text-sm font-medium text-gray-800 md:flex">
                     <Link to="/blogs"
                         className="rounded bg-white px-3 py-2 transition hover:bg-gray-100"
                     >
@@ -160,7 +160,7 @@ function Navbar() {
 
 
                     </div>
-                </nav>
+                </nav> */}
                 <nav className="flex items-center space-x-1 font-medium text-gray-800 gap-2">
                     {!loggedin ? 
                     <>
@@ -193,6 +193,7 @@ function Navbar() {
       </MenuHandler>
       <MenuList>
         <MenuItem className="flex items-center gap-2">
+          <Link to="/dashboard/user/profile"> 
           <svg
             width="16"
             height="16"
@@ -211,6 +212,7 @@ function Navbar() {
           <Typography variant="small" className="font-medium">
             My Profile
           </Typography>
+          </Link>
         </MenuItem>
         <MenuItem className="flex items-center gap-2">
           <svg

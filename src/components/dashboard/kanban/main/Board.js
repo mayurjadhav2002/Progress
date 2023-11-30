@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card from "./card";
-import { MoreHorizontal } from "react-feather";
-import Editable from "./Editable";
-import Dropdown from "./Dropdown";
+
 import { AiTwotoneDelete } from 'react-icons/ai'
 import { IoIosAdd } from 'react-icons/io'
 import {
@@ -16,19 +14,10 @@ import { TfiLayoutMenuSeparated } from 'react-icons/tfi'
 import { Droppable } from "react-beautiful-dnd";
 import Editable2 from "./Editable2";
 export default function KanbanBoard(props) {
+    console.log("board props",)
     const [show, setShow] = useState(false);
-    useEffect(() => {
-        document.addEventListener("keypress", (e) => {
-          if (e.code === "Enter") setShow(false);
-        });
-        return () => {
-          document.removeEventListener("keypress", (e) => {
-            if (e.code === "Enter") setShow(false);
-          });
-        };
-      });
     return (
-        <div className="board w-96 bg-blue-500 flex-shrink-0  ">
+        <div className="board w-96  flex-shrink-0  ">
             <div className='col-span-1 h-[calc(100vh-270px)] border-b-4 border-b-gray-200 bg-gray-200 overflow-y-scroll custom-scrollbar'>
 
                 <div className="board__top flex justify-between items-center sticky top-0 bg-gray-100 p-5 shadow-lg">
@@ -86,11 +75,14 @@ export default function KanbanBoard(props) {
                                     id={items.id}
                                     index={index}
                                     key={items.id}
+                                    priority={items.priority}
+                                    description={items.description}
                                     title={items.title}
                                     tags={items.tags}
                                     updateCard={props.updateCard}
                                     removeCard={props.removeCard}
                                     card={items}
+                                    user_avatar={items.user_avatar}
                                 />
                             ))}
                             {provided.placeholder}

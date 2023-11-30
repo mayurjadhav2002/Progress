@@ -8,12 +8,12 @@ import { useUserContext } from '../../../utils/UserContext/UserContext'
 import { getprojects } from '../../../utils/Queries'
 
 function Project() {
-  const {user } = useUserContext();
+  const { user } = useUserContext();
   const [projects, setProjects] = useState([])
 
   useEffect(() => {
     let isMounted = true;
-  
+
     if (user) {
       getprojects(user._id)
         .then(data => {
@@ -27,35 +27,30 @@ function Project() {
           console.error("Error retrieving projects: ", error);
         });
     }
-  
+
     // Cleanup function to avoid memory leaks
     return () => {
       isMounted = false;
     };
   }, [user]);
-  
-  
-  return (
-    <div className='flex items-start gap-5'>
-      <Sidebar />
 
+
+  return (
+    <>
       <div className='p-5 w-full overflow-y-auto'>
         <div className='flex justify-between items-start'>
           <h1 className='text-2xl font-bold'>Projects</h1>
-          <Link 
-        className="select-none rounded-lg bg-blue-500 py-2 px-6 text-center align-middle font-sans  text-md font-semibold  text-white shadow-md 
+          <Link
+            className="select-none rounded-lg bg-blue-500 py-2 px-6 text-center align-middle font-sans  text-md font-semibold  text-white shadow-md 
         shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-
-          to="/dashboard/user/project/new" color="blue" >Create Project</Link>
-
-
+            to="/dashboard/user/project/new" color="blue" >Create Project</Link>
         </div>
-
         <div className='block'>
-          <ListingProject  projects={projects} />
+          <ListingProject projects={projects} />
         </div>
       </div>
-    </div>)
+    </>
+  )
 }
 
 export default Project

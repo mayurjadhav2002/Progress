@@ -13,7 +13,6 @@ import { StarIcon } from '@heroicons/react/24/solid';
 import { Delete } from 'react-feather';
    
 function Team(props) {
-  console.log("isOwner", props.isowner)
   return (
       <div className='max-h-72 overflow-y-scroll custom-scrollbar  '>
         {props?.team?.map((i, j) => 

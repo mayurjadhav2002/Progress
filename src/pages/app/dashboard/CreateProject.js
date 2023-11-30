@@ -23,10 +23,7 @@ function CreateProject() {
     }
 
     return (
-        <div className='flex items-start gap-5'>
-            <Sidebar />
-
-            <div className='p-5 w-full '>
+    <>
                 <h1 className='text-2xl font-bold'>Managing Project is gonna be easy now!</h1>
 
                 <div className='py-5'>
@@ -124,9 +121,8 @@ dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
 
                     <Button onClick={OnSubmit} type='button' variant='gradient' color='blue' size='lg'>Create Project</Button>
                 </div>
-            </div>
-
-        </div>
+                </>
+                
     )
 }
 

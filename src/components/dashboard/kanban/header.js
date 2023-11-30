@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { AiOutlineStar, AiOutlineClockCircle, AiOutlineShareAlt, AiOutlineFullscreen } from 'react-icons/ai'
 import Settings from './settings'
 import { differenceInDays } from 'date-fns';
+import { useProjectContext } from '../../../utils/ProjectContext/ProjectContext';
 
 function Countdown({ targetDate }) {
     const [remainingDays, setRemainingDays] = useState(null);
@@ -33,6 +34,7 @@ function Countdown({ targetDate }) {
 
 
 function Header(props) {
+    const {saving,timeline, title} =useProjectContext()
     return (
         <div className='flex flex-row items-end justify-between'>
             <div className='flex flex-col gap-2'>
@@ -97,19 +99,35 @@ function Header(props) {
                     </li>
                 </ol>
 
-                <h1 className='text-2xl font-bold '>{props?.alldata?.title}</h1>
+                <h1 className='text-2xl font-bold '>{title}</h1>
             </div>
             <div className='flex items-center gap-3'>
+                {saving && <Loader />}
                 <AiOutlineStar className='w-6 h-6 hover:text-yellow-700 dark:text-white' />
                 <span className='flex items-center gap-2 hover:bg-gray-50 p-2 rounded-lg'><AiOutlineClockCircle className='w-6 h-6  dark:text-white' />
-                    <Countdown targetDate={props?.alldata?.timeline} />
+                    <Countdown targetDate={timeline} />
                 </span>
                 <AiOutlineShareAlt className='w-6 h-6 hover:text-blue-700 dark:text-white' />
                 <AiOutlineFullscreen className='w-6 h-6 hover:text-blue-700 dark:text-white cursor-pointer' />
 
-                <Settings data={props.alldata}/>
+                <Settings />
             </div>
         </div>
+    )
+}
+
+
+const Loader = () => {
+    return (
+        <>
+            <div className='flex items-center gap-2 relative -mt-1.5'>
+                <div class="loadingio-spinner-bean-eater-0knfrtq0p9df"><div class="ldio-ivfsphy3f1h">
+                    <div><div></div><div></div><div></div></div><div><div></div><div></div><div></div></div>
+                </div></div>
+                <span className='font-semibold text-primary text-sm'>Saving</span>
+            </div>
+
+        </>
     )
 }
 

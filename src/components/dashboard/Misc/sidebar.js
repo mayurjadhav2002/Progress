@@ -69,7 +69,7 @@ export function Sidebar() {
                         </ListItem>
                     </Link>
 {/* /dashboard/user/project/documentation/ */}
-<Link to="/dashboard/user/project/documentation">
+<Link to="/dashboard/user/documentation">
                         <ListItem as={Link} >
                             <ListItemPrefix>
                                 <InboxIcon className="h-5 w-5" />
@@ -81,7 +81,7 @@ export function Sidebar() {
                         </ListItem>
                     </Link>
 
-                    <AccordionBody className="py-1">
+                    {/* <AccordionBody className="py-1">
                         <List className="p-0">
                             <ListItem>
                                 <ListItemPrefix>
@@ -102,7 +102,7 @@ export function Sidebar() {
                                 Projects
                             </ListItem>
                         </List>
-                    </AccordionBody>
+                    </AccordionBody> */}
                 </Accordion>
                 <Accordion
                     open={open === 2}
@@ -119,7 +119,7 @@ export function Sidebar() {
                                 <ShoppingBagIcon className="h-5 w-5" />
                             </ListItemPrefix>
                             <Typography color="blue-gray" className="mr-auto font-normal">
-                                E-Commerce
+                                Addons
                             </Typography>
                         </AccordionHeader>
                     </ListItem>

@@ -22,10 +22,33 @@ export const registerWithGoogle = async (props) => {
         const result = await axios.post('/create-session', { credentials: props.credential })
         return result
     } catch (error) {
+        throw new Error()
 
     }
 }
 
+
+export const LoginWithoutGoogle = async (props) => {
+    try {
+        const result = await axios.post({
+            email: props.email,
+            password: props.password,
+        });
+        return result
+    } catch (error) {
+        throw new Error()
+    }
+}
+
+export const LoginWithGoogle = async (props) => {
+    try {
+        const result = await axios.post('/create-session', { credentials: props.credential })
+        return result
+    } catch (error) {
+        throw new Error()
+
+    }
+}
 
 
 
@@ -51,20 +74,44 @@ export const getprojects = async (userId) => {
 // timeline: new Date(formattedTimeline), // Parse the timeline string to Date
 // keyword: req.body.keyword,
 // // color: req.body.color
-export const createProject = async(props) =>{
+export const createProject = async (props) => {
     console.log(props)
     try {
-        const response = await axios.post('/project/newproject', { created_by: props.created_by, title: props.title, description: props.description, timeline: props.timeline, keyword: props.keyword,
-        collaborators: [{userId:  props.created_by}, {userId:  props.created_by}]
+        const response = await axios.post('/project/newproject', {
+            created_by: props.created_by, title: props.title, description: props.description, timeline: props.timeline, keyword: props.keyword,
+            collaborators: [{ userId: props.created_by }, { userId: props.created_by }]
         });
 
         if (response.status === 200) {
             return response // Return the actual data instead of true
-        }   
+        }
     } catch (error) {
-        
+
     }
 }
+export const UpdateProject = async (props) => {
+    try {
+        console.log(props);
+        const res = await axios.put(`/project/updateproject/${props.id}`, props.data);
+
+        if (res.status === 200) {
+            return res.data; // Return the response data
+        } else {
+            console.error("Some error occurred while updating the project");
+        }
+    } catch (error) {
+        console.error(`Error updating project: ${error.message}`);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error(`Server response data: ${JSON.stringify(error.response.data)}`);
+            console.error(`Server response status: ${error.response.status}`);
+            console.error(`Server response headers: ${JSON.stringify(error.response.headers)}`);
+        }
+        throw new Error(`Error updating project: ${error.message}`);
+    }
+};
+
 
 export const getKanban = async (id) => {
     console.log("id", id)
@@ -86,11 +133,79 @@ export const getKanban = async (id) => {
 
 export const updateBoard = async (projectid, board) => {
     try {
+        console.log("Board updating")
         const response = await axios.put('/kanban/updateboard', { projectid: projectid, board: board })
         if (response.status === 200) {
             return response; // Return the actual data instead of true
         }
     } catch (error) {
 
+    }
+}
+
+export const InviteCollaborator = async (props) => {
+    try {
+        const response = await axios.put(`/project/invite`, { email: props.email, id: props.id })
+        if (response.status === 200) {
+            console.log(response)
+            return response; // Return the actual data instead of true
+        }
+        return null; // Return null instead of false if the status is not 200
+
+    } catch (error) {
+        console.log("Some error occurred: ", error);
+        return null;
+    }
+}
+
+export const UpdateCard = async (props) => {
+    try {
+        const response = await axios.put(`/kanban/updatecard?projectId=${props.projectId}&id=${props.id}&cardId=${props.cardId}`, props.card)
+        if (response.status === 200) {
+            console.log(response)
+            return response; // Return the actual data instead of true
+        }
+        return null
+    } catch (error) {
+
+    }
+}
+
+export const GetFolderDoc = async(props) =>{
+    try {
+        const response =await axios.get('/document/getfolder', props);
+        if (response.status === 200) {
+            console.log(response)
+            return response; // Return the actual data instead of true
+        }
+        return null
+    } catch (error) {
+        
+    }
+}
+
+export const getSharedDocs = async(req, res) =>{
+    try {
+        const response =await axios.get('/document/getSharedDocument', props);
+        if (response.status === 200) {
+            console.log(response)
+            return response; // Return the actual data instead of true
+        }
+        return null
+    } catch (error) {
+        
+    }
+}
+
+export const getDocumentByFolder = async(props)=>{
+    try {
+        const response =await axios.get('/document/getDocumentByFolder', props);
+        if (response.status === 200) {
+            console.log(response)
+            return response; // Return the actual data instead of true
+        }
+        return null
+    } catch (error) {
+        
     }
 }

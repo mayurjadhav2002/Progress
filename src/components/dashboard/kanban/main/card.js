@@ -7,136 +7,136 @@ import CardDetails from "./CardDetails";
 import { RxDotFilled } from 'react-icons/rx'
 import { HiOutlineCalendarDays } from 'react-icons/hi2'
 import { v4 as uuidv4 } from "uuid";
+import { IoClose } from "react-icons/io5";
 
 import {
-    Drawer,
-    Button,
-    Typography,
-    IconButton,
-    Input,
+  Drawer,
+  Button,
+  Typography,
+  IconButton,
+  Input,
+  Textarea,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 import { FaPencilAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { useProjectContext } from "../../../../utils/ProjectContext/ProjectContext";
 
 const Card = (props) => {
-    console.log("card prps", props)
-    useEffect(() => {
-        document.addEventListener("keypress", (e) => {
-          if (e.code === "Enter") setShow(false);
-        });
-        return () => {
-          document.removeEventListener("keypress", (e) => {
-            if (e.code === "Enter") setShow(false);
-          });
-        };
-      });
-    const [show, setShow] = React.useState('');
-    const [openRight, setOpenRight] = React.useState(false);
-    const [text, setText] = useState('')
-    const openDrawerRight = () => setOpenRight(true);
-    const closeDrawerRight = () => setOpenRight(false);
-    const colors = ["#61bd4f", "#f2d600", "#ff9f1a", "#eb5a46", "#c377e0"];
+  console.log(props)
+  const [show, setShow] = React.useState('');
+  const [openRight, setOpenRight] = React.useState(false);
+  const [title, setTitle] = useState(props?.title)
+  const [desc, setDesc] = useState(props?.description)
+  const openDrawerRight = () => setOpenRight(true);
+  const closeDrawerRight = () => setOpenRight(false);
+  const colors = ["#61bd4f", "#f2d600", "#ff9f1a", "#eb5a46", "#c377e0"];
 
-    const [values, setValues] = useState({ ...props.card });
-    const [input, setInput] = useState(false);
-    const [labelShow, setLabelShow] = useState(false);
-    // const Input = (props) => {
-    //   return (
-    //     <div className="">
-    //       <input
-    //         autoFocus
-    //         defaultValue={text}
-    //         type={"text"}
-    //         onChange={(e) => {
-    //           setText(e.target.value);
-    //         }}
-    //       />
-    //     </div>
-    //   );
-    // };
-    const addTask = (value) => {
-      values.task.push({
-        id: uuidv4(),
-        task: value,
-        completed: false,
-      });
-      setValues({ ...values });
-    };
-  
-    const removeTask = (id) => {
-      const remaningTask = values.task.filter((item) => item.id !== id);
-      setValues({ ...values, task: remaningTask });
-    };
-  
-    const deleteAllTask = () => {
-      setValues({
-        ...values,
-        task: [],
-      });
-    };
-  
-    const updateTask = (id) => {
-      const taskIndex = values.task.findIndex((item) => item.id === id);
-      values.task[taskIndex].completed = !values.task[taskIndex].completed;
-      setValues({ ...values });
-    };
-    const updateTitle = (value) => {
-      setValues({ ...values, title: value });
-    };
-  
-    const calculatePercent = () => {
-      const totalTask = values.task.length;
-      const completedTask = values.task.filter(
-        (item) => item.completed === true
-      ).length;
-  
-      return Math.floor((completedTask * 100) / totalTask) || 0;
-    };
-  
-    const removeTag = (id) => {
-      const tempTag = values.tags.filter((item) => item.id !== id);
-      setValues({
-        ...values,
-        tags: tempTag,
-      });
-    };
-  
-    const addTag = (value, color) => {
-      values.tags.push({
-        id: uuidv4(),
-        tagName: value,
-        color: color,
-      });
-  
-      setValues({ ...values });
-    };
-  
-    const handelClickListner = (e) => {
-      if (e.code === "Enter") {
-        setInput(false);
-        updateTitle(text === "" ? values.title : text);
-      } else return;
-    };
-  
-    useEffect(() => {
-      document.addEventListener("keypress", handelClickListner);
-      return () => {
-        document.removeEventListener("keypress", handelClickListner);
-      };
+  const [values, setValues] = useState({ ...props.card });
+  const [input, setInput] = useState(false);
+  const [labelShow, setLabelShow] = useState(false);
+  // const Input = (props) => {
+  //   return (
+  //     <div className="">
+  //       <input
+  //         autoFocus
+  //         defaultValue={text}
+  //         type={"text"}
+  //         onChange={(e) => {
+  //           setText(e.target.value);
+  //         }}
+  //       />
+  //     </div>
+  //   );
+  // };
+  const addTask = (value) => {
+    values.task.push({
+      id: uuidv4(),
+      task: value,
+      completed: false,
     });
-    useEffect(() => {
-      if (props.updateCard) props.updateCard(props.bid, values.id, values);
-    }, [values]);
-    
-    return (
+    setValues({ ...values });
+  };
 
-        <Draggable
-            key={props.id.toString()}
-            draggableId={props.id.toString()}
-            index={props.index}
-        >
-            {(provided) => (
-                <>
-                    {/* {modalShow && (
+
+  const changeDescription = (desc) => {
+    setDesc(desc)
+    setValues({ ...values, description: desc })
+  }
+const changeTitle = (title) =>{
+  setTitle(title)
+  setValues({...values, title:title})
+}
+const changePriority = (priority) =>{
+  setValues({...values, priority:priority})
+}
+  const removeTask = (id) => {
+    const remaningTask = values.task.filter((item) => item.id !== id);
+    setValues({ ...values, task: remaningTask });
+  };
+
+  const deleteAllTask = () => {
+    setValues({
+      ...values,
+      task: [],
+    });
+  };
+
+  const updateTask = (id) => {
+    const taskIndex = values.task.findIndex((item) => item.id === id);
+    values.task[taskIndex].completed = !values.task[taskIndex].completed;
+    setValues({ ...values });
+  };
+  const updateTitle = (value) => {
+    setValues({ ...values, title: value });
+  };
+
+  const calculatePercent = () => {
+    const totalTask = values.task.length;
+    const completedTask = values.task.filter(
+      (item) => item.completed === true
+    ).length;
+
+    return Math.floor((completedTask * 100) / totalTask) || 0;
+  };
+
+  const removeTag = (id) => {
+    const tempTag = values.tags.filter((item) => item.id !== id);
+    setValues({
+      ...values,
+      tags: tempTag,
+    });
+  };
+
+  const addTag = (value, color) => {
+    values.tags.push({
+      id: uuidv4(),
+      tagName: value,
+      color: color,
+    });
+
+    setValues({ ...values });
+  };
+
+
+
+
+  useEffect(() => {
+    if (props.updateCard) props.updateCard(props.bid, values.id, values);
+  }, [values]);
+
+  return (
+
+
+    <Draggable
+      key={props.id.toString()}
+      draggableId={props.id.toString()}
+      index={props.index}
+    >
+      {(provided) => (
+        <>
+          {/* {modalShow && (
                         <CardDetails
                             updateCard={props.updateCard}
                             onClose={setModalShow}
@@ -145,7 +145,7 @@ const Card = (props) => {
                             removeCard={props.removeCard}
                         />
                     )} */}
-                    {/* <Dialog open={open} handler={handleOpen}>
+          {/* <Dialog open={open} handler={handleOpen}>
                         <DialogHeader>Card Dialog Box {props.id}</DialogHeader>
                         <DialogBody>
                             The key to more success is to have a lot of pillows. Put it this way,
@@ -167,148 +167,223 @@ const Card = (props) => {
                             </Button>
                         </DialogFooter>
                     </Dialog> */}
-                    <div onClick={openDrawerRight} className="rounded-xl border-2 border-gray-100 bg-white"
+          <div onClick={openDrawerRight} className="rounded-xl border-2 border-gray-100 bg-white"
 
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                    >
-                        <div className="flex items-start gap-4 p-4 sm:p-4 lg:p-4">
-                            <div>
-
-                                <RxDotFilled className='w-6 h-6  -mt-4 -ml-4 text-green-600' />
-
-                                <div className="card__text">
-                                    <p>{props.title}</p>
-
-                                </div>
-
-                                <div className="card__tags">
-                                    {props.tags?.map((item, index) => (
-                                        <Tag key={index} tagName={item.tagName} color={item.color} />
-                                    ))}
-                                </div>
-                                <p className="line-clamp-2 text-sm text-gray-700">
-                                    {props.description || `  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus, a a a a a
-                                    accusantium temporibus iure delectus ut totam natus nesciunt ex?
-                                    Ducimus, enim.`}
-                                </p>
-
-                                <div className="mt-2 sm:flex sm:items-center sm:gap-2 justify-between">
-
-
-                                    <div className="flex gap-2 items-center">
-                                        <div className="flex items-center gap-1 text-gray-500">
-                                            <HiOutlineCalendarDays className="h-4 w-4" />
-
-                                            <p className="text-xs">2 days remaining</p>
-                                        </div>
-                                        <span className="hidden sm:block" aria-hidden="true">&middot;</span>
-
-                                        <div className="flex items-center gap-1 text-gray-500">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-4 w-4"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-                                                />
-                                            </svg>
-
-                                            <p className="text-xs">14 comments</p>
-                                        </div>
-
-                                    </div>
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+          >
+            <div className="flex items-start gap-4 p-4 sm:p-4 lg:p-4">
+              <div>
 
 
 
-                                    <p className="hidden sm:block sm:text-xs sm:text-gray-500 lg:flex gap-1 items-center">
-                                        <a href="#" className="font-medium underline hover:text-gray-700 flex items-center gap-1">
-                                            <img src='https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1760&q=80'
-                                                className='w-6 h-6 rounded-full'
-                                            />
-                                        </a>
-                                    </p>
-                                </div>
-                                <div className="card__footer">
-                                    {/* <div className="time">
+
+                <RxDotFilled className={`w-6 h-6  -mt-4 -ml-4 
+                ${props?.priority === 'low' && 'text-green-500'}
+                ${props?.priority === 'medium' && 'text-yellow-500'}
+                ${props?.priority === 'high' && 'text-red-500'}
+                ` }/>
+
+                <div className="card__text">
+                  <p>{props.title}</p>
+
+                </div>
+
+                <div className="card__tags">
+                  {props.tags?.map((item, index) => (
+                    <Tag key={index} tagName={item.tagName} color={item.color} />
+                  ))}
+                </div>
+                <p className="line-clamp-2 text-sm text-gray-700">
+                  {props.description || "none"}
+                </p>
+
+                <div className="mt-2 sm:flex sm:items-center sm:gap-2 justify-between">
+
+
+                  <div className="flex gap-2 items-center">
+                    <div className="flex items-center gap-1 text-gray-500">
+                      <HiOutlineCalendarDays className="h-4 w-4" />
+
+                      <p className="text-xs">2 days remaining</p>
+                    </div>
+                    <span className="hidden sm:block" aria-hidden="true">&middot;</span>
+
+                    <div className="flex items-center gap-1 text-gray-500">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                        />
+                      </svg>
+
+                      <p className="text-xs">14 comments</p>
+                    </div>
+
+                  </div>
+
+
+
+                  <p className="hidden sm:block sm:text-xs sm:text-gray-500 lg:flex gap-1 items-center">
+                    <Link to="#" className="font-medium underline hover:text-gray-700 flex items-center gap-1">
+                      <img src={props?.user_avatar ? props.user_avatar : null}
+                        className='w-6 h-6 rounded-full'
+                      />
+                    </Link>
+                  </p>
+                </div>
+                <div className="card__footer">
+                  {/* <div className="time">
                 <Clock />
                 <span>Sun 12:30</span>
               </div> */}
 
-                                </div>
+                </div>
 
 
-                                {provided.placeholder}
-                            </div>
-                        </div>
+                {provided.placeholder}
+              </div>
+            </div>
 
-                    </div> 
-                    <Drawer
-                        placement="right"
-                        overlay={false}
-                        open={openRight}
-                        onClose={closeDrawerRight}
-                        className="p-4"
-                    >
-                        <div className="mb-6 flex items-center justify-between">
-                      
-                                <Typography variant="h5" color="blue-gray">
-                                        {props.title}
-                                    </Typography>
+          </div>
+          <Drawer
+            placement="right"
+            overlay={false}
+            open={openRight}
+            onClose={closeDrawerRight}
+            className="p-4 bg-blue-50 rounded-s-xl"
+          >
+            <div className="mb-6 flex w-full   items-center justify-between ">
 
-                          
+              <Typography variant="h5" color="blue-gray">
+                {title}
+              </Typography>
 
 
-                            <IconButton
-                                variant="text"
-                                color="blue-gray"
-                                onClick={closeDrawerRight}
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={2}
-                                    stroke="currentColor"
-                                    className="h-5 w-5"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </IconButton>
-                        <hr/>
-                        </div>
-                      
-                        <Input 
-                           autoFocus
-            defaultValue={text}
-            type={"text"}
-            onChange={(e) => {
-              setText(e.target.value);
-            }} label="Project title" value={props.title} />
 
-                        <div className="flex gap-2">
-                            <Button size="sm" variant="outlined">
-                                Documentation
-                            </Button>
-                            <Button size="sm">Get Started</Button>
-                        </div>
-                    </Drawer>
 
-                </>
-            )}
-        </Draggable>
-    );
+              <span
+                className="cursor-pointer"
+                onClick={closeDrawerRight}
+              >
+                <IoClose className="r-0" />
+              </span>
+            </div>
+            <hr />
+
+
+            <div className="h-[calc(100vh-20vh)] w-full flex flex-col gap-5 overflow-y-scroll py-1 custom-scrollbar">
+
+              <Input
+                defaultValue={title}
+                variant="outlined"
+                type={"text"}
+                onChange={(e) => {
+                  changeTitle(e.target.value);
+                }} label="Project title" value={title} />
+
+              <Textarea variant="outlined" label="Description" rows={2}
+
+                value={props.description} onChange={(e) => { changeDescription(e.target.value) }}
+              />
+
+
+              <div>
+                <Select label="Assign this Task to.." id="assignee">
+                  <Option>Mayur</Option>
+
+                  <Option>Mayur</Option>
+                </Select>
+                <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
+                  <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
+                  <span class="sr-only">Info</span>
+                  <div class="ms-1 text-xs font-medium">
+                    Assign task to someone  <span className="text-blue-400 font-semibold">(hover me)</span>
+                  </div>
+
+                </div>
+              </div>
+
+
+              <div>
+                <Select label="Report this Task to.." id="reporter">
+                  <Option>Mayur</Option>
+
+                  <Option>Mayur</Option>
+                </Select>
+                <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
+                  <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
+                  <span class="sr-only">Info</span>
+                  <div class="ms-1 text-xs font-medium">
+                    Choose whom to report <span className="text-blue-400 font-semibold">(hover me)</span>
+                  </div>
+
+                </div>
+              </div>
+              <div>
+                <Select label="Priority of the task" id="reporter"
+                onChange={e=>changePriority(e)}
+
+                >
+                  <Option value="low">Low</Option>
+                  <Option value="medium">Medium</Option>
+                  <Option value="high">High</Option>
+                </Select>
+                <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
+                  <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
+                  <span class="sr-only">Info</span>
+                  <div class="ms-1 text-xs font-medium">
+                    Select Priority of this task <span className="text-blue-400 font-semibold">(hover me)</span>
+                  </div>
+
+                </div>
+              </div>
+
+
+              <div>
+                <Select label="Select Documentation for this task..." id="assignee">
+                  <Option>Mayur</Option>
+
+                  <Option>Mayur</Option>
+                </Select>
+                <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
+                  <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
+                  <span class="sr-only">Info</span>
+                  <div class="ms-1 text-xs font-medium">
+                    helps to understand the tasks <span className="text-blue-400 font-semibold">(hover me)</span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+
+              <Button fullWidth  >Save</Button>
+            </div>
+          </Drawer>
+
+        </>
+      )}
+    </Draggable>
+  );
 };
 
 export default Card;
