@@ -1,0 +1,306 @@
+
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,700|Lato:300,400,700&display=swap');
+
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+body {
+  font-family: 'Lato', sans-serif;
+}
+h1, h2, h3, h4, h5, h6,
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  font-family: 'Poppins', sans-serif;
+}
+p {
+  font-size: 16px;
+  line-height: 24px;
+  @apply text-gray-700;
+}
+.container {
+  @apply px-5 mx-auto;
+}
+
+.row {
+  @apply flex flex-wrap;
+}
+.navbar-area {
+  @apply absolute top-0 left-0 z-40 w-full py-2 duration-300 bg-transparent;
+}
+.sticky {
+  @apply fixed py-1 bg-white shadow;
+}
+@media (max-width: 1024px) {
+  .navbar-area {
+    @apply py-6;
+  }
+}
+.collapse.show {
+  @apply block;
+}
+.toggler-icon {
+  @apply relative block duration-300 bg-white;
+  height: 2px;
+  width: 30px;
+  margin: 6px 0;
+}
+.sticky .toggler-icon {
+  @apply bg-gray-900;
+}
+.active>.toggler-icon:nth-child(1) {
+  @apply transform rotate-45;
+  top: 7px;
+}
+.active>.toggler-icon:nth-child(2) {
+  @apply opacity-0;
+}
+.active>.toggler-icon:nth-child(3) {
+  top: -8px;
+  transform: rotate(135deg);
+}
+
+.navbar-nav .nav-item a {
+  @apply relative inline-block px-4 py-3 text-white capitalize duration-300;
+}
+.sticky .navbar-nav .nav-item a {
+  @apply text-gray-900;
+}
+
+.show .navbar-nav .nav-item a {
+  @apply text-gray-900;
+}
+.show .navbar-nav .nav-item.active a,
+.show .navbar-nav .nav-item a:hover,
+.sticky .navbar-nav .nav-item.active a,
+.sticky .navbar-nav .nav-item a:hover {
+  @apply text-theme-color;
+}
+.gradient-btn {
+  background-image: linear-gradient(to right, #fe8464 0%, #fe6e9a 50%, #fe8464 100%);
+  background-size: 200% auto;
+  overflow: hidden;
+}
+.gradient-btn-2 {
+  background-image: linear-gradient(to right, #33c8c1 0%, #119bd2 50%, #33c8c1 100%);
+}
+.gradient-btn:hover {
+  background-position: right center;
+  @apply shadow-xl;
+}
+.main-btn {
+  @apply inline-block px-6 py-3 font-medium text-white duration-300 bg-blue-600 rounded-lg;
+}
+.main-btn:hover {
+  @apply bg-blue-400;
+}
+
+.header-hero {
+  @apply relative z-20 bg-bottom bg-no-repeat bg-cover;
+}
+.particles {
+  @apply absolute top-0 left-0 w-full h-full;
+  z-index: -1;
+}
+
+.single-logo {
+  max-width: 190px;
+  @apply px-3 mt-8 duration-300 opacity-50;
+}
+
+.section-title .line {
+  background: linear-gradient(#fe8464 0%, #fe6e9a 100%);
+  @apply w-40 h-1 mb-3;
+}
+
+.section-title .title {
+  font-size: 32px;
+
+  @apply pt-2 font-bold;
+}
+.section-title .title span {
+  @apply font-normal;
+}
+
+
+.single-services {
+
+  @apply px-8 py-12 mx-4 mt-8 text-center duration-300 bg-white border-2 border-transparent rounded-lg shadow-lg;
+}
+.single-services:hover {
+  @apply border-theme-color-2;
+}
+.services-icon {
+  @apply relative inline-block;
+}
+.services-icon img {
+  @apply duration-300;
+}
+.services-icon .shape-1 {
+  @apply absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.single-services:hover .services-icon .shape {
+  transform: rotate(25deg);
+}
+.services-icon i {
+  @apply absolute top-0 left-0 flex items-center justify-center w-full h-full text-3xl text-white;
+}
+
+.about-shape-1 {
+  z-index: -1;
+  width: 35%;
+  @apply absolute top-0 right-0 h-full;
+}
+.about-shape-2 {
+  z-index: -1;
+  width: 35%;
+  @apply absolute top-0 left-0 h-full;
+}
+
+
+.video-icon a {
+  @apply flex items-center justify-center w-16 h-16 bg-white rounded-full text-theme-color-2;
+}
+.single-counter {
+  width: 155px;
+  height: 120px;
+  border-radius: 60px;
+  @apply relative z-10 mt-16;
+}
+.single-counter::before {
+  content: '';
+  border-radius: 60px;
+  z-index: -1;
+  @apply absolute top-0 left-0 w-full h-full transform -rotate-45;
+}
+.counter-color-1::before {
+  background-image: linear-gradient(#33c8c1 0%,#119bd2 100%);
+}
+.counter-color-2::before {
+  background-image: linear-gradient(#fe8464 0%,#fe6e9a 100%);
+}
+.counter-color-3::before {
+  background-image: linear-gradient(#361cc1 0%,#2e82ef 100%);
+}
+
+
+.single-team {
+  @apply mx-4 overflow-hidden duration-300 rounded-lg shadow-sm;
+}
+
+.single-team:hover {
+  @apply shadow-xl;
+}
+.team-social {
+  @apply absolute bottom-0 left-0 right-0 mb-6;
+}
+
+.team-social ul {
+  @apply relative z-10 inline-flex px-3 overflow-hidden bg-white bg-opacity-25 rounded-full;
+}
+.team-social ul::before {
+  content: '';
+  background-image: linear-gradient(#fe8464 0%,#fe6e9a 100%);
+  z-index: -1;
+  @apply absolute top-0 left-0 invisible w-full h-full duration-300 opacity-0;
+}
+.single-team:hover .team-social ul::before {
+  @apply visible opacity-100;
+}
+.team-social ul a {
+  @apply inline-block px-3 py-4 text-white duration-300;
+}
+.team-social ul a:hover {
+  @apply text-theme-color;
+}
+
+
+
+
+.single-testimonial {
+  @apply px-8 py-10 mx-4 mt-8 mb-12 duration-300 bg-white border-2 border-transparent rounded-lg shadow-lg;
+}
+
+.slick-current .single-testimonial,
+.single-testimonial:hover {
+  @apply border-theme-color-2;
+}
+.slick-current .single-testimonial .quota i,
+.single-testimonial:hover .quota i {
+  @apply text-theme-color-2;
+}
+.author-image .author {
+  @apply absolute top-0 left-0 w-20 h-20 m-4 mt-4;
+}
+
+.slick-slide:focus {
+  @apply outline-none;
+}
+.slick-dots {
+  @apply absolute bottom-0 left-0 right-0 flex justify-center mx-auto -mb-10;
+}
+.slick-dots li {
+  @apply leading-none;
+}
+.slick-dots button {
+  text-indent: -999999px;
+  @apply w-3 h-3 m-1 duration-300 transform border-0 rounded-full opacity-25 bg-theme-color-2;
+}
+.slick-dots .slick-active button,
+.slick-dots button:hover {
+  @apply scale-125 opacity-100;
+}
+.slick-dots button:focus {
+  @apply outline-none;
+}
+
+.subscribe-form .main-btn {
+  border-radius: 0 .25em .25em 0;
+  @apply absolute top-0 right-0 h-full py-4;
+}
+@media (max-width: 500px) {
+  .container {
+    @apply px-3;
+  }
+  .subscribe-form .main-btn {
+    @apply static w-full mt-4 rounded;
+  }
+}
+
+
+.footer-bg {
+  z-index: -1;
+  @apply absolute bottom-0 left-0 w-full h-full bg-top bg-no-repeat bg-cover;
+}
+
+
+.footer-social li a {
+  
+  @apply inline-block mr-6 text-2xl text-white duration-300;
+}
+.footer-social li a:hover {
+  @apply text-theme-color-2;
+}
+.contact li {
+  @apply mb-3 text-white;
+}
+.link li a {
+  @apply inline-block mb-3 text-white duration-300;
+}
+.link li a:hover {
+  @apply text-theme-color-2;
+}
+
+.back-to-top {
+  background-image: linear-gradient(to right, #361cc1 0%,#2e82ef 100%);
+  background-size: 200% auto;
+  @apply fixed bottom-0 right-0 z-20 flex items-center justify-center w-10 h-10 mb-8 mr-8 overflow-hidden text-white duration-300 rounded;
+}
+.back-to-top:hover {
+  @apply bg-right;
+}
+
