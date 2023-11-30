@@ -184,7 +184,7 @@ export const GetFolderDoc = async(props) =>{
     }
 }
 
-export const getSharedDocs = async(req, res) =>{
+export const getSharedDocs = async(props) =>{
     try {
         const response =await axios.get('/document/getSharedDocument', props);
         if (response.status === 200) {
