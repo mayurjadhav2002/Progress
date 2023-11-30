@@ -1,5 +1,59 @@
 const nodemailer = require('nodemailer');
 
+
+
+
+const inviteMail = ({ token, email, by }) => {
+    try {
+        const emailData = nodemailer.createTransport({
+            service: 'gmail',
+            port: 465,
+            secure: true, // use SSL
+            requireTLS: true,
+            auth: {
+                user: process.env.EMAIL_ADDRESS,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        });
+        
+        const Mailoptions = {
+            from: process.env.EMAIL_ADDRESS,
+            to: email,
+            subject: "Please Verify User Account",
+            html: `${by} Invited you to join their project
+        ${token}
+        `,
+        };
+        emailData.sendMail(Mailoptions, function (error, success) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log("Mail has been sent: ", success.response);
+            }
+        });
+    } catch (error) {
+        console.log("Some error occured")
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const VerifyEmail = ({ token, email }) => {
     try {
         const emailData = nodemailer.createTransport({
@@ -12,6 +66,7 @@ const VerifyEmail = ({ token, email }) => {
                 pass: process.env.EMAIL_PASSWORD
             }
         });
+        
 
         const Mailoptions = {
             from: process.env.EMAIL_ADDRESS,
@@ -497,8 +552,9 @@ const VerifyEmail = ({ token, email }) => {
     }
 };
 
-const PasswordReset = ({token, email}) => {
+const PasswordReset = ({ token, email }) => {
     try {
+
         const emailData = nodemailer.createTransport({
             service: 'gmail',
             port: 465,
@@ -509,7 +565,7 @@ const PasswordReset = ({token, email}) => {
                 pass: process.env.EMAIL_PASSWORD
             }
         });
-
+        
         const Mailoptions = {
             from: process.env.EMAIL_ADDRESS,
             to: email,
@@ -534,4 +590,4 @@ const PasswordReset = ({token, email}) => {
 }
 
 
-module.exports = { VerifyEmail, PasswordReset }
+module.exports = { VerifyEmail, PasswordReset, inviteMail }

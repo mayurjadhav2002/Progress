@@ -6,7 +6,8 @@ require('dotenv').config()
 const port = process.env.PORT;
 const userRoute = require('./routes/userRoute')
 const projectRoute = require('./routes/projectRoute');
-const { VerifyEmail } = require('./config/mails');
+const kanban_route = require('./routes/KanbanRoute');
+const document_route = require('./routes/DocumentRoute');
 
 
 const app = express();
@@ -19,5 +20,7 @@ Connect();
 // User routes
 app.use('/', userRoute)
 app.use('/project', projectRoute)
+app.use('/kanban', kanban_route)
+app.use('/document', document_route)
 
 app.listen(port, () => console.log(`Connected to port: ${port}`));

@@ -15,6 +15,10 @@ project_route.post('/newproject', userMiddleware.verifyToken, project_controller
 
 project_route.post('/getprojects', userMiddleware.verifyToken, project_controller.getProjects);
 
-project_route.put('/updateproject', userMiddleware.verifyToken, project_controller.updateProject);
+project_route.put('/updateproject/:id', userMiddleware.verifyToken, project_controller.updateProject);
+
+project_route.put('/deleteProject', userMiddleware.verifyToken, project_controller.deleteProject);
+
+project_route.put('/invite', userMiddleware.verifyToken, project_controller.inviteCollaborator)
 
 module.exports = project_route
