@@ -1,5 +1,6 @@
 const Project = require('../models/Project');
-const Kanban = require("../models/Kanban")
+const Kanban = require("../models/Kanban");
+const { InviteMail } = require('../config/mails');
 
 const newProject = async (req, res) => {
     try {
@@ -50,7 +51,9 @@ const deleteProject = async (req, res) => {
 }
 const getProjects = async (req, res) => {
     try {
-        const Projects = await Project.find({ created_by: req.body.created_by, deleted: false }).populate('created_by', 'avatar name') // Populate user fields
+        const Projects = await Project.find({ created_by: req.body.created_by, deleted: false }).populate('created_by', 'avatar name')
+
+            // Populate user fields
             .exec();
 
         if (Projects.length > 0) {
@@ -82,32 +85,34 @@ const updateProject = async (req, res) => {
 const inviteCollaborator = async (req, res) => {
     try {
         console.log(req.body.email, req.body.id)
-    const email = req.body.email;
-      const result = await Project.findOneAndUpdate(
-        { _id: req.body.id },
-        { $push: { invite: email } },
-        { new: true } 
-      ).populate('created_by', 'name'); 
-  
-      if (result) {
-        const createdByUserName = result.created_by.name;
-  
-        await inviteMail({
-          token: result.inviteCode,
-          email: email,
-          by: createdByUserName,
-        });
-  
-        res
-          .status(200)
-          .send({ success: true, message: `Invite sent to ${email} by ${createdByUserName}` });
-      } else {
-        console.log("Some Error occurred");
-        return res.status(500).send({ success: false, message: "Some error occurred" });
-      }
+        const email = req.body.email;
+        const result = await Project.findOneAndUpdate(
+            { _id: req.body.id },
+            { $push: { invite: email } },
+            { new: true }
+        ).populate('created_by', 'name');
+
+        if (result) {
+            const createdByUserName = result.created_by.name;
+
+            const Mail = await InviteMail({
+                token: result.inviteCode,
+                email: email,
+                by: createdByUserName,
+            });
+
+            res
+                .status(200)
+                .send({ success: true, message: `Invite sent to ${email} by ${createdByUserName}` });
+
+        } else {
+            console.log("Some Error occurred");
+            return res.status(500).send({ success: false, message: "Some error occurred" });
+        }
     } catch (error) {
-      return res.status(500).send({ success: false, message: "Internal Server Error" });
+        console.error("Error in inviteCollaborator:", error);
+        return res.status(500).send({ success: false, message: "Internal Server Error" });
     }
-  };
-  
-module.exports = { newProject, getProjects, updateProject, deleteProject,inviteCollaborator }
+};
+
+module.exports = { newProject, getProjects, updateProject, deleteProject, inviteCollaborator }

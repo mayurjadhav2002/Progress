@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const Documentation = new mongoose.Schema({
+    docID: {
+        type: String,
+        require: true
+    }
+    ,
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -10,20 +15,19 @@ const Documentation = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
-    published:{
-      type:Boolean,
-      default: false  
+    published: {
+        type: Boolean,
+        default: false
     },
-    group:{
-        name: {type:String, default:'main'},
-        color: {type:String, default: '#1565cf'}
+    group: {
+        name: { type: String, default: 'main' },
+        color: { type: String, default: '#1565cf' }
     },
-    document_title:{
-        type:String,
-        required:true
+    document_title: {
+        type: String,
     },
-    document:{
-        type:String
+    document: {
+        type: String
     },
     deleted: {
         type: Boolean,

@@ -1,20 +1,20 @@
 const nodemailer = require('nodemailer');
 
+const emailData = nodemailer.createTransport({
+    service: 'gmail',
+    port: 465,
+    secure: true, // use SSL
+    requireTLS: true,
+    auth: {
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.EMAIL_PASSWORD
+    }
+});
 
 
-
-const inviteMail = ({ token, email, by }) => {
+const InviteMail = ({ token, email, by }) => {
     try {
-        const emailData = nodemailer.createTransport({
-            service: 'gmail',
-            port: 465,
-            secure: true, // use SSL
-            requireTLS: true,
-            auth: {
-                user: process.env.EMAIL_ADDRESS,
-                pass: process.env.EMAIL_PASSWORD
-            }
-        });
+     
         
         const Mailoptions = {
             from: process.env.EMAIL_ADDRESS,
@@ -590,4 +590,4 @@ const PasswordReset = ({ token, email }) => {
 }
 
 
-module.exports = { VerifyEmail, PasswordReset, inviteMail }
+module.exports = { VerifyEmail, PasswordReset, InviteMail }
