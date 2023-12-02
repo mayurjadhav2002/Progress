@@ -24,7 +24,9 @@ import { Link } from "react-router-dom";
 import { useProjectContext } from "../../../../utils/ProjectContext/ProjectContext";
 
 const Card = (props) => {
-  console.log(props)
+  const { collaborators } = useProjectContext()
+  console.log(collaborators)
+
   const [show, setShow] = React.useState('');
   const [openRight, setOpenRight] = React.useState(false);
   const [title, setTitle] = useState(props?.title)
@@ -64,13 +66,13 @@ const Card = (props) => {
     setDesc(desc)
     setValues({ ...values, description: desc })
   }
-const changeTitle = (title) =>{
-  setTitle(title)
-  setValues({...values, title:title})
-}
-const changePriority = (priority) =>{
-  setValues({...values, priority:priority})
-}
+  const changeTitle = (title) => {
+    setTitle(title)
+    setValues({ ...values, title: title })
+  }
+  const changePriority = (priority) => {
+    setValues({ ...values, priority: priority })
+  }
   const removeTask = (id) => {
     const remaningTask = values.task.filter((item) => item.id !== id);
     setValues({ ...values, task: remaningTask });
@@ -183,7 +185,7 @@ const changePriority = (priority) =>{
                 ${props?.priority === 'low' && 'text-green-500'}
                 ${props?.priority === 'medium' && 'text-yellow-500'}
                 ${props?.priority === 'high' && 'text-red-500'}
-                ` }/>
+                ` } />
 
                 <div className="card__text">
                   <p>{props.title}</p>
@@ -299,9 +301,14 @@ const changePriority = (priority) =>{
 
               <div>
                 <Select label="Assign this Task to.." id="assignee">
-                  <Option>Mayur</Option>
 
-                  <Option>Mayur</Option>
+                  {collaborators && collaborators.length > 0
+                    ? collaborators.map((user, index) => (
+                      <Option value={user.userId.id} key={index}>
+                        {user.userId.name}
+                      </Option>
+                    ))
+                    : "No user Found"}
                 </Select>
                 <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
                   <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -318,9 +325,13 @@ const changePriority = (priority) =>{
 
               <div>
                 <Select label="Report this Task to.." id="reporter">
-                  <Option>Mayur</Option>
-
-                  <Option>Mayur</Option>
+                  {collaborators && collaborators.length > 0
+                    ? collaborators.map((user, index) => (
+                      <Option value={user.userId.id} key={index}>
+                        {user.userId.name}
+                      </Option>
+                    ))
+                    : "No user Found"}
                 </Select>
                 <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
                   <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -335,7 +346,7 @@ const changePriority = (priority) =>{
               </div>
               <div>
                 <Select label="Priority of the task" id="reporter"
-                onChange={e=>changePriority(e)}
+                  onChange={e => changePriority(e)}
 
                 >
                   <Option value="low">Low</Option>
@@ -357,9 +368,7 @@ const changePriority = (priority) =>{
 
               <div>
                 <Select label="Select Documentation for this task..." id="assignee">
-                  <Option>Mayur</Option>
-
-                  <Option>Mayur</Option>
+                  
                 </Select>
                 <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
                   <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">

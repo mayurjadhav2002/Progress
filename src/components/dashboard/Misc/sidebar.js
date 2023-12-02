@@ -31,7 +31,7 @@ export function Sidebar() {
     };
 
     return (
-        <Card className="h-[calc(100vh-6rem)] z-4 w-full max-w-[20rem] p-4 lg:block hidden">
+        <Card className="h-[calc(100vh-4rem)] z-4 w-full max-w-[20rem] p-4 lg:block hidden">
 
             <List>
                 <Accordion
@@ -103,8 +103,8 @@ export function Sidebar() {
                             </ListItem>
                         </List>
                     </AccordionBody> */}
-                </Accordion>
-                <Accordion
+                {/* </Accordion> */}
+                {/* <Accordion
                     open={open === 2}
                     icon={
                         <ChevronDownIcon
@@ -138,7 +138,7 @@ export function Sidebar() {
                                 Products
                             </ListItem>
                         </List>
-                    </AccordionBody>
+                    </AccordionBody> */}
                 </Accordion>
                 <hr className="my-2 border-blue-gray-50" />
                 <ListItem>

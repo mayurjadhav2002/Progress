@@ -5,7 +5,7 @@ function Users(props) {
   return (
     <div className="flex items-center -space-x-4">
    {
-    props?.alldata?.map((i,j)=>
+    props?.collab?.map((i,j)=>
     <Avatar key={j}
       variant="circular"
       alt="user 5"

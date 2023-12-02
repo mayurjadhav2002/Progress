@@ -10,8 +10,10 @@ import {
 import { TbSettings } from "react-icons/tb";
 import { Combobox } from '@headlessui/react'
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Await, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useUserContext } from '../../../../utils/UserContext/UserContext';
+import axios from 'axios';
 const people = [
     'Durward Reynolds',
     'Kenton Towne',
@@ -20,29 +22,73 @@ const people = [
     'Katelyn Rohan',
 ]
 
-function WriteNew() {
+function UpdateDoc() {
 
     let { id } = useParams();
-
-    const { document_title, setDocument_title, HandleGetFolders,
-        folders, setChange,
-        setFolder, loading, setLoading,
-        group, setGroup, setDocId, doc_id,
-    } = useConfluenceContext()
+    const { user } = useUserContext();
+    const {
+        document_title,
+        setDocument_title,
+        HandleGetFolders,
+        folders,
+        setChange,
+        setFolder,
+        loading,
+        setLoading,
+        HandleGetDocs,
+        group,
+        setGroup,
+        doc,
+        setDocument,
+        setDocId,
+        doc_id,
+        published,
+        setPublished,
+    } = useConfluenceContext();
     const [open, setOpen] = useState(false);
+    const [query, setQuery] = useState('');
+    const handleOpen = () => { setOpen(!open) }
+    useEffect(() => {
+        setDocId(id);
+        setLoading(true);
 
-    const handleOpen = () => setOpen(!open);
-    const [query, setQuery] = useState('')
-    const filteredPeople =
-        query === ''
-            ? people
-            : people.filter((person) => {
-                return person.toLowerCase().includes(query.toLowerCase())
-            })
-    useEffect(() => { setDocId(id) }, [id])
-    if (loading) { return "loading" }
+        async function getData() {
+            try {
+                const response = await axios.post('/document/getDocumentById', {
+                    doc_id: id,
+                    created_by: user._id,
+                });
+
+                if (response.data.success) {
+                    const documentData = response.data.data[0];
+                    setDocument(documentData.document);
+                    setDocument_title(documentData.document_title);
+                    setPublished(documentData.published);
+                    setGroup(documentData.group);
+                } else {
+                    console.log('Some error occurred');
+                }
+            } catch (error) {
+                console.error('Error fetching document data', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        getData();
+    }, [id, user._id]);
+
+    if (loading) {
+        return 'Loading...';
+    }
+    const HandleGroup = (newGroupName) => {
+        // Update the group state with the new name
+        setGroup({ ...group, name: newGroupName });
+      };
+
     return (
         <>
+
             <div>
                 <div className='flex justify-between items-start'>
 
@@ -51,21 +97,28 @@ function WriteNew() {
                         New Doc</Typography>
                     <div className='flex items-center gap-5'>
                         <Button variant='text'>Saved a Draft</Button>
-                        <Button onClick={handleOpen}>Publish</Button>
+                        <Button onClick={handleOpen}>
+                            {published ? 
+                        'Published'    
+                        :
+                            'Publish'
+                            }   
+                            </Button>
                         <TbSettings className='h-8 w-8' />
                     </div>
                 </div>
-                <div class="my-5">
-                    <label for="base-input" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Headline/Title of Documentation</label>
-                    <input type="text" id="base-input" placeholder='e.g. Frontend Testing Module Guide' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+                <div className="my-5">
+                    <label htmlFor="base-input" className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Headline/Title of Documentation</label>
+                    <input type="text" id="base-input" placeholder='e.g. Frontend Testing Module Guide' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
         dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        onChange={(e) => {
-            setDocument_title(e.target.value);
-            setChange(true);
-          }}
-          
-          />
+                        value={document_title}
+                        onChange={(e) => {
+                            setDocument_title(e.target.value);
+                            setChange(true);
+                        }}
+
+                    />
                 </div>
                 <div>
                     <WriteDoc />
@@ -77,10 +130,11 @@ function WriteNew() {
                 <DialogBody>
 
                     <div className='my-5'>
-                        <label for="email" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Save in Folder</label>
+                        <label htmlFor="email" className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Save in Folder</label>
 
-                        <Combobox value={group} onChange={setGroup}>
+                        <Combobox value={group.name} onChange={HandleGroup}>
                             <Combobox.Input onChange={(event) => setQuery(event.target.value)}
+                            
                                 placeholder='type the name of folder you want save this file'
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             />
@@ -114,4 +168,4 @@ function WriteNew() {
     )
 }
 
-export default WriteNew
+export default UpdateDoc

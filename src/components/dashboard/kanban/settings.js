@@ -22,10 +22,11 @@ import Team from './subComponents/Team';
 import { useUserContext } from '../../../utils/UserContext/UserContext';
 import { InviteCollaborator, UpdateProject } from '../../../utils/Queries';
 import { useProjectContext } from '../../../utils/ProjectContext/ProjectContext';
+import { ToastContainer, toast } from 'react-toastify';
 function Settings(props) {
 
-    const { saving, id, timeline, title, setTitle, description, setDesc
-        , keyword, setKeyword, setTimeline, HandleUpdateProject, formatDate1
+    const { saving, id, timeline, title, setTitle, description, setDesc, create_by
+        , keyword, setKeyword, setTimeline, HandleUpdateProject, formatDate1, collaborators, setCollaborators
     } = useProjectContext()
 
     const { user } = useUserContext()
@@ -35,16 +36,20 @@ function Settings(props) {
 
     const [inviteEmail, setInviteEmail] = useState('')
     const [changesList, setChangesList] = useState([]);
-    let isOwner = false;
-    if (props?.data?.created_by === user?._id) {
-        isOwner = true;
-    }
+    const [owner, setOwner] = useState(false)
+    useEffect(() => {
+        if (user && create_by === user._id) {
+            setOwner(true)
+        }
+    }, [owner, create_by])
     const handleOpen = () => setOpen(!open);
 
     const HandleInvite = async (e) => {
         try {
             const res = await InviteCollaborator({ id: id, email: inviteEmail })
-            if (res) {
+            console.log(res)
+            if (res.data.success) {
+                toast.success("Invitation Send!")
                 console.log("User Invitation send")
             } else {
                 console.log("Error while sending ")
@@ -70,6 +75,7 @@ function Settings(props) {
                 size='lg'
                 open={open}
                 handler={handleOpen}
+
                 animate={{
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0.9, y: -100 },
@@ -165,12 +171,13 @@ dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                                             Invite
                                         </Button>
                                     </div>
+                                    <ToastContainer />
 
                                     <div className='w-full'>
                                         <Typography variant='h6'>Your Team</Typography>
-                                        {props?.data?.collaborators?.length > 0 ?
+                                        {collaborators.length > 0 ?
 
-                                            <Team team={props?.data?.collaborators} isowner={isOwner} />
+                                            <Team team={collaborators} isowner={owner} />
                                             : "No Team created yet"
                                         }
                                     </div>
@@ -178,7 +185,9 @@ dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </TabPanel>
                             <TabPanel key={3} value={'tab3'} className="py-0">
                                 <Typography variant='h3' color='red'> Delete Your Project</Typography>
-                                {isOwner ?
+                                {console.log(owner)}
+
+                                {owner ?
                                     <div className='my-5 '>
                                         <div className="relative flex w-full ">
                                             <Input

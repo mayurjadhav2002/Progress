@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useConfluenceContext } from "../../../utils/WriteContext/ConfluenceContext";
 
 
 function WriteDoc() {
+  const { 
+    doc, setDocument, setChange
+   } = useConfluenceContext()
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -36,10 +40,9 @@ function WriteDoc() {
     "size",
     "font"
   ];
-
-  const [code, setCode] = useState("hellllo");
   const handleProcedureContentChange = (content, delta, source, editor) => {
-    setCode(content);
+    setDocument(content);
+    setChange(true);
     //let has_attribues = delta.ops[1].attributes || "";
     //console.log(has_attribues);
     //const cursorPosition = e.quill.getSelection().index;
@@ -49,13 +52,13 @@ function WriteDoc() {
 
   return (
     <>
-      {console.log(code)}
       <ReactQuill
         theme="snow"
         modules={modules}
         formats={formats}
-        value={code}
+        value={doc}
         onChange={handleProcedureContentChange}
+
       />
     </>
   );

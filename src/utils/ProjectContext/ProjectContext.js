@@ -14,11 +14,12 @@ export function ProjectContextProvider({ children }) {
     const [saving, setSaving] = useState(false)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
-
+    const [collaborators, setCollaborators] = useState()
     const [title, setTitle] = useState('')
     const [description, setDesc] = useState('')
     const [keyword, setKeyword] = useState('')
     const [timeline, setTimeline] = useState('');
+    const [create_by, setCreated_by] = useState('')
     // const defaultDate = props?.data?.timeline instanceof Date ? props.data.timeline : new Date();
     const [originalData, setOriginalData] = useState({
         title: '',
@@ -30,10 +31,19 @@ export function ProjectContextProvider({ children }) {
     function formatDate(date) {
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     }
-    async function formatDate1(date) {
-        const newDate = await `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-        setTimeline(newDate)
+    async function formatDate1(dateString) {
+        const date = new Date(dateString);
+    
+        if (isNaN(date.getTime())) {
+            console.error('Invalid date string:', dateString);
+            return;
+        }
+    
+        const newDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        setTimeline(newDate);
     }
+    
+    
 
     const HandleFetchBoard = async (props) => {
         try {
@@ -46,7 +56,8 @@ export function ProjectContextProvider({ children }) {
                 setTitle(prevTitle => res.data.projectId.title);
                 setDesc(prevDesc => res.data.projectId.description);
                 setKeyword(prevKeyword => res.data.projectId.keyword);
-
+                setCollaborators(res.data.projectId.collaborators);
+                setCreated_by(res.data.projectId.created_by)
                 const DefaultDate = await res.data.projectId.timeline instanceof Date ? res.data.projectId.timeline : new Date()
                 const date = await formatDate(DefaultDate)
                 await setTimeline(date)
@@ -264,44 +275,16 @@ export function ProjectContextProvider({ children }) {
 
     };
 
-    useEffect(() => {
-        localStorage.setItem("kanban-board", JSON.stringify(board));
-        const intervalId = setInterval(() => {
-            if (saving) {
-                // Make Axios request to update data
-                const updateData = async () => {
-                    try {
-                        const response = await axios.put('/kanban/updateboard', {
-                            projectid: id, // Replace with the actual projectId
-                            board: board,
-                        });
 
-                        if (response.status === 200) {
-                            console.log('Data updated successfully');
-                            setSaving(false); // Reset the updated state after a successful update
-                        }
-                    } catch (error) {
-                        console.error('Error updating data:', error);
-                    }
-                };
 
-                updateData();
-            }
-        }, 5000);
-
-        // Cleanup function
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, [board, saving, id]);
 
 
     const exportValues = {
         id, setId, board, setBoard, saving, setSaving, loading, setLoading,
         error, setError, title, setTitle, description, setDesc,
         keyword, setKeyword, timeline, setTimeline, formatDate1,
-        HandleFetchBoard, HandleUpdateProject, setName, dragCardInBoard,
-        addBoard, addCard, removeCard, onDragEnd, updateCard, removeBoard
+        HandleFetchBoard, HandleUpdateProject, setName, dragCardInBoard,create_by,
+        addBoard, addCard, removeCard, onDragEnd, updateCard, removeBoard,collaborators, setCollaborators
     }
     return (
         <ProjectContext.Provider value={exportValues}>

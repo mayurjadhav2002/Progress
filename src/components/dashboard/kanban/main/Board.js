@@ -13,9 +13,12 @@ import {
 import { TfiLayoutMenuSeparated } from 'react-icons/tfi'
 import { Droppable } from "react-beautiful-dnd";
 import Editable2 from "./Editable2";
+import { useUserContext } from "../../../../utils/UserContext/UserContext";
 export default function KanbanBoard(props) {
-    console.log("board props",)
+
+    const { user } = useUserContext()
     const [show, setShow] = useState(false);
+  
     return (
         <div className="board w-96  flex-shrink-0  ">
             <div className='col-span-1 h-[calc(100vh-270px)] border-b-4 border-b-gray-200 bg-gray-200 overflow-y-scroll custom-scrollbar'>
@@ -36,9 +39,9 @@ export default function KanbanBoard(props) {
                             </div>
                         ) : (
 
-                            <h1    onClick={() => {
+                            <h1 onClick={() => {
                                 setShow(true);
-                              }} className='text-lg font-semibold  dark:text-primary'>
+                            }} className='text-lg font-semibold  dark:text-primary'>
 
                                 {props?.name || "Name of Board"}
                                 <span className="total__cards text-blue-gray-400 text-sm">({props.card?.length})</span>
@@ -83,6 +86,7 @@ export default function KanbanBoard(props) {
                                     removeCard={props.removeCard}
                                     card={items}
                                     user_avatar={items.user_avatar}
+                                // collab={props.collaborators}
                                 />
                             ))}
                             {provided.placeholder}

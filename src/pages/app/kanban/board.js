@@ -141,14 +141,15 @@ function Board(props) {
     HandleSetUpdated()
   };
 
-  useEffect(() => {
-    localStorage.setItem("kanban-board", JSON.stringify(data));
-    console.log("Data set")
-  }, [data]);
+  // useEffect(() => {
+  //   localStorage.setItem("kanban-board", JSON.stringify(data));
+  //   console.log("Data set")
+  // }, [data]);
 
+  console.log(data.length)
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (updated) {
+      if (updated & (data.length > 1 ||  data[0]?.card?.length > 0)) {
         // Make Axios request to update data
         const updateData = async () => {
           try {
@@ -175,12 +176,11 @@ function Board(props) {
     return () => clearInterval(intervalId);
   }, [data, updated, id]);
   return (
-    <div className='max-w-[calc(100vw-20rem)]'>
-
+    <div className='w-auto'>
 
       <DragDropContext onDragEnd={onDragEnd}>
 
-        <div className='w-[calc(100vw-24rem)] overflow-x-scroll custom-scrollbar2 '>
+        <div className=' overflow-x-scroll custom-scrollbar2 '>
           <div className='flex flex-row gap-5  items-start mt-8'>
             {data.map((item) => (
               <div key={item.id} className='kanban-board-wrapper'>
@@ -193,6 +193,7 @@ function Board(props) {
                   removeCard={removeCard}
                   removeBoard={removeBoard}
                   updateCard={updateCard}
+                  collaborators={props?.collab}
                   
                 />
               </div>

@@ -171,41 +171,92 @@ export const UpdateCard = async (props) => {
     }
 }
 
-export const GetFolderDoc = async(props) =>{
+export const GetFolderDoc = async (props) => {
     try {
-        const response =await axios.get('/document/getfolder', props);
+        const response = await axios.get('/document/getfolder', props);
         if (response.status === 200) {
             console.log(response)
             return response; // Return the actual data instead of true
         }
         return null
     } catch (error) {
-        
+
     }
 }
 
-export const getSharedDocs = async(props) =>{
+export const getSharedDocs = async (props) => {
     try {
-        const response =await axios.get('/document/getSharedDocument', props);
+        const response = await axios.get('/document/getSharedDocument', props);
         if (response.status === 200) {
             console.log(response)
             return response; // Return the actual data instead of true
         }
         return null
     } catch (error) {
-        
+
     }
 }
 
-export const getDocumentByFolder = async(props)=>{
+
+export const getDocumentByFolder = async (props) => {
     try {
-        const response =await axios.get('/document/getDocumentByFolder', props);
+        const response = await axios.post('/document/getDocumentByFolder',
+            { userId: props.userId, folder: props.folder },
+        );
+
         if (response.status === 200) {
-            console.log(response)
-            return response; // Return the actual data instead of true
+            console.log(response); // Assuming your data is in the response.data property
+            return response; // Return the actual data instead of the whole response
         }
-        return null
+
+        return null;
     } catch (error) {
+        console.error('Error while fetching documents by folder:', error);
+        throw error; // Re-throw the error so that the calling code can handle it if needed
+    }
+};
+
+
+
+export const CreateOrUpdateDoc = async (props) => {
+    console.log(props)
+    try {
+        const response = await axios.put('/document/updateDoc', props);
+        if (response.status === 200) {
+            console.log(response);
+            return response.data.data; // Return the actual data instead of true
+        }
+        return null;
+    } catch (error) {
+        console.error("Error creating doc:", error);
+    }
+};
+
+
+export const GetDocumentbyID = async (doc_id, userId) => {
+    try {
+        const response = await axios.post('/document/getDocumentById', {doc_id: doc_id, created_by:userId});
+        if (response.status === 200) {
+            console.log(response);
+            return response.data; // Return the actual data instead of true
+        }
+    } catch (error) {
+        console.error('Error while fetching documents by folder:', error);
+        throw error; 
+    }
+}
+
+export const fetchAllDocuments = async (userId) =>{
+    console.log(userId)
+    try {
         
+        const res = await axios.post('/document/getAllDocuments', {userId:userId})
+        if(res.status === 200){
+            console.log(res)
+            return res.data;
+        }
+    } catch (error) {
+        console.log("Error while fetching the documents", error)
+        throw new Error()
     }
 }
