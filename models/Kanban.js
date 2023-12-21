@@ -10,10 +10,7 @@ const KanbanSchema = new mongoose.Schema({
     },
     board: [
         {
-            bid: {
-                type: String,
-                default: v4
-            },
+           
             id:{
                 type: String,
                 default: v4

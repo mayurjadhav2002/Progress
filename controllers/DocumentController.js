@@ -12,12 +12,12 @@ const getDocumentsByFolder = async (req, res) => {
     }
 };
 
-const getAllDocuments = async(req, res)=>{
+const getAllDocuments = async (req, res) => {
     console.log(req.body)
     try {
         const user = req.body.userId;
-        const result = await Documentation.find({created_by: user})
-        return res.status(200).send({success:true, message:"all documents fetched", data:result})
+        const result = await Documentation.find({ created_by: user })
+        return res.status(200).send({ success: true, message: "all documents fetched", data: result })
     } catch (error) {
         console.error('Error fetching distinct group names:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -26,11 +26,11 @@ const getAllDocuments = async(req, res)=>{
 const getAllFolder = async (req, res) => {
     try {
         const userId = req.body.userId;
-
+        console.log(req.body)
         const distinctGroupNames = await Documentation.distinct('group.name', { created_by: userId });
-
-        if(distinctGroupNames.length === 0){
-return res.status(200).send({data:['main']})
+        console.log(distinctGroupNames)
+        if (distinctGroupNames.length === 0) {
+            return res.status(200).send({ data: ['main'] })
         }
         res.status(200).json(distinctGroupNames);
     } catch (error) {
@@ -85,9 +85,9 @@ const UpdateDocument = async (req, res) => {
         const filter = { docID: req.body.doc_id, created_by: req.body.created_by };
         const update = { ...req.body };
         const options = { new: true, upsert: true };
-    
+
         const result = await Documentation.findOneAndUpdate(filter, update, options);
-    
+
         if (result) {
             return res.status(200).send({ success: true, msg: "Documentation Updated", data: result });
         } else {
@@ -97,7 +97,7 @@ const UpdateDocument = async (req, res) => {
         console.error("Error occurred while updating or creating doc", error);
         return res.status(500).send({ success: false, msg: "Internal server error" });
     }
-    
+
 }
 
 
@@ -131,4 +131,4 @@ const getDocumentById = async (req, res) => {
     }
 }
 
-module.exports = { CreateDocument, UpdateDocument, getDocumentsByFolder, getAllFolder,getAllDocuments, getSharedFolderNames, ShareDocument, getDocumentById }
+module.exports = { CreateDocument, UpdateDocument, getDocumentsByFolder, getAllFolder, getAllDocuments, getSharedFolderNames, ShareDocument, getDocumentById }

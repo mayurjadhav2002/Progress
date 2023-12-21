@@ -51,10 +51,10 @@ const deleteProject = async (req, res) => {
 }
 const getProjects = async (req, res) => {
     try {
-        const Projects = await Project.find({ created_by: req.body.created_by, deleted: false }).populate('created_by', 'avatar name')
-
-            // Populate user fields
-            .exec();
+        const Projects = await Project.find({ created_by: req.body.created_by, deleted: false })
+  .sort({ createdAt: 'desc' })
+  .populate('created_by', 'avatar name')
+  .exec();
 
         if (Projects.length > 0) {
             return res.status(200).send({ success: true, msg: "project found", data: Projects })

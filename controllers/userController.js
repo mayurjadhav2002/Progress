@@ -48,7 +48,7 @@ const register_new_user = async (req, res) => {
         // Checking whether user with given email already exists or not
         const userExists = await User.findOne({ email: email });
         if (userExists) {
-            return res.send({ msg: "User with this email already exists" });
+            return res.status(201).send({ success: false, code:"exists", msg: "User with this email already exists" });
         }
 
         const account_verification_token = await AccounVerificationToken();
@@ -69,20 +69,21 @@ const register_new_user = async (req, res) => {
                 new: true
             });
             // Send the response first
-            res.status(201).send({ success: true, msg: "New Account Created", data: user2});
+            res.status(201).send({ success: true, code: "success", msg: "New Account Created", data: user2});
 
             // Then handle the asynchronous operation
             await VerifyEmail({ token: account_verification_token, email: email });
         } else {
-            res.status(400).send({ success: false, msg: "Error in creating the account" });
-        }
+            res.status(400).send({ success: false, code: "error", msg: "Error in creating the account" });
+        } 
     } catch (error) {
-        res.status(500).send({ success: false, msg: "Internal error occurred", error: error });
+        res.status(500).send({ success: false, code:'internal error', msg: "Internal error occurred" });
     }
 }
 
 
 const signin = async (req, res) => {
+    console.log(req.body)
     const email = req.body.email;
     // Check whether the user exists or not
     try {
@@ -90,13 +91,15 @@ const signin = async (req, res) => {
             return res.status(400).send({ succes: false, msg: "please check your credentials", typeError: "Password" })
         }
         let user = await User.findOne({ email: email });
-
-        if (!user.signInType.normal) {
-            return res.status(400).send({ success: false, msg: "Please Sign in using Google or github" })
-        }
+        console.log(user)
         if (!user) {
             return res.status(400).send({ success: false, msg: "User Not exists" })
         }
+        if (!user.signInType[0].normal) {
+            console.log("not a normal login")
+            return res.status(400).send({ success: false, code:"oauth", msg: "Please Sign in using Google or github" })
+        }
+   
 
         if (!user.verified_account) {
             return res.status(200).send({ success: false, code: "unverified", msg: "Email not Verified" })
@@ -124,14 +127,12 @@ const signin = async (req, res) => {
 
 
         } else {
-            return res.status(406).send({ success: false, msg: `Incorrect Login Credentials` });
+            return res.status(406).send({ success: false, code:"invalid", msg: `Incorrect Login Credentials` });
         }
 
     } catch (error) {
-        return res.status(500).send({ success: false, msg: "Failed to load, some errored occured" });
+        return res.status(500).send({ success: false, code: "error" ,msg: "Failed to load, some errored occured" });
     }
-
-
 }
 
 const verifyEmail = async (req, res) => {

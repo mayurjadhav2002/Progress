@@ -20,7 +20,7 @@ const User = mongoose.Schema({
     },
     avatar:{
         type:String,
-        default: "/newUser.jpg"
+        default: `${process.env.BACKEND_URL}/static/newUser.jpg`
     },
     password_reset:{
         type:String,
