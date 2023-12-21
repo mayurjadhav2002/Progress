@@ -10,7 +10,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 axios.defaults.headers.common['Authorization'] = `${Cookies.get('access_token')}`;
 
 root.render(
