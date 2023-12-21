@@ -8,17 +8,16 @@ import {
     MenuHandler,
     MenuList,
     MenuItem,
-    Button,
 } from "@material-tailwind/react";
 import { TfiLayoutMenuSeparated } from 'react-icons/tfi'
 import { Droppable } from "react-beautiful-dnd";
 import Editable2 from "./Editable2";
-import { useUserContext } from "../../../../utils/UserContext/UserContext";
 export default function KanbanBoard(props) {
 
-    const { user } = useUserContext()
     const [show, setShow] = useState(false);
-  
+    if(props.id === undefined){
+        return "loading"
+    }
     return (
         <div className="board w-96  flex-shrink-0  ">
             <div className='col-span-1 h-[calc(100vh-270px)] border-b-4 border-b-gray-200 bg-gray-200 overflow-y-scroll custom-scrollbar'>
@@ -74,10 +73,10 @@ export default function KanbanBoard(props) {
                         >
                             {props.card?.map((items, index) => (
                                 <Card
-                                    bid={props.id}
+                                    bid={items.bid}
                                     id={items.id}
                                     index={index}
-                                    key={items.id}
+                                    key={items.bid}
                                     priority={items.priority}
                                     description={items.description}
                                     title={items.title}

@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { Calendar, CheckSquare, Clock, MoreHorizontal } from "react-feather";
 import Dropdown from "./Dropdown";
+import Modal from "./Model";
 import Tag from "./Tag";
 import CardDetails from "./CardDetails";
+import { IoClose } from "react-icons/io5";
 import { RxDotFilled } from 'react-icons/rx'
 import { HiOutlineCalendarDays } from 'react-icons/hi2'
-import { v4 as uuidv4 } from "uuid";
-import { IoClose } from "react-icons/io5";
-
 import {
   Drawer,
   Button,
   Typography,
-  IconButton,
   Input,
   Textarea,
   Select,
   Option,
 } from "@material-tailwind/react";
-import { FaPencilAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useProjectContext } from "../../../../utils/ProjectContext/ProjectContext";
 
 const Card = (props) => {
   const { collaborators } = useProjectContext()
-  console.log(collaborators)
 
+  const [dropdown, setDropdown] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
   const [show, setShow] = React.useState('');
   const [openRight, setOpenRight] = React.useState(false);
   const [title, setTitle] = useState(props?.title)
@@ -38,30 +36,6 @@ const Card = (props) => {
   const [values, setValues] = useState({ ...props.card });
   const [input, setInput] = useState(false);
   const [labelShow, setLabelShow] = useState(false);
-  // const Input = (props) => {
-  //   return (
-  //     <div className="">
-  //       <input
-  //         autoFocus
-  //         defaultValue={text}
-  //         type={"text"}
-  //         onChange={(e) => {
-  //           setText(e.target.value);
-  //         }}
-  //       />
-  //     </div>
-  //   );
-  // };
-  const addTask = (value) => {
-    values.task.push({
-      id: uuidv4(),
-      task: value,
-      completed: false,
-    });
-    setValues({ ...values });
-  };
-
-
   const changeDescription = (desc) => {
     setDesc(desc)
     setValues({ ...values, description: desc })
@@ -73,64 +47,8 @@ const Card = (props) => {
   const changePriority = (priority) => {
     setValues({ ...values, priority: priority })
   }
-  const removeTask = (id) => {
-    const remaningTask = values.task.filter((item) => item.id !== id);
-    setValues({ ...values, task: remaningTask });
-  };
-
-  const deleteAllTask = () => {
-    setValues({
-      ...values,
-      task: [],
-    });
-  };
-
-  const updateTask = (id) => {
-    const taskIndex = values.task.findIndex((item) => item.id === id);
-    values.task[taskIndex].completed = !values.task[taskIndex].completed;
-    setValues({ ...values });
-  };
-  const updateTitle = (value) => {
-    setValues({ ...values, title: value });
-  };
-
-  const calculatePercent = () => {
-    const totalTask = values.task.length;
-    const completedTask = values.task.filter(
-      (item) => item.completed === true
-    ).length;
-
-    return Math.floor((completedTask * 100) / totalTask) || 0;
-  };
-
-  const removeTag = (id) => {
-    const tempTag = values.tags.filter((item) => item.id !== id);
-    setValues({
-      ...values,
-      tags: tempTag,
-    });
-  };
-
-  const addTag = (value, color) => {
-    values.tags.push({
-      id: uuidv4(),
-      tagName: value,
-      color: color,
-    });
-
-    setValues({ ...values });
-  };
-
-
-
-
-  useEffect(() => {
-    if (props.updateCard) props.updateCard(props.bid, values.id, values);
-  }, [values]);
 
   return (
-
-
     <Draggable
       key={props.id.toString()}
       draggableId={props.id.toString()}
@@ -138,37 +56,8 @@ const Card = (props) => {
     >
       {(provided) => (
         <>
-          {/* {modalShow && (
-                        <CardDetails
-                            updateCard={props.updateCard}
-                            onClose={setModalShow}
-                            card={props.card}
-                            bid={props.bid}
-                            removeCard={props.removeCard}
-                        />
-                    )} */}
-          {/* <Dialog open={open} handler={handleOpen}>
-                        <DialogHeader>Card Dialog Box {props.id}</DialogHeader>
-                        <DialogBody>
-                            The key to more success is to have a lot of pillows. Put it this way,
-                            it took me twenty five years to get these plants, twenty five years of
-                            blood sweat and tears, and I&apos;m never giving up, I&apos;m just
-                            getting started. I&apos;m up to something. Fan luv.
-                        </DialogBody>
-                        <DialogFooter>
-                            <Button
-                                variant="text"
-                                color="red"
-                                onClick={handleOpen}
-                                className="mr-1"
-                            >
-                                <span>Cancel</span>
-                            </Button>
-                            <Button variant="gradient" color="green" onClick={handleOpen}>
-                                <span>Confirm</span>
-                            </Button>
-                        </DialogFooter>
-                    </Dialog> */}
+
+
           <div onClick={openDrawerRight} className="rounded-xl border-2 border-gray-100 bg-white"
 
             {...provided.draggableProps}
@@ -191,7 +80,6 @@ const Card = (props) => {
                   <p>{props.title}</p>
 
                 </div>
-
                 <div className="card__tags">
                   {props.tags?.map((item, index) => (
                     <Tag key={index} tagName={item.tagName} color={item.color} />
@@ -200,7 +88,6 @@ const Card = (props) => {
                 <p className="line-clamp-2 text-sm text-gray-700">
                   {props.description || "none"}
                 </p>
-
                 <div className="mt-2 sm:flex sm:items-center sm:gap-2 justify-between">
 
 
@@ -233,29 +120,25 @@ const Card = (props) => {
 
                   </div>
 
-
-
                   <p className="hidden sm:block sm:text-xs sm:text-gray-500 lg:flex gap-1 items-center">
                     <Link to="#" className="font-medium underline hover:text-gray-700 flex items-center gap-1">
-                      <img src={props?.user_avatar ? props.user_avatar : null}
+                      <img src={props.user_avatar}
                         className='w-6 h-6 rounded-full'
                       />
                     </Link>
                   </p>
-                </div>
-                <div className="card__footer">
-                  {/* <div className="time">
-                <Clock />
-                <span>Sun 12:30</span>
-              </div> */}
+                  {console.log(props.user_avatar)}
 
                 </div>
-
 
                 {provided.placeholder}
-              </div>
-            </div>
 
+
+              </div></div>
+
+
+
+            {provided.placeholder}
           </div>
           <Drawer
             placement="right"
@@ -265,9 +148,9 @@ const Card = (props) => {
             className="p-4 bg-blue-50 rounded-s-xl"
           >
             <div className="mb-6 flex w-full   items-center justify-between ">
-
+              
               <Typography variant="h5" color="blue-gray">
-                {title}
+                {title || "Update"}
               </Typography>
 
 
@@ -295,7 +178,8 @@ const Card = (props) => {
 
               <Textarea variant="outlined" label="Description" rows={2}
 
-                value={props.description} onChange={(e) => { changeDescription(e.target.value) }}
+                value={props && props.description ? props.description : ''}
+                onChange={(e) => { changeDescription(e.target.value) }}
               />
 
 
@@ -325,6 +209,9 @@ const Card = (props) => {
 
               <div>
                 <Select label="Report this Task to.." id="reporter">
+
+
+
                   {collaborators && collaborators.length > 0
                     ? collaborators.map((user, index) => (
                       <Option value={user.userId.id} key={index}>
@@ -365,10 +252,13 @@ const Card = (props) => {
                 </div>
               </div>
 
-
-              <div>
+              {/* This Causing the error */}
+              {/* <div>
                 <Select label="Select Documentation for this task..." id="assignee">
-                  
+                  {props.userAllDocs && props?.userAllDocs?.map((i, j) => {
+                    <Option key={j}>{i.name}</Option>
+                  }
+                  )}
                 </Select>
                 <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
                   <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -380,12 +270,12 @@ const Card = (props) => {
                   </div>
 
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex gap-2">
 
-              <Button fullWidth  >Save</Button>
+              <Button fullWidth >Save</Button>
             </div>
           </Drawer>
 

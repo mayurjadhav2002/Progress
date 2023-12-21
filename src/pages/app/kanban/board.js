@@ -59,28 +59,96 @@ function Board(props) {
   //   setData(tempData);
   // };
 
-  const addCard = async (props, bid) => {
+  const addCard = (title, bid) => {
     const index = data.findIndex((item) => item.id === bid);
     const tempData = [...data];
     tempData[index].card.push({
-      id: await uuidv4(),
-      bid: await uuidv4(),
-      title: props.title,
-      description: props.description,
+      id: uuidv4(),
+      bid: uuidv4(),
+      title: title.title,
+      description: title.description,
       user_avatar: user.avatar,
       user_id: user._id,
       assignee: null,
       reporter: null,
       documentation: null,
-      priority: "low",
+      priority: 'low',
       tags: [],
       task: [],
-
     });
     setData(tempData);
-    HandleSetUpdated()
+        HandleSetUpdated()
 
   };
+
+  // const addCard = async(cardProps, bid) => {
+  //   console.log("BId: ", bid)
+  //   console.log("Data: ", data); // Add this line to check the value of data
+
+  //   const index = await data.findIndex((item) => item.id === bid);
+  //   console.log("index: ", index)
+  //   const tempData = [...data];
+  //   const id =  uuidv4()
+  //   if(index != -1){
+  //     if (!Array.isArray(tempData[index].card)) {
+  //       tempData[index].card = [];
+  //     }
+
+  //     tempData[index].card.push({ 
+  //       id: id,
+  //       bid: id,
+  //       title: cardProps.title,
+  //       description: cardProps.description,
+  //       user_avatar: user.avatar,
+  //       user_id: user._id,
+  //       assignee: null,
+  //       reporter: null,
+  //       documentation: null,
+  //     //   priority: 'low',
+  //     //   tags: [],
+  //     });
+  //   }else{
+  //     console.log("index not found")
+  //   }
+  //   // console.log(tempData[index])
+
+  //   setData(tempData);
+
+
+  // };
+
+
+  // const addCard = async (cardProps, bid) => {
+  //   const updatedData = data.map(item => {
+  //     if (item.id === bid) {
+  //       return {
+  //         ...item,
+  //         card: [
+  //           ...item.card,
+  //           {
+  //             id: uuidv4(),
+  //             bid: uuidv4(),
+  //             title: cardProps.title,
+  //             description: cardProps.description,
+  //             user_avatar: user.avatar,
+  //             user_id: user._id,
+  //             assignee: null,
+  //             reporter: null,
+  //             documentation: null,
+  //             priority: 'low',
+  //             tags: [],
+  //             task: [],
+  //           },
+  //         ],
+  //       };
+  //     }
+  //     return item;
+  //   });
+
+  //   setData(updatedData);
+  //   HandleSetUpdated()
+  // };
+
 
   const removeCard = (boardId, cardId) => {
     const index = data.findIndex((item) => item.id === boardId);
@@ -146,10 +214,9 @@ function Board(props) {
   //   console.log("Data set")
   // }, [data]);
 
-  console.log(data.length)
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (updated & (data.length > 1 ||  data[0]?.card?.length > 0)) {
+      if (updated && data && (data.length > 1 || (data[0]?.card?.length > 0))) {
         // Make Axios request to update data
         const updateData = async () => {
           try {
@@ -161,8 +228,7 @@ function Board(props) {
             if (response.status === 200) {
               console.log('Data updated successfully');
               setUpdated(false); // Reset the updated state after successful update
-              props.setSaving(false)
-
+              props.setSaving(false);
             }
           } catch (error) {
             console.error('Error updating data:', error);
@@ -174,7 +240,9 @@ function Board(props) {
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, [data, updated, id]);
+  }, [data, updated, id, props]);
+
+
   return (
     <div className='w-auto'>
 
@@ -182,8 +250,8 @@ function Board(props) {
 
         <div className=' overflow-x-scroll custom-scrollbar2 '>
           <div className='flex flex-row gap-5  items-start mt-8'>
-            {data.map((item) => (
-              <div key={item.id} className='kanban-board-wrapper'>
+            {data.map((item, j) => (
+              <div key={j} className='kanban-board-wrapper'>
                 <KanbanBoard
                   id={item.id}
                   name={item.boardName}
@@ -194,7 +262,7 @@ function Board(props) {
                   removeBoard={removeBoard}
                   updateCard={updateCard}
                   collaborators={props?.collab}
-                  
+                  userAllDocs={props.userDocs}
                 />
               </div>
             ))}

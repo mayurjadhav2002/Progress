@@ -5,17 +5,19 @@ import { useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 import { useUserContext } from '../../../utils/UserContext/UserContext';
 import { createProject } from '../../../utils/Queries';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function CreateProject() {
-    const [selected, setSelected] = useState();
-    const [date, setDate] = useState()
-    const {user }= useUserContext()
-    const [props, setProps] = useState({created_by: user?._id, title: '', description: '', timeline: '', keyword: '' })
 
+    const {user }= useUserContext()
+    const [props, setProps] = useState({created_by: user._id, title: '', description: '', timeline: '', keyword: '' })
+    const navigate = useNavigate()
     const OnSubmit = async() => {
         const response = await createProject(props);
         if(response){
-            alert("project created")
+            toast.success("Project Created SuccessFully");
+            navigate(`/dashboard/user/board/${response.data.data._id}`)
         }
         else{
             console.log("error", response)

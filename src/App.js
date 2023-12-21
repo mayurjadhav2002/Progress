@@ -8,16 +8,13 @@ import Login from './pages/authentication/login';
 import KanbanBoard from './pages/app/dashboard/kanbanBoard';
 import Project from './pages/app/dashboard/Project';
 import { UserContextProvider } from './utils/UserContext/UserContext';
-import axios from 'axios';
 import Dashboard from './pages/app/dashboard/dashboard';
 import Confluence from './pages/app/dashboard/confluence';
 import CreateProject from './pages/app/dashboard/CreateProject';
 import ListProject from './pages/app/dashboard/Conflence/ListProject';
-import { ProjectContextProvider } from './utils/ProjectContext/ProjectContext';
 import Main from './pages/app/dashboard/Main';
 import ProfilePage from './pages/app/dashboard/ProfilePage';
 import WriteNew from './pages/app/dashboard/Conflence/WriteNew';
-import { ConfluenceContextProvider } from './utils/WriteContext/ConfluenceContext';
 import UpdateDoc from './pages/app/dashboard/Conflence/UpdateDoc';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,8 +22,7 @@ function App() {
 
   return (
     <UserContextProvider>
-      <ProjectContextProvider>
-        <ConfluenceContextProvider>
+
           <ToastContainer
             position="top-center"
             autoClose={5000}
@@ -62,8 +58,7 @@ function App() {
             </Route>
 
           </Routes>
-        </ConfluenceContextProvider>
-      </ProjectContextProvider>
+
     </UserContextProvider>
 
   );

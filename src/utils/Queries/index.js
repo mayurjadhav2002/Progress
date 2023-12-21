@@ -30,10 +30,8 @@ export const registerWithGoogle = async (props) => {
 
 export const LoginWithoutGoogle = async (props) => {
     try {
-        const result = await axios.post({
-            email: props.email,
-            password: props.password,
-        });
+        const result = await axios.post('/login', props);
+        console.log(result)
         return result
     } catch (error) {
         throw new Error()
@@ -173,9 +171,9 @@ export const UpdateCard = async (props) => {
 
 export const GetFolderDoc = async (props) => {
     try {
-        const response = await axios.get('/document/getfolder', props);
+        console.log(props)
+        const response = await axios.put('/document/getfolder', {userId: props.userId});
         if (response.status === 200) {
-            console.log(response)
             return response; // Return the actual data instead of true
         }
         return null

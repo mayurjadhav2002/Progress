@@ -39,7 +39,9 @@ function WriteNew() {
             : people.filter((person) => {
                 return person.toLowerCase().includes(query.toLowerCase())
             })
-    useEffect(() => { setDocId(id) }, [id])
+    useEffect(() => { setDocId(id);
+}, [id]);
+console.log(folders)
     if (loading) { return "loading" }
     return (
         <>
@@ -59,7 +61,7 @@ function WriteNew() {
                     <label for="base-input" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Headline/Title of Documentation</label>
                     <input type="text" id="base-input" placeholder='e.g. Frontend Testing Module Guide' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-        dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={document_title}
         onChange={(e) => {
             setDocument_title(e.target.value);
             setChange(true);
@@ -80,12 +82,15 @@ function WriteNew() {
                         <label for="email" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Save in Folder</label>
 
                         <Combobox value={group} onChange={setGroup}>
-                            <Combobox.Input onChange={(event) => setQuery(event.target.value)}
+                            <Combobox.Input onChange={(event) =>{ setQuery(event.target.value); 
+                                      setGroup({name: event.target.value, ...group });
+
+                            setChange(true)}}
                                 placeholder='type the name of folder you want save this file'
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             />
                             <Combobox.Options className={'overflow-y-scroll max-h-32 bg-gray-100 rounded-e-lg'}>
-                                {folders && folders?.map((person) => (
+                                {folders.length > 0 && folders?.map((person) => (
                                     <Combobox.Option key={person}
                                         value={person}
                                         className="px-5 py-2 text-black hover:text-primary hover:bg-blue-100 cursor-pointer">

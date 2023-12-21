@@ -6,14 +6,15 @@ import Header from '../../../components/dashboard/kanban/header';
 import Search from '../../../components/dashboard/kanban/search';
 import Users from '../../../components/dashboard/kanban/users';
 import { useProjectContext } from '../../../utils/ProjectContext/ProjectContext';
+import { useConfluenceContext } from '../../../utils/WriteContext/ConfluenceContext';
 
 function KanbanBoard() {
   const params = useParams();
-
+  const { HandleFetchAllDocuments, userAllDocs, setUserAllDocs } = useConfluenceContext()
   const { board, saving, setSaving, loading, error, HandleFetchBoard, collaborators, setCollaborators } = useProjectContext()
   useEffect(() => {
     HandleFetchBoard({ id: params.id });
-
+    // HandleFetchAllDocuments()
   }, [])
   if (loading) {
     return "Loading..."
@@ -21,6 +22,7 @@ function KanbanBoard() {
   if (error) {
     return "Some error occured"
   }
+  console.log(board.data)
   return (
 
 

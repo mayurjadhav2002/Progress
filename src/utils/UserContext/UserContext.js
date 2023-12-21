@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom';
 // Create the context
 const UserContext = createContext();
 
@@ -9,10 +10,10 @@ export function UserContextProvider({ children }) {
     const [user, setUser] = useState();
     const [accessToken, setAccessToken] = useState();
     const [loggedin, setLoggedin] = useState(false);
-
+    const navigate = useNavigate()
     useEffect(() => {
         handleLoggedin();
-        
+
         // Check login status when component mounts
     }, []);
 
@@ -33,21 +34,31 @@ export function UserContextProvider({ children }) {
 
     const handleAccessToken = (props) => {
         try {
-          if (props) {
-            const expirationDate = new Date();
-            expirationDate.setDate(expirationDate.getDate() + 31); // expires in 31 days
-      
-            Cookies.set('access_token', props.access_token, { expires: expirationDate });
-            setAccessToken(props.access_token);
-      
-            Cookies.set('user', JSON.stringify(props.user), { expires: expirationDate });
-            setUser(props.user);
-          }
+            if (props) {
+                const expirationDate = new Date();
+                expirationDate.setDate(expirationDate.getDate() + 31); // expires in 31 days
+
+                Cookies.set('access_token', props.access_token, { expires: expirationDate });
+                setAccessToken(props.access_token);
+
+                Cookies.set('user', JSON.stringify(props.user), { expires: expirationDate });
+                setUser(props.user);
+            }
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
-      };
-      
+    };
+
+    const handleLogout = () => {
+        setLoggedin(false);
+        setUser(null);
+        setAccessToken(null);
+
+        Cookies.remove('access_token')
+        Cookies.remove('user')
+        navigate('/');
+    };
+
     // The context value should be an object
     const contextValue = {
         user,
@@ -55,6 +66,7 @@ export function UserContextProvider({ children }) {
         loggedin,
         handleLoggedin,
         setUser,
+        handleLogout,
         setAccessToken,
         handleAccessToken
     };

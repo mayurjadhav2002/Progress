@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { CreateDoc, CreateOrUpdateDoc, GetDocumentbyID, GetFolderDoc, getDocumentByFolder } from '../Queries';
+import { CreateDoc, CreateOrUpdateDoc, GetDocumentbyID, GetFolderDoc, fetchAllDocuments, getDocumentByFolder } from '../Queries';
 import { useUserContext } from '../UserContext/UserContext';
 
 // Create the context
@@ -11,7 +11,7 @@ export function ConfluenceContextProvider({ children }) {
     const [doc_id, setDocId] = useState('')
     const [document_title, setDocument_title] = useState('')
     const [doc, setDocument] = useState('')
-    const [group, setGroup] = useState({name: 'main', color: '#1565cf'})
+    const [group, setGroup] = useState({ name: 'main', color: '#1565cf' })
     const [published, setPublished] = useState(false)
     const [shared_with, setShared_with] = useState('')
     const [folders, setFolder] = useState([])
@@ -19,32 +19,26 @@ export function ConfluenceContextProvider({ children }) {
     const [saving, setSaving] = useState(false)
     const [change, setChange] = useState(false)
     const [folderFetched, setFolderFetched] = useState(false)
-    const [docCreate, setDocCreate]=useState(false)
+    const [docCreate, setDocCreate] = useState(false)
+    const [userAllDocs, setUserAllDocs] = useState()
     const HandleGetFolders = async () => {
-
-        const res = await GetFolderDoc({ userId: user?._id })
+        const res = await GetFolderDoc({ userId: user._id })
         if (res) {
-            setFolder(res.data.data)
+            setFolder(res.data)
         } else {
             console.log("Some error occured")
         }
     }
 
-    const HandleCreateNew = async (props) => {
-        try {
-            console.log("Creating new Blog")
-        } catch (error) {
-            console.log("Error while Creating new Blog")
-            throw new Error()
-        }
-    }
+
 
 
     const HandleUpdate = async (props) => {
         try {
             setSaving(true)
-            const res = await CreateOrUpdateDoc({doc_id: doc_id, created_by: user._id, 
-                document_title:document_title,
+            const res = await CreateOrUpdateDoc({
+                doc_id: doc_id, created_by: user._id,
+                document_title: document_title,
                 document: doc,
                 group: group,
                 published: props?.published ? props?.published : false
@@ -55,7 +49,7 @@ export function ConfluenceContextProvider({ children }) {
                 console.log("Some error occured")
             }
             setSaving(false)
-             
+
         } catch (error) {
             console.log("unexpected error occured", error)
         }
@@ -70,10 +64,10 @@ export function ConfluenceContextProvider({ children }) {
         }
     }
 
-    const HandleGetDocs = async(props) =>{
+    const HandleGetDocs = async (props) => {
         try {
             const Doc = await GetDocumentbyID(props?.doc_id, user?._id)
-            if(Doc){
+            if (Doc) {
                 console.log(Doc)
             }
         } catch (error) {
@@ -84,6 +78,22 @@ export function ConfluenceContextProvider({ children }) {
     const HandleShare = async (props) => {
         try {
             console.log("Shared doc with User")
+        } catch (error) {
+            console.log("Error while Sharing Doc")
+            throw new Error()
+        }
+    }
+
+    const HandleFetchAllDocuments = async (props) => {
+        try {
+            setLoading(true)
+            if (user._id) {
+                const alldoc = await fetchAllDocuments(user._id)
+                setUserAllDocs(alldoc)
+            } else {
+                console.log("Cannot fetch user Data.")
+            }
+            setLoading(false)
         } catch (error) {
             console.log("Error while Sharing Doc")
             throw new Error()
@@ -119,10 +129,10 @@ export function ConfluenceContextProvider({ children }) {
     const exportValues = {
         document_title, setDocument_title, HandleGetFolders, folders, setFolder,
         doc, setDocument, loading, setLoading,
-        group, setGroup,saving, setSaving,
-        published, setPublished,doc_id, setDocId,
-        shared_with, setShared_with, change, setChange,setDocCreate, docCreate,
-        HandleCreateNew, HandleUpdate, HandleDelete, HandleShare,HandleGetDocs
+        group, setGroup, saving, setSaving,
+        published, setPublished, doc_id, setDocId,
+        shared_with, setShared_with, change, setChange, setDocCreate, docCreate,
+        HandleUpdate, HandleDelete, HandleShare, HandleGetDocs, HandleFetchAllDocuments, userAllDocs, setUserAllDocs
     }
     return (
         <ConfluenceContext.Provider value={exportValues}>

@@ -10,6 +10,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { LoginWithGoogle, LoginWithoutGoogle, registerUser, registerWithGoogle } from '../../utils/Queries';
 import { useUserContext } from '../../utils/UserContext/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Login() {
     const [email, setEmail] = useState('')
@@ -45,17 +46,37 @@ function Login() {
 
 
     const handleSubmit = async () => {
+        console.log(tc, email, password)
         try {
             if (tc) {
                 const res = await LoginWithoutGoogle({ email: email, password: password })
                 console.log(res)
+                if(res.data.success == false && res.data.code == "unverified"){
+                    toast.error("Email not Verified! please check your inbox to verify mail.")
+                }
+                if(res.data.success == false && res.data.code == "oauth"){
+                    toast.error("Looks like you created account using Google. Please Login with Google.")
+                }
+                if(res.data.success == false && res.data.code == "invalid"){
+                    toast.error("Login Failed! Please Check your Email and password again.")
+                }
+                if(res.data.success == false && res.data.code == "error"){
+                    toast.error("Sorry, Error from our Side ! Please hang in while we solve this issues. ")
+                }
+                
+                if(res.data.success == true){
+                    await setUser(res.data.data)
+                    await handleAccessToken({ access_token: res.data.data.access_token, user: res.data.data });
+                    await handleLoggedin(true)
+                    toast.success("Logged into your Account")
+                }
             }
             else {
-                console.log("tc checkbox not working")
+                toast.warning("Please Check the T&C to continue")
             }
 
         } catch (error) {
-            console.log("Unexprected Error Occured at Handlesubmit")
+            toast.error("Sorry! this time error from our side. Fixing the Issue.")
         }
     }
     return (
@@ -175,12 +196,12 @@ function Login() {
                                     onChange={(e) => { setTc(!tc) }}
                                 />
                                 <Button className="mt-6" fullWidth onClick={handleSubmit}>
-                                    sign up
+                                    sign in
                                 </Button>
                                 <Typography color="gray" className="mt-4 text-center font-normal">
-                                    Already have an account?{" "}
+                                    Dont have an account?{" "}
                                     <a href="#" className="font-medium text-gray-900">
-                                        Sign In
+                                        Sign UP
                                     </a>
                                 </Typography>
                             </form>

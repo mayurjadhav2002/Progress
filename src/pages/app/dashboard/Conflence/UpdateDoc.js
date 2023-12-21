@@ -42,6 +42,7 @@ function UpdateDoc() {
         setDocument,
         setDocId,
         doc_id,
+        HandleUpdate,
         published,
         setPublished,
     } = useConfluenceContext();
@@ -76,7 +77,7 @@ function UpdateDoc() {
         }
 
         getData();
-    }, [id, user._id]);
+    }, [id, user?._id]);
 
     if (loading) {
         return 'Loading...';
@@ -84,8 +85,14 @@ function UpdateDoc() {
     const HandleGroup = (newGroupName) => {
         // Update the group state with the new name
         setGroup({ ...group, name: newGroupName });
-      };
+    };
 
+    const HandlePublish = async () => {
+        await setPublished(true)
+        HandleUpdate()
+        handleOpen()
+
+    }
     return (
         <>
 
@@ -98,12 +105,12 @@ function UpdateDoc() {
                     <div className='flex items-center gap-5'>
                         <Button variant='text'>Saved a Draft</Button>
                         <Button onClick={handleOpen}>
-                            {published ? 
-                        'Published'    
-                        :
-                            'Publish'
-                            }   
-                            </Button>
+                            {published ?
+                                'Published'
+                                :
+                                'Publish'
+                            }
+                        </Button>
                         <TbSettings className='h-8 w-8' />
                     </div>
                 </div>
@@ -119,6 +126,8 @@ function UpdateDoc() {
                         }}
 
                     />
+
+
                 </div>
                 <div>
                     <WriteDoc />
@@ -131,23 +140,36 @@ function UpdateDoc() {
 
                     <div className='my-5'>
                         <label htmlFor="email" className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Save in Folder</label>
+                        <div class="relative mb-6">
 
-                        <Combobox value={group.name} onChange={HandleGroup}>
-                            <Combobox.Input onChange={(event) => setQuery(event.target.value)}
-                            
-                                placeholder='type the name of folder you want save this file'
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            />
-                            <Combobox.Options className={'overflow-y-scroll max-h-32 bg-gray-100 rounded-e-lg'}>
-                                {folders && folders?.map((person) => (
-                                    <Combobox.Option key={person}
-                                        value={person}
-                                        className="px-5 py-2 text-black hover:text-primary hover:bg-blue-100 cursor-pointer">
-                                        {person}
-                                    </Combobox.Option>
-                                ))}
-                            </Combobox.Options>
-                        </Combobox>
+                            <Combobox value={group.name} onChange={HandleGroup}>
+                                <div className='relative'>
+                                <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 cursor-pointer">
+                                    <input type="color" className='w-8 h-8 text-gray-500 dark:text-gray-400 rounded-lg'
+                                        onChange={(e) => setGroup({ ...group, color: e.target.value })}
+                                    />
+
+                                </div>
+                                <Combobox.Input onChange={(event) => { setQuery(event.target.value); HandleGroup(event.target.value) }}
+
+                                    placeholder='type the name of folder you want save this file'
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+                                        ps-14
+                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                />
+                                </div>
+                                <Combobox.Options className={'overflow-y-scroll max-h-32 bg-gray-100 rounded-e-lg'}>
+                                    {folders && folders?.map((person) => (
+                                        <Combobox.Option key={person}
+                                            value={person}
+                                            className="px-5 py-2 text-black hover:text-primary hover:bg-blue-100 cursor-pointer">
+                                            {person}
+                                        </Combobox.Option>
+                                    ))}
+                                </Combobox.Options>
+                            </Combobox>
+
+                        </div>
                     </div>
                 </DialogBody>
                 <DialogFooter>
@@ -159,7 +181,7 @@ function UpdateDoc() {
                     >
                         <span>Cancel</span>
                     </Button>
-                    <Button variant="gradient" color="green" onClick={handleOpen}>
+                    <Button variant="gradient" color="green" onClick={HandlePublish}>
                         <span>Confirm</span>
                     </Button>
                 </DialogFooter>

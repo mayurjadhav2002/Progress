@@ -21,10 +21,10 @@ const ColumnHelper = createColumnHelper()
 const columns = [
 
     ColumnHelper.accessor("title", {
-        cell: (info) => ( <Link to={`/dashboard/user/board/${info.row.original._id}`} 
-        className='text-blue-800 underline underline-offset-4 text-sm'>
-        {info.getValue()}
-      </Link>),
+        cell: (info) => (<Link to={`/dashboard/user/board/${info.row.original._id}`}
+            className='text-blue-800 underline underline-offset-4 text-sm'>
+            {info.getValue()}
+        </Link>),
         header: "Name"
     }),
     ColumnHelper.accessor("keyword", {
@@ -74,6 +74,8 @@ export default function ListingProject(props) {
         enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
         onRowSelectionChange: setRowSelection,
         getPaginationRowModel: getPaginationRowModel(),
+        initialState: { pageIndex: 0, pageSize: 7 }, // Set the initial page size to 7
+
     })
 
     return (
@@ -115,26 +117,33 @@ export default function ListingProject(props) {
                         ))}
                     </thead>
                     <tbody>
-                        {table.getRowModel().rows.map((row, i) => (
-                            <tr
-                                key={row.id}
-                                className={`py-5 items-start hover:bg-gray-400 ${i % 2 === 0
-                                        ? 'bg-gray-100 dark:bg-dark dark:text-white'
-                                        : 'bg-gray-50 dark:bg-black dark:text-white'
-                                    }`}
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <td key={cell.id} className={i === 0 ? "p-4" : "p-4 border-b border-blue-gray-50 text-ellipsis"}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
+                        {table.getRowModel().rows.map((row,i) => {
+                            return (
+                                <tr key={row.id} className={`py-5 items-start hover:bg-gray-400 ${i % 2 === 0
+                                    ? 'bg-gray-100 dark:bg-dark dark:text-white'
+                                    : 'bg-gray-50 dark:bg-black dark:text-white'
+                                    }`}>
+                                    {row.getVisibleCells().map(cell => {
+                                        return (
+                                            <td key={cell.id} className={i === 0 ? "p-4" : "p-4 border-b border-blue-gray-50 text-ellipsis"}>
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        })}
                     </tbody>
 
                 </table>
-       
-                <div className='flex items-center justify-end mt-2 gap-2'>
+
+
+
+
+                < div className='flex items-center justify-end mt-2 gap-2'>
                     <button
                         onClick={() => {
                             table.previousPage()
@@ -165,7 +174,7 @@ export default function ListingProject(props) {
             </div>
 
 
-        </div>
+        </div >
 
 
     )
