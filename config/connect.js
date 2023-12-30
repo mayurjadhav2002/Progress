@@ -2,7 +2,7 @@ const { default: mongoose } = require("mongoose");
 
 const Connect = () => {
     try {
-        mongoose.connect(`${process.env.MONGO_URL}`)
+        mongoose.connect(`${process.env.MONGO_LOCAL_URL}`)
 
         mongoose.connection.on('connected', function () {
             console.log('Connected to Database');

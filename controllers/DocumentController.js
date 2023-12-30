@@ -13,7 +13,7 @@ const getDocumentsByFolder = async (req, res) => {
 };
 
 const getAllDocuments = async (req, res) => {
-    console.log(req.body)
+    console.log("AllDocuments", req.body)
     try {
         const user = req.body.userId;
         const result = await Documentation.find({ created_by: user })
@@ -26,9 +26,7 @@ const getAllDocuments = async (req, res) => {
 const getAllFolder = async (req, res) => {
     try {
         const userId = req.body.userId;
-        console.log(req.body)
         const distinctGroupNames = await Documentation.distinct('group.name', { created_by: userId });
-        console.log(distinctGroupNames)
         if (distinctGroupNames.length === 0) {
             return res.status(200).send({ data: ['main'] })
         }
@@ -131,4 +129,45 @@ const getDocumentById = async (req, res) => {
     }
 }
 
-module.exports = { CreateDocument, UpdateDocument, getDocumentsByFolder, getAllFolder, getAllDocuments, getSharedFolderNames, ShareDocument, getDocumentById }
+
+  
+const getRecentlyEditedDoc = async(req,res) => {
+    try {
+        const userId = req.body.userId;
+    
+        // Get shared documents for the user
+        const sharedDocs = await Documentation.find({
+          shared_with: userId,
+        });
+    
+        // Get recently edited documents based on UpdatedAt
+        const recentlyEditedDocs = await Documentation.find({
+          created_by: userId,
+        }).sort({ updatedAt: 'desc' }).limit(10); // Adjust the limit as needed
+    
+        // Get all folder names
+        const distinctGroupNames = await Documentation.distinct('group', {
+            created_by: userId,
+            'group.name': { $exists: true, $ne: '' }, // Exclude documents where group.name does not exist or is an empty string
+        });
+    
+        // Handle the case when there are no distinct group names
+        if (distinctGroupNames.length === 0) {
+            distinctGroupNames = ['main'] 
+        }
+        // Handle other response scenarios based on your requirements
+    
+        return res.status(200).send({
+          success: true,
+          sharedDocs,
+          recentlyEditedDocs,
+          distinctGroupNames,
+        });
+    
+      } catch (error) {
+        console.error("Error occurred while fetching document details", error);
+        return res.status(500).send({ success: false, msg: "Internal Server Error" });
+      }
+}
+
+module.exports = { CreateDocument, UpdateDocument, getDocumentsByFolder, getAllFolder, getAllDocuments, getSharedFolderNames, ShareDocument, getDocumentById, getRecentlyEditedDoc }

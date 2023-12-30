@@ -57,6 +57,10 @@ const card = new mongoose.Schema({
         type: String,
         default: "low"
     },
+    deadline: {
+        type: String,
+        required: false
+    },
     comments: [{
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         userAvatar: { type: String },

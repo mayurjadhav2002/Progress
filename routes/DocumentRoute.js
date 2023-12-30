@@ -14,5 +14,5 @@ document_route.put('/getfolder', userMiddleware.verifyToken, document_controller
 document_route.post('/getDocumentByFolder', userMiddleware.verifyToken, document_controller.getDocumentsByFolder)
 document_route.get('/getSharedDocument', userMiddleware.verifyToken, document_controller.getSharedFolderNames)
 document_route.post('/getDocumentById', userMiddleware.verifyToken, document_controller.getDocumentById);
-
+document_route.post('/getRecentlyEditedDoc', userMiddleware.verifyToken, document_controller.getRecentlyEditedDoc)
 module.exports = document_route

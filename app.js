@@ -23,4 +23,10 @@ app.use('/project', projectRoute)
 app.use('/kanban', kanban_route)
 app.use('/document', document_route)
 
+// setTimeout(()=>{
+    
+//     app.listen(port, () => console.log(`Connected to port: ${port}`));
+// },
+// //  15000
+// )
 app.listen(port, () => console.log(`Connected to port: ${port}`));

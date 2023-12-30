@@ -4,16 +4,20 @@ const getKanban = async (req, res) => {
     console.log(req.body)
     try {
         const data = await Kanban.findOne({ projectId: req.body.projectid })
-            .populate({
-                path: 'projectId',
-                select: 'title created_by timeline color collaborators keyword description',
-                populate: {
-                    path: 'collaborators.userId',
-                    model: 'User',
-                    select: 'name avatar organization_name'
-                }
-            })
-            .exec();
+        .populate({
+          path: 'projectId',
+          select: 'title created_by timeline color collaborators keyword description',
+          populate: {
+            path: 'collaborators.userId',
+            model: 'User',
+            select: 'name avatar organization_name',
+            match: {
+              _id: { $ne: req.body.userId }
+            }
+          }
+        })
+        .exec();
+      
 
         if (data) {
             return res.status(200).send({ success: true, msg: "Board fetched", data: data })

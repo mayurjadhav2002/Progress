@@ -90,19 +90,19 @@ const signin = async (req, res) => {
         if (req.body.password === '') {
             return res.status(400).send({ succes: false, msg: "please check your credentials", typeError: "Password" })
         }
-        let user = await User.findOne({ email: email });
-        console.log(user)
+        let user = await User.findOne({ email: req.body.email });
+        console.log(user && "User Exists")
         if (!user) {
-            return res.status(400).send({ success: false, msg: "User Not exists" })
+            return res.status(201).send({ success: false, msg: "User Not exists" })
         }
         if (!user.signInType[0].normal) {
             console.log("not a normal login")
-            return res.status(400).send({ success: false, code:"oauth", msg: "Please Sign in using Google or github" })
+            return res.status(201).send({ success: false, code:"oauth", msg: "Please Sign in using Google or github" })
         }
    
 
         if (!user.verified_account) {
-            return res.status(200).send({ success: false, code: "unverified", msg: "Email not Verified" })
+            return res.status(201).send({ success: false, code: "unverified", msg: "Email not Verified" })
         }
         // If user Exists
 
