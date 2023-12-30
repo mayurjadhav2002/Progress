@@ -74,6 +74,7 @@ export default function KanbanBoard(props) {
                             {props.card?.map((items, index) => (
                                 <Card
                                     bid={items.bid}
+                                    boardId={props.id}
                                     id={items.id}
                                     index={index}
                                     key={items.bid}
@@ -85,6 +86,7 @@ export default function KanbanBoard(props) {
                                     removeCard={props.removeCard}
                                     card={items}
                                     user_avatar={items.user_avatar}
+                                    deadline={items.deadline && items.deadline}
                                 // collab={props.collaborators}
                                 />
                             ))}

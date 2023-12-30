@@ -41,14 +41,11 @@ function WriteNew() {
             })
     useEffect(() => { setDocId(id);
 }, [id]);
-console.log(folders)
     if (loading) { return "loading" }
     return (
         <>
-            <div>
+            <div className='px-5'>
                 <div className='flex justify-between items-start'>
-
-
                     <Typography variant='h4' className='flex gap-2'>
                         New Doc</Typography>
                     <div className='flex items-center gap-5'>

@@ -7,9 +7,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useConfluenceContext } from '../../../utils/WriteContext/ConfluenceContext';
 import { CiCirclePlus } from "react-icons/ci";
 import { v4 as uuidv4 } from 'uuid';
+import ListDocs from './ListDocs';
 
-function Folder() {
-  const { folders } = useConfluenceContext()
+function Folder(props) {
+  // const { folders } = useConfluenceContext()
   const randomId = uuidv4();
   const navigate = useNavigate();
 
@@ -40,16 +41,16 @@ function Folder() {
             Your Folders</Typography>
         </div>
         <div className='grid lg:grid-cols-5 grid-cols-2 gap-2 mt-2 mb-10'>
-        {folders.length > 0 && folders.map((folder, index) => (
-  <Link
-    key={index}
-    to={`/dashboard/user/documentation/folder/${folder}`}
-    className='flex flex-col gap-2 items-center p-2 rounded-lg justify-between text-gray-800 hover:bg-blue-gray-50 hover:text-black'
-  >
-    <IoFolderOpen className='w-16 h-16' />
-    <Typography variant='small'>{folder}</Typography>
-  </Link>
-))}
+          {props.folders.length > 0 && props.folders.map((folder, index) => (
+            <Link
+              key={index}
+              to={`/dashboard/user/documentation/folder/${folder.name}`}
+              className={`flex flex-col gap-2 items-center p-2 rounded-lg justify-between text-[${folder.color}]  hover:bg-blue-gray-50 hover:text-black`}
+            >
+              <IoFolderOpen className={`w-16 h-16 text-[${folder.color}]`} />
+              <Typography variant='small'>{folder.name}</Typography>
+            </Link>
+          ))}
 
 
 
@@ -68,7 +69,8 @@ function Folder() {
           <Typography variant='h4' className='text-black flex gap-2 items-center'>
             <MdOutlineArticle />
             Recently Edited</Typography>
-
+          {props.recentlyEdited && <ListDocs docs={props.recentlyEdited} />
+          }
 
         </div>
 

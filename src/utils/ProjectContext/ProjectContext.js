@@ -49,7 +49,7 @@ export function ProjectContextProvider({ children }) {
         try {
             await setLoading(true)
             await setId(props.id)
-            const res = await getKanban(id ? id : props.id);
+            const res = await getKanban({id : props?.id, userId: user?._id});
             console.log("Data", res)
             if (res) {
                 setBoard({ data: { board: res.data.board } })

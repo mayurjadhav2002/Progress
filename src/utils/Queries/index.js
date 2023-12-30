@@ -30,12 +30,15 @@ export const registerWithGoogle = async (props) => {
 
 export const LoginWithoutGoogle = async (props) => {
     try {
+        console.log(props)
         const result = await axios.post('/login', props);
         console.log(result)
         return result
     } catch (error) {
-        throw new Error()
+        console.error('Error in LoginWithoutGoogle:', error);
+        throw error; // rethrow the error for further handling
     }
+
 }
 
 export const LoginWithGoogle = async (props) => {
@@ -111,11 +114,10 @@ export const UpdateProject = async (props) => {
 };
 
 
-export const getKanban = async (id) => {
-    console.log("id", id)
+export const getKanban = async (props) => {
 
     try {
-        const response = await axios.post('/kanban/getboard', { projectid: id });
+        const response = await axios.post('/kanban/getboard', { projectid: props.id, userId: props.userId });
         if (response.status === 200) {
             console.log("Data updated to db")
             return response.data; // Return the actual data instead of true
@@ -160,7 +162,6 @@ export const UpdateCard = async (props) => {
     try {
         const response = await axios.put(`/kanban/updatecard?projectId=${props.projectId}&id=${props.id}&cardId=${props.cardId}`, props.card)
         if (response.status === 200) {
-            console.log(response)
             return response; // Return the actual data instead of true
         }
         return null
@@ -171,8 +172,7 @@ export const UpdateCard = async (props) => {
 
 export const GetFolderDoc = async (props) => {
     try {
-        console.log(props)
-        const response = await axios.put('/document/getfolder', {userId: props.userId});
+        const response = await axios.put('/document/getfolder', { userId: props.userId });
         if (response.status === 200) {
             return response; // Return the actual data instead of true
         }
@@ -233,28 +233,38 @@ export const CreateOrUpdateDoc = async (props) => {
 
 export const GetDocumentbyID = async (doc_id, userId) => {
     try {
-        const response = await axios.post('/document/getDocumentById', {doc_id: doc_id, created_by:userId});
+        const response = await axios.post('/document/getDocumentById', { doc_id: doc_id, created_by: userId });
         if (response.status === 200) {
             console.log(response);
             return response.data; // Return the actual data instead of true
         }
     } catch (error) {
         console.error('Error while fetching documents by folder:', error);
-        throw error; 
+        throw error;
     }
 }
 
-export const fetchAllDocuments = async (userId) =>{
+export const fetchAllDocuments = async (userId) => {
     console.log(userId)
     try {
-        
-        const res = await axios.post('/document/getAllDocuments', {userId:userId})
-        if(res.status === 200){
+
+        const res = await axios.post('/document/getAllDocuments', { userId: userId })
+        if (res.status === 200) {
             console.log(res)
             return res.data;
         }
     } catch (error) {
         console.log("Error while fetching the documents", error)
         throw new Error()
+    }
+}
+
+export const getAllDataOfDocs = async (userId) => {
+    try {
+        const res = await axios.post('/document/getRecentlyEditedDoc', userId);
+        console.log("All Documents information", res)
+        return res
+    } catch (error) {
+        console.log("Error while getting all data", error)
     }
 }

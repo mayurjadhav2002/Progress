@@ -9,9 +9,9 @@ function Users(props) {
     <Avatar key={j}
       variant="circular"
       alt="user 5"
-      title={i.userId.name}
+      title={i?.userId?.name}
       className="border-2 border-white hover:z-10 focus:z-10"
-      src={i.userId.avatar}
+      src={i?.userId?.avatar}
     />
     )
    }

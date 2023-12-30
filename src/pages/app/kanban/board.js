@@ -73,6 +73,7 @@ function Board(props) {
       reporter: null,
       documentation: null,
       priority: 'low',
+      deadline: new Date().toLocaleDateString('en-CA'),
       tags: [],
       task: [],
     });
@@ -81,73 +82,6 @@ function Board(props) {
 
   };
 
-  // const addCard = async(cardProps, bid) => {
-  //   console.log("BId: ", bid)
-  //   console.log("Data: ", data); // Add this line to check the value of data
-
-  //   const index = await data.findIndex((item) => item.id === bid);
-  //   console.log("index: ", index)
-  //   const tempData = [...data];
-  //   const id =  uuidv4()
-  //   if(index != -1){
-  //     if (!Array.isArray(tempData[index].card)) {
-  //       tempData[index].card = [];
-  //     }
-
-  //     tempData[index].card.push({ 
-  //       id: id,
-  //       bid: id,
-  //       title: cardProps.title,
-  //       description: cardProps.description,
-  //       user_avatar: user.avatar,
-  //       user_id: user._id,
-  //       assignee: null,
-  //       reporter: null,
-  //       documentation: null,
-  //     //   priority: 'low',
-  //     //   tags: [],
-  //     });
-  //   }else{
-  //     console.log("index not found")
-  //   }
-  //   // console.log(tempData[index])
-
-  //   setData(tempData);
-
-
-  // };
-
-
-  // const addCard = async (cardProps, bid) => {
-  //   const updatedData = data.map(item => {
-  //     if (item.id === bid) {
-  //       return {
-  //         ...item,
-  //         card: [
-  //           ...item.card,
-  //           {
-  //             id: uuidv4(),
-  //             bid: uuidv4(),
-  //             title: cardProps.title,
-  //             description: cardProps.description,
-  //             user_avatar: user.avatar,
-  //             user_id: user._id,
-  //             assignee: null,
-  //             reporter: null,
-  //             documentation: null,
-  //             priority: 'low',
-  //             tags: [],
-  //             task: [],
-  //           },
-  //         ],
-  //       };
-  //     }
-  //     return item;
-  //   });
-
-  //   setData(updatedData);
-  //   HandleSetUpdated()
-  // };
 
 
   const removeCard = (boardId, cardId) => {
@@ -209,10 +143,6 @@ function Board(props) {
     HandleSetUpdated()
   };
 
-  // useEffect(() => {
-  //   localStorage.setItem("kanban-board", JSON.stringify(data));
-  //   console.log("Data set")
-  // }, [data]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {

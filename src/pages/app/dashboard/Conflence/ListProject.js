@@ -33,11 +33,11 @@ function ListProject() {
                 // throw error;
             }
         };
-    
+
         HandleGetDocByFolder();
     }, [user?._id, fname]);
-    
-    
+
+
     return (
 
         <div className='p-5 w-full overflow-y-auto'>
@@ -47,7 +47,7 @@ function ListProject() {
                 <Typography variant='h4' className='flex gap-2'>
                     <FaFolderOpen />
                     Folder - {fname && fname}</Typography>
-
+      
                 <Link to={`/dashboard/user/documentation/new/${randomId}`} className="text-white
                          bg-[#24292F] hover:bg-[#24292F]/90 focus:ring-4 focus:outline-none
                           focus:ring-[#24292F]/50 font-medium rounded-lg text-sm px-5 py-2.5 
@@ -58,7 +58,14 @@ function ListProject() {
                 </Link>
             </div>
             <br />
-            <ListDocs docs={docs}/>
+            <div className='w-full'>
+                    <h1 className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 dark:text-white dark:bg-gray-800">
+                        Recently Created Docs
+                    </h1>
+
+                </div>
+
+            <ListDocs docs={docs} />
         </div>
     )
 }

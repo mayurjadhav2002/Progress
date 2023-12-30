@@ -46,11 +46,9 @@ function Login() {
 
 
     const handleSubmit = async () => {
-        console.log(tc, email, password)
         try {
             if (tc) {
                 const res = await LoginWithoutGoogle({ email: email, password: password })
-                console.log(res)
                 if(res.data.success == false && res.data.code == "unverified"){
                     toast.error("Email not Verified! please check your inbox to verify mail.")
                 }
@@ -76,7 +74,7 @@ function Login() {
             }
 
         } catch (error) {
-            toast.error("Sorry! this time error from our side. Fixing the Issue.")
+            toast.error("Sorry! this time error from our side. Fixing the Issue.", error)
         }
     }
     return (
@@ -128,7 +126,7 @@ function Login() {
                                 <h1
                                     className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl"
                                 >
-                                    Welcome to Squid 🦑
+                                    Welcome to Progress 
                                 </h1>
 
                             </div>
@@ -159,6 +157,8 @@ function Login() {
                                             className: "before:content-none after:content-none",
                                         }}
                                         onChange={(e) => { setEmail(e.target.value); }}
+                                        type='email'
+                                        required
 
                                     />
                                     <Typography variant="h6" color="blue-gray" className="-mb-3">

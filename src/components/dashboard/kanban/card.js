@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { RxDotFilled } from 'react-icons/rx'
 import { HiOutlineCalendarDays } from 'react-icons/hi2'
 import {
@@ -9,7 +9,7 @@ import {
     DialogFooter,
   } from "@material-tailwind/react";
 function Card(props) {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
  
     const handleOpen = () => setOpen(!open);
     return (

@@ -5,6 +5,8 @@ import Dropdown from "./Dropdown";
 import Modal from "./Model";
 import Tag from "./Tag";
 import CardDetails from "./CardDetails";
+import { RiDeleteBack2Fill } from "react-icons/ri";
+
 import { IoClose } from "react-icons/io5";
 import { RxDotFilled } from 'react-icons/rx'
 import { HiOutlineCalendarDays } from 'react-icons/hi2'
@@ -19,23 +21,17 @@ import {
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { useProjectContext } from "../../../../utils/ProjectContext/ProjectContext";
+import moment from "moment";
 
 const Card = (props) => {
   const { collaborators } = useProjectContext()
-
-  const [dropdown, setDropdown] = useState(false);
-  const [modalShow, setModalShow] = useState(false);
-  const [show, setShow] = React.useState('');
-  const [openRight, setOpenRight] = React.useState(false);
+  const [openRight, setOpenRight] = useState(false);
   const [title, setTitle] = useState(props?.title)
   const [desc, setDesc] = useState(props?.description)
   const openDrawerRight = () => setOpenRight(true);
   const closeDrawerRight = () => setOpenRight(false);
-  const colors = ["#61bd4f", "#f2d600", "#ff9f1a", "#eb5a46", "#c377e0"];
-
   const [values, setValues] = useState({ ...props.card });
-  const [input, setInput] = useState(false);
-  const [labelShow, setLabelShow] = useState(false);
+
   const changeDescription = (desc) => {
     setDesc(desc)
     setValues({ ...values, description: desc })
@@ -47,7 +43,33 @@ const Card = (props) => {
   const changePriority = (priority) => {
     setValues({ ...values, priority: priority })
   }
+  const changeAssignee = (assignee) => {
+    console.log(assignee)
+    setValues({ ...values, assignee: assignee })
+  }
 
+  const HandleRemoveCard  = async(e)=>{
+      const shouldDelete = window.confirm('Are you sure you want to delete this card?');
+  
+      if (shouldDelete) {
+        // Call your delete card function here
+        props.removeCard(props.boardId, props.id)
+      }
+  
+  }
+
+
+  const HandleUpdateChanges = async (e) => {
+    // Boardid, cardId, and card values
+    try {
+      const res = await props.updateCard(props.boardId, props.id, values)
+      if (res) {
+        console.log("Card Data Updated ")
+      }
+    } catch (error) {
+      console.log("Some error occured while updating the card", error)
+    }
+  }
   return (
     <Draggable
       key={props.id.toString()}
@@ -58,13 +80,15 @@ const Card = (props) => {
         <>
 
 
-          <div onClick={openDrawerRight} className="rounded-xl border-2 border-gray-100 bg-white"
+          <div onClick={openDrawerRight} className="rounded-xl border-2 border-gray-100 bg-white card-container"
 
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
           >
-            <div className="flex items-start gap-4 p-4 sm:p-4 lg:p-4">
+            <div className="flex items-start gap-4 p-4 sm:p-4 lg:p-4 relative card-container"
+          
+            >
               <div>
 
 
@@ -76,6 +100,10 @@ const Card = (props) => {
                 ${props?.priority === 'high' && 'text-red-500'}
                 ` } />
 
+               <span className="text-red-200 text-sm right-0 text-end absolute pr-2 -mt-4 cursor-pointer" title="Drop the Card" onClick={HandleRemoveCard}>
+                <RiDeleteBack2Fill/>
+               </span>
+
                 <div className="card__text">
                   <p>{props.title}</p>
 
@@ -86,7 +114,7 @@ const Card = (props) => {
                   ))}
                 </div>
                 <p className="line-clamp-2 text-sm text-gray-700">
-                  {props.description || "none"}
+                  {props.description || ""}
                 </p>
                 <div className="mt-2 sm:flex sm:items-center sm:gap-2 justify-between">
 
@@ -95,7 +123,7 @@ const Card = (props) => {
                     <div className="flex items-center gap-1 text-gray-500">
                       <HiOutlineCalendarDays className="h-4 w-4" />
 
-                      <p className="text-xs">2 days remaining</p>
+                      <p className="text-xs"> Due {moment(values.deadline, moment.ISO_8601).fromNow()}</p>
                     </div>
                     <span className="hidden sm:block" aria-hidden="true">&middot;</span>
 
@@ -127,7 +155,6 @@ const Card = (props) => {
                       />
                     </Link>
                   </p>
-                  {console.log(props.user_avatar)}
 
                 </div>
 
@@ -148,7 +175,7 @@ const Card = (props) => {
             className="p-4 bg-blue-50 rounded-s-xl"
           >
             <div className="mb-6 flex w-full   items-center justify-between ">
-              
+
               <Typography variant="h5" color="blue-gray">
                 {title || "Update"}
               </Typography>
@@ -178,18 +205,21 @@ const Card = (props) => {
 
               <Textarea variant="outlined" label="Description" rows={2}
 
-                value={props && props.description ? props.description : ''}
+                value={values.description}
                 onChange={(e) => { changeDescription(e.target.value) }}
               />
 
 
               <div>
-                <Select label="Assign this Task to.." id="assignee">
+                <Select label="Assign this Task to.." id="assignee"
+                  value={values.assignee || ''}
+                  onChange={e => changeAssignee(e)}
+                >
 
                   {collaborators && collaborators.length > 0
                     ? collaborators.map((user, index) => (
-                      <Option value={user.userId.id} key={index}>
-                        {user.userId.name}
+                      <Option value={user?.userId?._id} key={index}>
+                        {user?.userId?.name}
                       </Option>
                     ))
                     : "No user Found"}
@@ -208,14 +238,11 @@ const Card = (props) => {
 
 
               <div>
-                <Select label="Report this Task to.." id="reporter">
-
-
-
+                <Select label="Report this Task to.." id="reporter" value={values.reporter} onChange={e => setValues({ ...values, reporter: e })}>
                   {collaborators && collaborators.length > 0
                     ? collaborators.map((user, index) => (
-                      <Option value={user.userId.id} key={index}>
-                        {user.userId.name}
+                      <Option value={user?.userId?._id} key={index}>
+                        {user?.userId?.name}
                       </Option>
                     ))
                     : "No user Found"}
@@ -252,6 +279,15 @@ const Card = (props) => {
                 </div>
               </div>
 
+              <Input
+                defaultValue={values.deadline ? new Date(values.deadline).toISOString().slice(0, 10) : ''}
+                variant="outlined"
+                type={"date"}
+                onChange={(e) => {
+                  setValues({ ...values, deadline: e.target.value });
+                }}
+                label="Deadline for this Task"
+              />
               {/* This Causing the error */}
               {/* <div>
                 <Select label="Select Documentation for this task..." id="assignee">
@@ -275,7 +311,7 @@ const Card = (props) => {
 
             <div className="flex gap-2">
 
-              <Button fullWidth >Save</Button>
+              <Button fullWidth onClick={HandleUpdateChanges}>Save</Button>
             </div>
           </Drawer>
 
