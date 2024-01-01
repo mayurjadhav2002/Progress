@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom';
 import { APIAwakeQuery } from './APIAwakeQuery';
+import { getProjectCounts } from '../Queries';
 // Create the context
 const UserContext = createContext();
 
@@ -12,6 +13,7 @@ export function UserContextProvider({ children }) {
     const [accessToken, setAccessToken] = useState();
     const [loggedin, setLoggedin] = useState(false);
     const [APIAwake, setAPIAwake] = useState(false); // use to check whether the api endpoints working or not
+    const [userActivityCount, setUserActivityCount] = useState([]);
     const HandleGetAPIStatus = async () => {
         try {
             if (Cookies.get('APIAwake')) {
@@ -25,12 +27,16 @@ export function UserContextProvider({ children }) {
 
     }
     const navigate = useNavigate()
+  
+    
 
     useEffect(() => {
         handleLoggedin();
         HandleGetAPIStatus();
         // Check login status when component mounts
     }, []);
+
+
     useEffect(() => {
         const intervalId = setInterval(() => {
             const cookieTime = parseInt(Cookies.get('APIAwake'));
@@ -98,9 +104,10 @@ export function UserContextProvider({ children }) {
         handleLogout,
         setAccessToken,
         handleAccessToken,
-        APIAwake
+        APIAwake,
+        userActivityCount,
+        setUserActivityCount
     };
-
     return (
         <UserContext.Provider value={contextValue}>
             {children}

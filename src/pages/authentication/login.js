@@ -147,7 +147,7 @@ function Login() {
                                 <div className="mb-1 flex flex-col gap-6">
 
                                     <Typography variant="h6" color="blue-gray" className="-mb-3">
-                                        Your Email
+                                        Your Email <span className='text-red-500'>&#42;</span>
                                     </Typography>
                                     <Input
                                         size="lg"
@@ -158,11 +158,10 @@ function Login() {
                                         }}
                                         onChange={(e) => { setEmail(e.target.value); }}
                                         type='email'
-                                        required
 
                                     />
                                     <Typography variant="h6" color="blue-gray" className="-mb-3">
-                                        Password
+                                        Password <span className='text-red-500'>&#42;</span>
                                     </Typography>
                                     <Input
                                         type="password"

@@ -28,7 +28,7 @@ export function Sidebar() {
     };
     const { handleLogout } = useUserContext()
     return (
-        <Card className="z-4 w-full max-w-[20rem] p-4 lg:block hidden h-full">
+        <Card className="z-4 w-full max-w-[20rem] p-4 lg:block hidden h-full ">
 
             <List>
                 <Accordion

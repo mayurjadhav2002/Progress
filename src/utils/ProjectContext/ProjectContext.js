@@ -14,7 +14,8 @@ export function ProjectContextProvider({ children }) {
     const [saving, setSaving] = useState(false)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
-    const [collaborators, setCollaborators] = useState()
+    const [collaborators, setCollaborators] = useState([])
+   
     const [title, setTitle] = useState('')
     const [description, setDesc] = useState('')
     const [keyword, setKeyword] = useState('')

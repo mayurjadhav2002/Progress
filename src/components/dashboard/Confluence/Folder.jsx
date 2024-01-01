@@ -44,11 +44,11 @@ function Folder(props) {
           {props.folders.length > 0 && props.folders.map((folder, index) => (
             <Link
               key={index}
-              to={`/dashboard/user/documentation/folder/${folder.name}`}
+              to={`/dashboard/user/documentation/folder/${folder}`}
               className={`flex flex-col gap-2 items-center p-2 rounded-lg justify-between text-[${folder.color}]  hover:bg-blue-gray-50 hover:text-black`}
             >
               <IoFolderOpen className={`w-16 h-16 text-[${folder.color}]`} />
-              <Typography variant='small'>{folder.name}</Typography>
+              <Typography variant='small'>{folder}</Typography>
             </Link>
           ))}
 

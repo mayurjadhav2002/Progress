@@ -268,3 +268,17 @@ export const getAllDataOfDocs = async (userId) => {
         console.log("Error while getting all data", error)
     }
 }
+
+export const getProjectCounts = async (userId) => {
+    try {
+        const res = await axios.get(`/getProjectCounts/${userId}`);
+        
+        if (res && res.data) {
+            return res.data; // Return only the data property
+        } else {
+            console.error("Some Internal error occurred", res ? res.status : 'Unknown status');
+        }
+    } catch (error) {
+        console.error("Error while getting all data", error);
+    }
+};

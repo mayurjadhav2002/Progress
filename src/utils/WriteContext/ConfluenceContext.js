@@ -21,6 +21,7 @@ export function ConfluenceContextProvider({ children }) {
     const [folderFetched, setFolderFetched] = useState(false)
     const [docCreate, setDocCreate] = useState(false)
     const [userAllDocs, setUserAllDocs] = useState()
+    const [deleted, setDeleted] = useState(false)
     const HandleGetFolders = async () => {
         const res = await GetFolderDoc({ userId: user._id })
         if (res) {
@@ -41,14 +42,17 @@ export function ConfluenceContextProvider({ children }) {
                 document_title: document_title,
                 document: doc,
                 group: group,
-                published: props?.published ? props?.published : false
+                published: props.published,
+                deleted: deleted
             })
+            setPublished(props.published)
             if (res) {
-                console.log("new blog Created /Updated")
+                console.log("new blog Created /Updated", res)
             } else {
                 console.log("Some error occured")
             }
             setSaving(false)
+
 
         } catch (error) {
             console.log("unexpected error occured", error)
@@ -132,7 +136,7 @@ export function ConfluenceContextProvider({ children }) {
         group, setGroup, saving, setSaving,
         published, setPublished, doc_id, setDocId,
         shared_with, setShared_with, change, setChange, setDocCreate, docCreate,
-        HandleUpdate, HandleDelete, HandleShare, HandleGetDocs, HandleFetchAllDocuments, userAllDocs, setUserAllDocs
+        HandleUpdate, HandleDelete, HandleShare, HandleGetDocs, HandleFetchAllDocuments, userAllDocs, setUserAllDocs, deleted, setDeleted
     }
     return (
         <ConfluenceContext.Provider value={exportValues}>
