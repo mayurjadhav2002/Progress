@@ -17,5 +17,6 @@ user_route.post('/verifyEmail', user_controller.verifyEmail)
 
 user_route.post('/create-session', user_controller.create_user_using_gauth)
 
+user_route.get('/getProjectCounts/:id', user_controller.getCountofUserActivity);
 
 module.exports = user_route

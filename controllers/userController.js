@@ -4,10 +4,22 @@ const User = require('../models/User');
 const randomstring = require('randomstring');
 const { VerifyEmail } = require('../config/mails');
 const { OAuth2Client } = require('google-auth-library');
+const Project = require('../models/Project');
+const Documentation = require('../models/Documentation');
+const { default: mongoose } = require('mongoose');
 const client_id = process.env.GOOGLE_AUTH_CLIENT_ID;
 const client = new OAuth2Client(client_id);
 
-
+const dbStats = async () => {
+    try {
+        // Use the dbStats command to get the storage statistics
+        const stats = await mongoose.connection.db.command({ dbStats: 1, scale: 1024 }); // scale: 1024 to get sizes in KB
+        return stats;
+    } catch (error) {
+        console.error("Error fetching dbStats:", error);
+        throw error;
+    }
+}
 
 // jwt token generation, whenever user sign in this token will be send.
 const token_generation = async (id) => {
@@ -41,14 +53,13 @@ const password_encrypt = async (password) => {
 const register_new_user = async (req, res) => {
     const email = req.body.email;
 
-    console.log(email)
     try {
         const encrypt_pass = await password_encrypt(req.body.password);
 
         // Checking whether user with given email already exists or not
         const userExists = await User.findOne({ email: email });
         if (userExists) {
-            return res.status(201).send({ success: false, code:"exists", msg: "User with this email already exists" });
+            return res.status(201).send({ success: false, code: "exists", msg: "User with this email already exists" });
         }
 
         const account_verification_token = await AccounVerificationToken();
@@ -69,21 +80,20 @@ const register_new_user = async (req, res) => {
                 new: true
             });
             // Send the response first
-            res.status(201).send({ success: true, code: "success", msg: "New Account Created", data: user2});
+            res.status(201).send({ success: true, code: "success", msg: "New Account Created", data: user2 });
 
             // Then handle the asynchronous operation
             await VerifyEmail({ token: account_verification_token, email: email });
         } else {
             res.status(400).send({ success: false, code: "error", msg: "Error in creating the account" });
-        } 
+        }
     } catch (error) {
-        res.status(500).send({ success: false, code:'internal error', msg: "Internal error occurred" });
+        res.status(500).send({ success: false, code: 'internal error', msg: "Internal error occurred" });
     }
 }
 
 
 const signin = async (req, res) => {
-    console.log(req.body)
     const email = req.body.email;
     // Check whether the user exists or not
     try {
@@ -91,15 +101,13 @@ const signin = async (req, res) => {
             return res.status(400).send({ succes: false, msg: "please check your credentials", typeError: "Password" })
         }
         let user = await User.findOne({ email: req.body.email });
-        console.log(user && "User Exists")
         if (!user) {
             return res.status(201).send({ success: false, msg: "User Not exists" })
         }
         if (!user.signInType[0].normal) {
-            console.log("not a normal login")
-            return res.status(201).send({ success: false, code:"oauth", msg: "Please Sign in using Google or github" })
+            return res.status(201).send({ success: false, code: "oauth", msg: "Please Sign in using Google or github" })
         }
-   
+
 
         if (!user.verified_account) {
             return res.status(201).send({ success: false, code: "unverified", msg: "Email not Verified" })
@@ -127,11 +135,11 @@ const signin = async (req, res) => {
 
 
         } else {
-            return res.status(406).send({ success: false, code:"invalid", msg: `Incorrect Login Credentials` });
+            return res.status(406).send({ success: false, code: "invalid", msg: `Incorrect Login Credentials` });
         }
 
     } catch (error) {
-        return res.status(500).send({ success: false, code: "error" ,msg: "Failed to load, some errored occured" });
+        return res.status(500).send({ success: false, code: "error", msg: "Failed to load, some errored occured" });
     }
 }
 
@@ -199,7 +207,7 @@ const create_user_using_gauth = async (req, res) => {
                 });
                 const userSaveResult = await guser.save()
                 if (userSaveResult) {
-                    const newToken = await User.findOne({email: userSaveResult.email,delete_account: false})
+                    const newToken = await User.findOne({ email: userSaveResult.email, delete_account: false })
                     const token = await token_generation(newToken._id);
                     const user = await User.findOneAndUpdate({ email: userSaveResult.email }, { access_token: token }, {
                         new: true
@@ -241,4 +249,30 @@ const create_user_using_gauth = async (req, res) => {
 }
 
 
-module.exports = { register_new_user, signin, verifyEmail, create_user_using_gauth }
+const getCountofUserActivity = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const ProjectCount = await Project.countDocuments({ created_by: userId, deleted: false })
+        const DocumentsCount = await Documentation.countDocuments({ created_by: userId, deleted: false })
+        const stats = await dbStats();
+
+        const projectStorageStats = ProjectCount * stats.storageSize;
+        const documentsStorageStats = DocumentsCount * stats.storageSize;
+
+        const SharedDocuments = await Documentation.countDocuments({
+            shared_with: userId,
+        })
+        return res.status(200).send({
+            success: true,
+            projectCount: ProjectCount,
+            documentCount: DocumentsCount,
+            sharedDocuments: SharedDocuments,
+            projectStorageStats: projectStorageStats,
+            documentsStorageStats: documentsStorageStats
+        })
+    } catch (error) {
+        return res.status(500).send({ success: false, msg: "Failed to load, some errored occured" });
+    }
+}
+
+module.exports = { register_new_user, signin, verifyEmail, create_user_using_gauth, getCountofUserActivity }

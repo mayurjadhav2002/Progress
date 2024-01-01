@@ -52,9 +52,9 @@ const deleteProject = async (req, res) => {
 const getProjects = async (req, res) => {
     try {
         const Projects = await Project.find({ created_by: req.body.created_by, deleted: false })
-  .sort({ createdAt: 'desc' })
-  .populate('created_by', 'avatar name')
-  .exec();
+            .sort({ createdAt: 'desc' })
+            .populate('created_by', 'avatar name')
+            .exec();
 
         if (Projects.length > 0) {
             return res.status(200).send({ success: true, msg: "project found", data: Projects })
@@ -70,7 +70,6 @@ const getProjects = async (req, res) => {
 
 const updateProject = async (req, res) => {
     try {
-        console.log(req.params.id)
         const result = await Project.findOneAndUpdate({ _id: req.params.id }, { ...req.body }, { new: true })
         if (result) {
             return res.status(200).send({ success: true, msg: "data updated successfully", data: result })
@@ -84,7 +83,6 @@ const updateProject = async (req, res) => {
 
 const inviteCollaborator = async (req, res) => {
     try {
-        console.log(req.body.email, req.body.id)
         const email = req.body.email;
         const result = await Project.findOneAndUpdate(
             { _id: req.body.id },

@@ -1,7 +1,6 @@
 const Kanban = require('../models/Kanban')
 
 const getKanban = async (req, res) => {
-    console.log(req.body)
     try {
         const data = await Kanban.findOne({ projectId: req.body.projectid })
         .populate({
