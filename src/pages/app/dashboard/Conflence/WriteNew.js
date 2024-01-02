@@ -12,13 +12,8 @@ import { Combobox } from '@headlessui/react'
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-const people = [
-    'Durward Reynolds',
-    'Kenton Towne',
-    'Therese Wunsch',
-    'Benedict Kessler',
-    'Katelyn Rohan',
-]
+import CSettings from '../../../../components/dashboard/Confluence/CSettings';
+
 
 function WriteNew() {
 
@@ -26,21 +21,24 @@ function WriteNew() {
 
     const { document_title, setDocument_title, HandleGetFolders,
         folders, setChange,
+        published,
         setFolder, loading, setLoading,
-        group, setGroup, setDocId, doc_id,
+        group, setGroup, setDocId, doc_id,HandleUpdate
     } = useConfluenceContext()
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(!open);
     const [query, setQuery] = useState('')
-    const filteredPeople =
-        query === ''
-            ? people
-            : people.filter((person) => {
-                return person.toLowerCase().includes(query.toLowerCase())
-            })
-    useEffect(() => { setDocId(id);
-}, [id]);
+
+    useEffect(() => {
+        setDocId(id);
+    }, [id]);
+
+    const HandlePublish = async () => {
+        HandleUpdate({ published: true })
+        handleOpen()
+    }
+
     if (loading) { return "loading" }
     return (
         <>
@@ -50,8 +48,10 @@ function WriteNew() {
                         New Doc</Typography>
                     <div className='flex items-center gap-5'>
                         <Button variant='text'>Saved a Draft</Button>
-                        <Button onClick={handleOpen}>Publish</Button>
-                        <TbSettings className='h-8 w-8' />
+                        <button className="text-white bg-gradient-to-r from-blue-700 via-blue-800 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center" onClick={HandlePublish}>
+                            {published ? 'Published' : 'Publish'}
+                        </button>
+                        <TbSettings className='h-10 w-10 cursor-pointer hover:bg-blue-gray-50 rounded-md hover:scale-105 p-1 duration-150' onClick={handleOpen} />
                     </div>
                 </div>
                 <div class="my-5">
@@ -59,12 +59,12 @@ function WriteNew() {
                     <input type="text" id="base-input" placeholder='e.g. Frontend Testing Module Guide' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
         dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={document_title}
-        onChange={(e) => {
-            setDocument_title(e.target.value);
-            setChange(true);
-          }}
-          
-          />
+                        onChange={(e) => {
+                            setDocument_title(e.target.value);
+                            setChange(true);
+                        }}
+
+                    />
                 </div>
                 <div>
                     <WriteDoc />
@@ -74,43 +74,10 @@ function WriteNew() {
             <Dialog open={open} handler={handleOpen}>
                 <DialogHeader className='bg-gray-50'>Additional Info...</DialogHeader>
                 <DialogBody>
+                    <CSettings handleOpen={handleOpen} setQuery={setQuery} HandlePublish={HandlePublish}/>
 
-                    <div className='my-5'>
-                        <label for="email" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Save in Folder</label>
-
-                        <Combobox value={group} onChange={setGroup}>
-                            <Combobox.Input onChange={(event) =>{ setQuery(event.target.value); 
-                                      setGroup({name: event.target.value, ...group });
-
-                            setChange(true)}}
-                                placeholder='type the name of folder you want save this file'
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            />
-                            <Combobox.Options className={'overflow-y-scroll max-h-32 bg-gray-100 rounded-e-lg'}>
-                                {folders.length > 0 && folders?.map((person) => (
-                                    <Combobox.Option key={person}
-                                        value={person}
-                                        className="px-5 py-2 text-black hover:text-primary hover:bg-blue-100 cursor-pointer">
-                                        {person}
-                                    </Combobox.Option>
-                                ))}
-                            </Combobox.Options>
-                        </Combobox>
-                    </div>
                 </DialogBody>
-                <DialogFooter>
-                    <Button
-                        variant="text"
-                        color="red"
-                        onClick={handleOpen}
-                        className="mr-1"
-                    >
-                        <span>Cancel</span>
-                    </Button>
-                    <Button variant="gradient" color="green" onClick={handleOpen}>
-                        <span>Confirm</span>
-                    </Button>
-                </DialogFooter>
+
             </Dialog>
         </>
     )

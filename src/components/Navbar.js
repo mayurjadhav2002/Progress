@@ -18,7 +18,7 @@ const APIstatusAnnouncBar = () => {
     <>
       <div className="bg-indigo-600 px-4 py-3 text-white">
         <p className="text-center text-sm font-medium">
-          Checking Status of API... 
+          Checking Status of API...
           <a href="#" className="inline-block underline ml-4">Demo API deployed on Render</a>
         </p>
       </div>
@@ -30,8 +30,8 @@ function Navbar() {
   const { loggedin, user, handleLogout, APIAwake } = useUserContext();
   return (
     <div className='shadow-sm top-0  z-50 sm:relative  md:sticky'>
-      
-      {!APIAwake && <APIstatusAnnouncBar/>}
+
+      {!APIAwake && <APIstatusAnnouncBar />}
       <div className="mx-auto bg-white flex shadow-sm items-center justify-between px-4 py-5">
         <div className="flex items-center space-x-2">
           <button type="button"
@@ -179,18 +179,12 @@ function Navbar() {
         <nav className="flex items-center space-x-1 font-medium text-gray-800 gap-2">
           {!loggedin ?
             <>
-              <Link to="/login"
-                className="rounded transition hover:bg-purple-50 sm:inline"
-              >
-                <Button color="blue">Login</Button>
 
-              </Link>
 
-              <Link to="/register">
-                <Button variant="text" className="flex items-center gap-2">
-                  Register
-                </Button>
-              </Link>
+              <Link to="/login" className="button-58" role="button">Login</Link>
+              <Link to="/register" className="button-59" role="button">Register</Link>
+
+
             </>
 
 
@@ -249,7 +243,8 @@ function Navbar() {
                       Edit Profile
                     </Typography>
                   </MenuItem>
-                  <MenuItem className="flex items-center gap-2">
+                  <MenuItem>
+                    <Link to="/dashboard" className="flex items-center gap-2">
                     <svg
                       width="14"
                       height="14"
@@ -266,8 +261,10 @@ function Navbar() {
                     </svg>
 
                     <Typography variant="small" className="font-medium">
-                      Inbox
+                      Dashboard
                     </Typography>
+                    </Link>
+
                   </MenuItem>
                   <MenuItem className="flex items-center gap-2">
                     <svg
