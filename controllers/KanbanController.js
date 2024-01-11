@@ -5,14 +5,12 @@ const getKanban = async (req, res) => {
         const data = await Kanban.findOne({ projectId: req.body.projectid })
         .populate({
           path: 'projectId',
-          select: 'title created_by timeline color collaborators keyword description',
+          select: 'title created_by timeline color collaborators keyword description inviteCode',
           populate: {
             path: 'collaborators.userId',
             model: 'User',
             select: 'name avatar organization_name',
-            match: {
-              _id: { $ne: req.body.userId }
-            }
+           
           }
         })
         .exec();

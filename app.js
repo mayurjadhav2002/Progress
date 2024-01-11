@@ -8,6 +8,7 @@ const userRoute = require('./routes/userRoute')
 const projectRoute = require('./routes/projectRoute');
 const kanban_route = require('./routes/KanbanRoute');
 const document_route = require('./routes/DocumentRoute');
+const share_route = require('./routes/ShareRoute');
 
 
 const app = express();
@@ -22,6 +23,7 @@ app.use('/', userRoute)
 app.use('/project', projectRoute)
 app.use('/kanban', kanban_route)
 app.use('/document', document_route)
+app.use('/share', share_route)
 
 // setTimeout(()=>{
     

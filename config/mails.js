@@ -12,16 +12,16 @@ const emailData = nodemailer.createTransport({
 });
 
 
-const InviteMail = ({ token, email, by }) => {
+const InviteMail = ({ project_name, token, unique_key, email, by }) => {
     try {
-     
-        
+
+
         const Mailoptions = {
             from: process.env.EMAIL_ADDRESS,
             to: email,
-            subject: "Please Verify User Account",
-            html: `${by} Invited you to join their project
-        ${token}
+            subject: `Progress - ${by} has send an Invitation`,
+            html: `${by} Invited you to join their "${project_name}" project
+        <a href="${process.env.APP_URL}/invite?key=${unique_key}&token=${token}">Click here to join</a>
         `,
         };
         emailData.sendMail(Mailoptions, function (error, success) {
@@ -66,7 +66,7 @@ const VerifyEmail = ({ token, email }) => {
                 pass: process.env.EMAIL_PASSWORD
             }
         });
-        
+
 
         const Mailoptions = {
             from: process.env.EMAIL_ADDRESS,
@@ -565,7 +565,7 @@ const PasswordReset = ({ token, email }) => {
                 pass: process.env.EMAIL_PASSWORD
             }
         });
-        
+
         const Mailoptions = {
             from: process.env.EMAIL_ADDRESS,
             to: email,
