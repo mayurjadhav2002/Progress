@@ -174,14 +174,14 @@ function Board(props) {
 
 
   return (
-    <div className='w-auto'>
+    <div className='w-full'>
 
       <DragDropContext onDragEnd={onDragEnd}>
 
         <div className=' overflow-x-scroll custom-scrollbar2 '>
           <div className='flex flex-row gap-5  items-start mt-8'>
             {data.map((item, j) => (
-              <div key={j} className='kanban-board-wrapper'>
+              <div key={j}>
                 <KanbanBoard
                   id={item.id}
                   name={item.boardName}

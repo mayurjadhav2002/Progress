@@ -21,6 +21,7 @@ export function ProjectContextProvider({ children }) {
     const [keyword, setKeyword] = useState('')
     const [timeline, setTimeline] = useState('');
     const [create_by, setCreated_by] = useState('')
+    const [inviteCode, setInviteCode] = useState('')
     // const defaultDate = props?.data?.timeline instanceof Date ? props.data.timeline : new Date();
     const [originalData, setOriginalData] = useState({
         title: '',
@@ -51,14 +52,14 @@ export function ProjectContextProvider({ children }) {
             await setLoading(true)
             await setId(props.id)
             const res = await getKanban({id : props?.id, userId: user?._id});
-            console.log("Data", res)
             if (res) {
-                setBoard({ data: { board: res.data.board } })
-                setTitle(prevTitle => res.data.projectId.title);
-                setDesc(prevDesc => res.data.projectId.description);
-                setKeyword(prevKeyword => res.data.projectId.keyword);
-                setCollaborators(res.data.projectId.collaborators);
-                setCreated_by(res.data.projectId.created_by)
+                await setBoard({ data: { board: res.data.board } })
+                await setTitle(prevTitle => res.data.projectId.title);
+                await setDesc(prevDesc => res.data.projectId.description);
+                await setKeyword(prevKeyword => res.data.projectId.keyword);
+                await setCollaborators(prevCollaborators=>res.data.projectId.collaborators);
+                await setCreated_by(preCreated_By=>res.data.projectId.created_by)
+                await setInviteCode(preInviteCode => res.data.projectId.inviteCode)
                 const DefaultDate = await res.data.projectId.timeline instanceof Date ? res.data.projectId.timeline : new Date()
                 const date = await formatDate(DefaultDate)
                 await setTimeline(date)
@@ -282,7 +283,7 @@ export function ProjectContextProvider({ children }) {
 
     const exportValues = {
         id, setId, board, setBoard, saving, setSaving, loading, setLoading,
-        error, setError, title, setTitle, description, setDesc,
+        error, setError, title, setTitle, description, setDesc,inviteCode,
         keyword, setKeyword, timeline, setTimeline, formatDate1,
         HandleFetchBoard, HandleUpdateProject, setName, dragCardInBoard,create_by,
         addBoard, addCard, removeCard, onDragEnd, updateCard, removeBoard,collaborators, setCollaborators

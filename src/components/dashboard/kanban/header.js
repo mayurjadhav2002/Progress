@@ -3,6 +3,7 @@ import { AiOutlineStar, AiOutlineClockCircle, AiOutlineShareAlt, AiOutlineFullsc
 import Settings from './settings'
 import { differenceInDays } from 'date-fns';
 import { useProjectContext } from '../../../utils/ProjectContext/ProjectContext';
+import SavingLoader from '../../Misc/SavingLoader';
 
 function Countdown({ targetDate }) {
     const [remainingDays, setRemainingDays] = useState(null);
@@ -102,7 +103,11 @@ function Header(props) {
                 <h1 className='text-2xl font-bold '>{title}</h1>
             </div>
             <div className='flex items-center gap-3'>
-                {saving && <Loader />}
+                {saving &&
+                    <div className='w-10 '>
+                        <SavingLoader />
+                    </div>
+                }
                 <AiOutlineStar className='w-6 h-6 hover:text-yellow-700' />
                 <span className='flex items-center gap-2 p-2 rounded-lg'>
                     <AiOutlineClockCircle className='w-6 h-6  dark:text-white' />
@@ -118,18 +123,6 @@ function Header(props) {
 }
 
 
-const Loader = () => {
-    return (
-        <>
-            <div className='flex items-center gap-2 relative -mt-1.5'>
-                <div class="loadingio-spinner-bean-eater-0knfrtq0p9df"><div class="ldio-ivfsphy3f1h">
-                    <div><div></div><div></div><div></div></div><div><div></div><div></div><div></div></div>
-                </div></div>
-                <span className='font-semibold text-primary text-sm'>Saving</span>
-            </div>
 
-        </>
-    )
-}
 
 export default Header

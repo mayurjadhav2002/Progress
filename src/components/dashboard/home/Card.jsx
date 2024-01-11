@@ -58,49 +58,49 @@ function CardComponent(props) {
         <section>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 px-5">
                 <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 px-6 py-2 pt-5">
-                        <CardTitle class="text-md font-medium">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 px-6 py-2 pt-5">
+                        <CardTitle className="text-md font-medium">
                             Boards
                         </CardTitle>
                         <MdDashboard className='dark:text-white ' />
 
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold">
+                        <div className="text-2xl font-bold">
                             {userActivityCount.projectCount}
                         </div>
-                        <p class="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                             boards created by you
                         </p>
                     </CardContent>
                 </Card>
                 <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 px-6 py-2 pt-5">
-                        <CardTitle class="text-md font-medium">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 px-6 py-2 pt-5">
+                        <CardTitle className="text-md font-medium">
                             Documentations
                         </CardTitle>
                         <SiGoogledocs className='dark:text-white ' />
 
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold">
+                        <div className="text-2xl font-bold">
                             {userActivityCount.documentCount}
                         </div>
-                        <p class="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                             Documents written by you
                         </p>
                     </CardContent>
                 </Card>
                 <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 px-6 py-2 pt-5">
-                        <CardTitle class="text-md font-medium">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 px-6 py-2 pt-5">
+                        <CardTitle className="text-md font-medium">
                             Space 1
                         </CardTitle>
                         <MdOutlineStorage className='dark:text-white ' />
 
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold">
+                        <div className="text-2xl font-bold">
                             {(userActivityCount.projectStorageStats / 1024).toFixed(2)} Mb
                         </div>
                         <p className="text-xs text-muted-foreground">
@@ -109,15 +109,15 @@ function CardComponent(props) {
                     </CardContent>
                 </Card>
                 <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 px-6 py-2 pt-5">
-                        <CardTitle class="text-md font-medium">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 px-6 py-2 pt-5">
+                        <CardTitle className="text-md font-medium">
                             Space 2
                         </CardTitle>
                         <GrStorage className='dark:text-white ' />
 
                     </CardHeader>
                     <CardContent>
-                        <div class="text-2xl font-bold">
+                        <div className="text-2xl font-bold">
                             {(userActivityCount.documentsStorageStats / 1024).toFixed(2)} Mb
                         </div>
                         <p className="text-xs text-muted-foreground">
@@ -126,15 +126,15 @@ function CardComponent(props) {
                     </CardContent>
                 </Card>
             </div>
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card class="col-span-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-5">
+                <Card className="col-span-4">
                     <CardHeader>
                         <CardTitle>Overview</CardTitle>
                     </CardHeader>
-                    <CardContent class="pl-2">
+                    <CardContent className="pl-2">
                     </CardContent>
                 </Card>
-                <Card class="col-span-3">
+                <Card className="col-span-3">
                     <CardHeader>
                         <CardTitle>Recent Sales</CardTitle>
                         <CardDescription>
@@ -146,51 +146,7 @@ function CardComponent(props) {
                 </Card>
             </div>
 
-            <div className='grid grid-cols-4'>
-
-                <ContextMenu>
-                    <ContextMenuTrigger>
-                        <CardforDrag />
-                    </ContextMenuTrigger>
-                    <ContextMenuContent>
-                        <ContextMenuItem>
-                            <InfoCircledIcon className='mr-2' />
-                            Card Information
-                        </ContextMenuItem>
-                        <Separator />
-
-                        <ContextMenuItem>
-                            <CiEdit className='mr-2' />
-
-                            Edit</ContextMenuItem>
-                        <ContextMenuItem>
-                            <FaHistory className='mr-2' />
-
-                            History</ContextMenuItem>
-                        <Separator />
-                        {/*  */}
-                        <ContextMenuItem>
-                            <div className=" my-2 flex gap-2 items-start">
-                                <IoDocumentTextOutline />
-                                <div className='flex flex-col mr-5'>
-                                    <h4 className="text-sm font-medium leading-none flex items-center gap-2" >
-
-                                        Write Documentation</h4>
-                                    <p className="text-xs text-muted-foreground">
-                                        New Doc for this Card
-                                    </p>
-
-                                </div>
-
-                            </div>
-                        </ContextMenuItem>
-                        <Separator />
-                        <ContextMenuItem className="mt-2 bg-red-500 hover:bg-red-600 cursor-pointer text-white dark:text-white">
-                            Delete</ContextMenuItem>
-                    </ContextMenuContent>
-                </ContextMenu>
-
-            </div>
+        
         </section>
     )
 }

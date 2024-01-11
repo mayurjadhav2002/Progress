@@ -4,7 +4,6 @@ import { Draggable } from "react-beautiful-dnd";
 import { IoClose } from "react-icons/io5";
 import {
   Drawer,
-  Button,
   Typography,
   Input,
   Textarea,
@@ -14,6 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import { useProjectContext } from "../../../../utils/ProjectContext/ProjectContext";
 import { CardforDrag } from "./CardForDrag";
+import { Button } from "../../../ui/button";
 
 const Card = (props) => {
   const { collaborators } = useProjectContext()
@@ -90,11 +90,11 @@ const Card = (props) => {
             overlay={false}
             open={openRight}
             onClose={closeDrawerRight}
-            className="p-4 bg-blue-50 rounded-s-xl"
+            className="p-4 bg-gray-50 dark:bg-[#242323] dark:rounded-none rounded-s-xl"
           >
             <div className="mb-6 flex w-full   items-center justify-between ">
 
-              <Typography variant="h5" color="blue-gray">
+              <Typography variant="h5" className="dark:text-white text-dark">
                 {title || "Update"}
               </Typography>
 
@@ -102,7 +102,7 @@ const Card = (props) => {
 
 
               <span
-                className="cursor-pointer"
+                className="cursor-pointer dark:text-white"
                 onClick={closeDrawerRight}
               >
                 <IoClose className="r-0" />
@@ -117,11 +117,14 @@ const Card = (props) => {
                 defaultValue={title}
                 variant="outlined"
                 type={"text"}
+                className="dark:text-white dark:bg-dark"
                 onChange={(e) => {
                   changeTitle(e.target.value);
                 }} label="Project title" value={title} />
 
-              <Textarea variant="outlined" label="Description" rows={2}
+              <Textarea variant="outlined" label="Description"
+                className="dark:text-white dark:bg-dark"
+                rows={2}
 
                 value={values.description}
                 onChange={(e) => { changeDescription(e.target.value) }}
@@ -129,8 +132,12 @@ const Card = (props) => {
 
 
               <div>
+
+
+                
                 <Select label="Assign this Task to.." id="assignee"
                   value={values.assignee || ''}
+                  className="dark:bg-dark dark:text-white "
                   onChange={e => changeAssignee(e)}
                 >
 
@@ -156,7 +163,10 @@ const Card = (props) => {
 
 
               <div>
-                <Select label="Report this Task to.." id="reporter" value={values.reporter} onChange={e => setValues({ ...values, reporter: e })}>
+                <Select label="Report this Task to.."
+                                  className="dark:bg-dark dark:text-white"
+
+                id="reporter" value={values.reporter} onChange={e => setValues({ ...values, reporter: e })}>
                   {collaborators && collaborators.length > 0
                     ? collaborators.map((user, index) => (
                       <Option value={user?.userId?._id} key={index}>
@@ -179,6 +189,8 @@ const Card = (props) => {
               <div>
                 <Select label="Priority of the task" id="reporter"
                   onChange={e => changePriority(e)}
+                  className="dark:bg-dark dark:text-white "
+
 
                 >
                   <Option value="low">Low</Option>
@@ -200,6 +212,7 @@ const Card = (props) => {
               <Input
                 defaultValue={values.deadline ? new Date(values.deadline).toISOString().slice(0, 10) : ''}
                 variant="outlined"
+                className="dark:bg-dark dark:text-white"
                 type={"date"}
                 onChange={(e) => {
                   setValues({ ...values, deadline: e.target.value });
@@ -229,7 +242,7 @@ const Card = (props) => {
 
             <div className="flex gap-2">
 
-              <Button fullWidth onClick={HandleUpdateChanges}>Save</Button>
+              <Button className="w-full" fullWidth onClick={HandleUpdateChanges}>Save</Button>
             </div>
           </Drawer>
 

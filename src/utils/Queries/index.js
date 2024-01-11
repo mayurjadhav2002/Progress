@@ -272,7 +272,7 @@ export const getAllDataOfDocs = async (userId) => {
 export const getProjectCounts = async (userId) => {
     try {
         const res = await axios.get(`/getProjectCounts/${userId}`);
-        
+
         if (res && res.data) {
             return res.data; // Return only the data property
         } else {
@@ -280,5 +280,36 @@ export const getProjectCounts = async (userId) => {
         }
     } catch (error) {
         console.error("Error while getting all data", error);
+    }
+};
+
+// /    created_by: req.body.userId,
+// sharing: req.body.sharing,
+// shared_with: req.body.shared_with,
+// shared_resource_id: req.body.shared_resource_id
+// project_name: req.body.project_name,
+// token: req.body.resource_token,
+// unique_key: shareInstance.unique_key,
+// by: req.body.userName,
+// email: req.body.shared_with
+
+export const InviteUser = async (props) => {
+    try {
+        const res = await axios.post('/share/invite', {
+            userId: props.userId,
+            sharing: props.sharing,
+            shared_with: props.shared_with,
+            project_name: props.project_name,
+            resource_token: props.token,
+            userName: props.userName
+        });
+
+        console.log("data",res.data); // Log the response data
+        return res.data; // Return the data property of the response
+
+    } catch (error) {
+        console.error("Error while inviting new user", error);
+        // If an error occurs, you might want to throw it to handle it in the calling code.
+        throw error;
     }
 };

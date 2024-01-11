@@ -3,25 +3,9 @@ import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import Team from './Team'
 import { IoSettings } from 'react-icons/io5'
-import { InviteCollaborator } from '../../../../utils/Queries'
 
 function InviteUsers(props) {
-    const [inviteEmail, setInviteEmail] = useState('')
 
-    const HandleInvite = async (e) => {
-        try {
-            const res = await InviteCollaborator({ id: props.id, email: inviteEmail })
-            if (res.data.success) {
-                toast.success("Invitation Send!")
-                console.log("User Invitation send")
-            } else {
-                console.log("Error while sending ")
-            }
-
-        } catch (error) {
-            console.log("Some unexpected error occured", error)
-        }
-    }
 
     return (
         <>
@@ -38,12 +22,12 @@ function InviteUsers(props) {
                         containerProps={{
                             className: "min-w-0",
                         }}
-
-                        onChange={(e) => setInviteEmail(e.target.value)}
+                        value={props.inviteEmail}
+                        onChange={(e) => props.setInviteEmail(e.target.value)}
                     />
                     <Button
                         size="sm"
-                        onClick={HandleInvite}
+                        onClick={props.HandleinviteNewEditor}
                         // color={email ? "gray" : "blue-gray"}
                         // disabled={!email}
                         className="!absolute right-1 top-1 rounded"

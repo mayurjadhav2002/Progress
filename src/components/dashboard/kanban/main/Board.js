@@ -23,12 +23,12 @@ export default function KanbanBoard(props) {
     return (
         <div className="board w-96  flex-shrink-0  ">
             <div className='col-span-1 h-[calc(100vh-250px)] border-[1px]
-            shadow-lg
+            shadow-md
             border-[#d5d2d2]
             
             dark:border-[#252426] dark:bg-[#101010] rounded-lg  overflow-y-scroll hidden-scrollbar'>
 
-                <div className="board__top dark:bg-[#111111] flex justify-between items-center sticky top-0  p-5 shadow-lg border-b-2 z-40">
+                <div className="board__top dark:bg-[#111111] flex justify-between items-center sticky top-0  p-5 shadow-lg border-b-2 z-40 bg-white">
 
                     <div>
                         {show ? (

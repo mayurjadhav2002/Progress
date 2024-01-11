@@ -3,12 +3,13 @@ import "./navbar.css"
 import { Link } from "react-router-dom"
 import { useUserContext } from '../utils/UserContext/UserContext'
 import { APIstatusAnnouncBar, AfterLoginMenu, BeforeLoginMenu, UserMenu } from './Misc/NavMenus'
+import { Button } from './ui/button'
 
 
 function Navbar() {
   const { loggedin, user, handleLogout, APIAwake } = useUserContext();
   return (
-    <div className='shadow-sm top-0  z-50 sm:relative  md:sticky'>
+    <div className='shadow-sm top-0 bg-white dark:bg-dark  z-50 sm:relative  md:sticky'>
       {!APIAwake && <APIstatusAnnouncBar />}
       <div className="mx-auto flex shadow-sm items-center justify-between px-4 py-2 dark:bg-dark dark:text-white dark:border-b-2 dark:border-gray-400">
         <div className="flex items-center space-x-2 gap-5">
@@ -57,6 +58,8 @@ function Navbar() {
               <span className="text-blue-600">P</span><span className="font-light">ro</span><span className="font-thin">gress</span>
             </h3>
           </Link>
+          <div className='lg:block hidden'>
+
           {!loggedin ?
             <BeforeLoginMenu />
             :
@@ -64,12 +67,17 @@ function Navbar() {
               <AfterLoginMenu />
             </>
           }
+          </div>
         </div>
         <nav className="flex items-center space-x-1 font-medium text-gray-800 gap-2">
           {!loggedin ?
             <>
-              <Link to="/login" className="button-58" role="button">Login</Link>
-              <Link to="/register" className="button-59" role="button">Register</Link>
+              <Link to="/login">
+                <Button>Login</Button>
+              </Link>
+              <Link to="/register">
+                <Button variant="secondary">Register</Button>
+              </Link>
             </>
             :
             <>

@@ -3,14 +3,15 @@ import {
     Card,
     Input,
     Checkbox,
-    Button,
     Typography,
 } from "@material-tailwind/react";
 import { GoogleLogin } from '@react-oauth/google';
 import { registerUser, registerWithGoogle } from '../../utils/Queries';
 import { useUserContext } from '../../utils/UserContext/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Label } from '../../components/ui/label';
+import { Button } from '../../components/ui/button';
 
 function Register() {
     const [name, setName] = useState('');
@@ -89,7 +90,7 @@ function Register() {
     return (
         <div className='flex justify-center items-center'>
 
-            <section className="bg-white">
+            <section className="bg-white  dark:bg-dark">
                 <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
                     <section
                         className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6"
@@ -106,11 +107,11 @@ function Register() {
 <img src='https://www.svgrepo.com/show/115206/letter-p.svg' className='h-16 w-16 bg-blue-200 p-2 rounded-sm'/>
                             </a>
 
-                            <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
+                            <h2 className="mt-6 text-2xl font-bold text-white dark:text-white sm:text-3xl md:text-4xl">
                                 Welcome to Progress
                             </h2>
 
-                            <p className="mt-4 leading-relaxed text-white/90">
+                            <p className="mt-4 leading-relaxed text-white/90 dark:text-white">
                             Elevate project management with our agile tool, providing Kanban-based sprint tracking, collaborative features, and efficient documentation.
                             </p>
                         </div>
@@ -131,7 +132,7 @@ function Register() {
                                 </a>
 
                                 <h1
-                                    className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl"
+                                    className="mt-2 mx-2 text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl md:text-4xl"
                                 >
                                     Welcome to Progress
                                 </h1>
@@ -152,9 +153,9 @@ function Register() {
                             </div>
                             <form className="mt-8 mb-2 w-full">
                                 <div className="mb-1 flex flex-col gap-6">
-                                    <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                    <Label className="-mb-3 dark:text-white">
                                         Your Name
-                                    </Typography>
+                                    </Label>
                                     <Input
                                         size="lg"
                                         type='text'
@@ -165,9 +166,9 @@ function Register() {
                                         }}
                                         onChange={(e) => { setName(e.target.value); }}
                                     />
-                                    <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                    <Label className="-mb-3 dark:text-white">
                                         Your Email
-                                    </Typography>
+                                    </Label>
                                     <Input
                                         size="lg"
                                         type="email"
@@ -179,9 +180,9 @@ function Register() {
                                         onChange={(e) => { setEmail(e.target.value); }}
 
                                     />
-                                    <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                      <Label className="-mb-3 dark:text-white">
                                         Password
-                                    </Typography>
+                                    </Label>
                                     <Input
                                         type="password"
                                         size="lg"
@@ -199,28 +200,27 @@ function Register() {
                                         <Typography
                                             variant="small"
                                             color="gray"
-                                            className="flex items-center font-normal"
+                                            className="flex items-center font-normal dark:text-white"
                                         >
                                             I agree the
-                                            <a
-                                                href="#"
-                                                className="font-medium transition-colors hover:text-gray-900"
+                                            <Link to="/"
+                                                className="font-medium transition-colors hover:text-gray-900 text-blue-500"
                                             >
                                                 &nbsp;Terms and Conditions
-                                            </a>
+                                            </Link>
                                         </Typography>
                                     }
                                     containerProps={{ className: "-ml-2.5" }}
                                     onChange={(e) => { setTc(!tc) }}
                                 />
-                                <Button className="mt-6" fullWidth onClick={handleSubmit}>
-                                    sign up
+                                <Button className="mt-6 w-full" fullWidth onClick={handleSubmit}>
+                                    Sign up
                                 </Button>
-                                <Typography color="gray" className="mt-4 text-center font-normal">
+                                <Typography color="gray" className="mt-4 text-center font-normal dark:text-white">
                                     Already have an account?{" "}
-                                    <a href="#" className="font-medium text-gray-900">
+                                    <Link to="/login" className="font-medium  text-blue-500">
                                         Sign In
-                                    </a>
+                                    </Link>
                                 </Typography>
                             </form>
                         </Card>
