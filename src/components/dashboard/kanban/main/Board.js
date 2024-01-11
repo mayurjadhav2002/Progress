@@ -12,17 +12,23 @@ import {
 import { TfiLayoutMenuSeparated } from 'react-icons/tfi'
 import { Droppable } from "react-beautiful-dnd";
 import Editable2 from "./Editable2";
+import { ScrollArea } from "../../../ui/scroll-area";
+import './Board.css'
 export default function KanbanBoard(props) {
 
     const [show, setShow] = useState(false);
-    if(props.id === undefined){
+    if (props.id === undefined) {
         return "loading"
     }
     return (
         <div className="board w-96  flex-shrink-0  ">
-            <div className='col-span-1 h-[calc(100vh-270px)] border-b-4 border-b-gray-200 bg-gray-200 overflow-y-scroll custom-scrollbar'>
+            <div className='col-span-1 h-[calc(100vh-250px)] border-[1px]
+            shadow-lg
+            border-[#d5d2d2]
+            
+            dark:border-[#252426] dark:bg-[#101010] rounded-lg  overflow-y-scroll hidden-scrollbar'>
 
-                <div className="board__top flex justify-between items-center sticky top-0 bg-gray-100 p-5 shadow-lg">
+                <div className="board__top dark:bg-[#111111] flex justify-between items-center sticky top-0  p-5 shadow-lg border-b-2 z-40">
 
                     <div>
                         {show ? (
@@ -40,33 +46,28 @@ export default function KanbanBoard(props) {
 
                             <h1 onClick={() => {
                                 setShow(true);
-                            }} className='text-lg font-semibold  dark:text-primary'>
+                            }} className='text-lg font-semibold exo-font  dark:text-primary'>
 
                                 {props?.name || "Name of Board"}
-                                <span className="total__cards text-blue-gray-400 text-sm">({props.card?.length})</span>
+                                <span className="total__cards exo-font text-blue-gray-400 text-sm ml-2">{props.card?.length} Task</span>
 
                             </h1>
                         )}
                     </div>
 
                     <Menu>
-                        <MenuHandler className="cursor-pointer">
+                        <MenuHandler className="cursor-pointer ">
                             <span variant="text"><TfiLayoutMenuSeparated className="w-6 h-6" /></span>
-                        </MenuHandler>
-                        <MenuList>
+                        </MenuHandler> 
+                        <MenuList className="dark:bg-dark border-1 border-[#1c1c1c] shadow-md shadow-gray-900">
                             <MenuItem className="text-red-500 flex gap-2 items-center hover:bg-red-700 hover:text-white" onClick={() => props.removeBoard(props.id)}><AiTwotoneDelete />Delete Board</MenuItem>
-                            <MenuItem className=" flex gap-2 items-center" onSubmit={(value) => props.addCard(value, props.id)}
-                            ><IoIosAdd /> Add Task</MenuItem>
-
+                            <MenuItem className=" flex gap-2 items-center" onSubmit={(value) => props.addCard(value, props.id)}><IoIosAdd /> Add Task</MenuItem>
                         </MenuList>
                     </Menu>
-
-
-                    {console.log(props.id.toString())}
                 </div>
                 <Droppable droppableId={props.id.toString()}>
                     {(provided) => (
-                        <div
+                        <ScrollArea
                             className=' flex flex-col overflow-y-auto p-3 gap-2'
                             ref={provided.innerRef}
                             {...provided.droppableProps}
@@ -91,7 +92,7 @@ export default function KanbanBoard(props) {
                                 />
                             ))}
                             {provided.placeholder}
-                        </div>
+                        </ScrollArea>
                     )}
                 </Droppable>
 
@@ -99,7 +100,7 @@ export default function KanbanBoard(props) {
                     <Editable2
                         name={"Add Card"}
                         btnName={"Add Card"}
-                        placeholder={"Enter Card Title"}
+                        placeholder={"Task Detail"}
                         onSubmit={(value) => props.addCard(value, props.id)}
                     />
                 </div>

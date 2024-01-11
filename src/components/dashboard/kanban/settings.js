@@ -1,19 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-    Button,
-    Dialog,
-    DialogHeader,
-    DialogBody,
-    DialogFooter,
-    Tabs,
-    TabsHeader,
-    TabsBody,
-    Tab,
-    TabPanel,
-    Input,
-    Textarea,
-    Typography,
-} from "@material-tailwind/react";
+
 import { GiSettingsKnobs } from 'react-icons/gi'
 import { format } from 'date-fns';
 
@@ -23,18 +9,23 @@ import { useUserContext } from '../../../utils/UserContext/UserContext';
 import { InviteCollaborator, UpdateProject } from '../../../utils/Queries';
 import { useProjectContext } from '../../../utils/ProjectContext/ProjectContext';
 import { ToastContainer, toast } from 'react-toastify';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
+import { Button } from '../../ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import DeleteProject from './subComponents/DeleteProject';
+import InviteUsers from './subComponents/InviteUsers';
+import ProjectSetting from './subComponents/ProjectSetting';
+import { Separator } from '../../ui/separator';
+import { RiSettings3Fill } from 'react-icons/ri';
 function Settings(props) {
 
-    const { saving, id, timeline, title, setTitle, description, setDesc, create_by
-        , keyword, setKeyword, setTimeline, HandleUpdateProject, formatDate1, collaborators, setCollaborators
-    } = useProjectContext()
+    const { create_by, collaborators } = useProjectContext()
 
     const { user } = useUserContext()
     const [open, setOpen] = React.useState(false);
 
 
 
-    const [inviteEmail, setInviteEmail] = useState('')
     const [changesList, setChangesList] = useState([]);
     const [owner, setOwner] = useState(false)
     useEffect(() => {
@@ -44,34 +35,49 @@ function Settings(props) {
     }, [owner, create_by])
     const handleOpen = () => setOpen(!open);
 
-    const HandleInvite = async (e) => {
-        try {
-            const res = await InviteCollaborator({ id: id, email: inviteEmail })
-            console.log(res)
-            if (res.data.success) {
-                toast.success("Invitation Send!")
-                console.log("User Invitation send")
-            } else {
-                console.log("Error while sending ")
-            }
-
-        } catch (error) {
-            console.log("Some unexpected error occured", error)
-        }
-    }
 
 
     return (
         <div>
 
+            <Dialog>
+                <DialogTrigger>
+                    <Button variant="secondary" title={"Setting"}>
 
-            <Button onClick={handleOpen} size="sm" color="blue" className='flex items-center gap-3'>
-                <GiSettingsKnobs className='w-6 h-6' />
-                <p className='text-md font-medium font-sans'>Setting</p>
+                        <RiSettings3Fill className='w-6 h-6'/>
 
-            </Button>
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <Tabs defaultValue="Project" className="w-full">
+                        <TabsList>
+                            <TabsTrigger value="Project">Project</TabsTrigger>
+                            <TabsTrigger value="Share">Invite </TabsTrigger>
+                            <TabsTrigger value="Delete" className="text-red-500">Delete </TabsTrigger>
 
-            <Dialog
+                        </TabsList>
+                        <Separator className="my-2" />
+                        <TabsContent value="Project">
+                            <ProjectSetting />
+                        </TabsContent>
+                        <TabsContent value="Share">
+                            <InviteUsers collaborators={collaborators} owner={owner} />
+                        </TabsContent>
+                        <TabsContent value="Delete">
+                            <DeleteProject owner={owner} />
+                        </TabsContent>
+
+                    </Tabs>
+
+
+                </DialogContent>
+            </Dialog>
+
+
+
+
+
+            {/* <Dialog
                 size='lg'
                 open={open}
                 handler={handleOpen}
@@ -243,7 +249,7 @@ dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                     </Tabs>
                 </DialogBody>
 
-            </Dialog>
+            </Dialog> */}
         </div>
     )
 }

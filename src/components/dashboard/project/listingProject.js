@@ -29,7 +29,7 @@ const columns = [
     }),
     ColumnHelper.accessor("keyword", {
         cell: (info) => <span>{info.getValue()}</span>,
-        header: "key"
+        header: "Team"
     }),
 
     ColumnHelper.accessor("description", {
@@ -55,10 +55,6 @@ const columns = [
 export default function ListingProject(props) {
     const data = props.projects
     const [rowSelection, setRowSelection] = React.useState({})
-    const [show, setShow] = useState(false);
-
-
-    console.log(data)
     const [globalFilter, setGlobalFilter] = React.useState("");
 
     const table = useReactTable({
@@ -90,19 +86,21 @@ export default function ListingProject(props) {
                         }
                     />
                 </div>
-                <table className="mt-4 w-full text-left">
+                <table className="mt-4 w-full text-left rounded-lg border-2">
                     <thead>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <tr key={headerGroup.id}>
+                            <tr key={headerGroup.id} className='rounded-lg'>
                                 {headerGroup.headers.map((header) => (
                                     <th
                                         key={header.id}
-                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
+                                        className="cursor-pointer border-y border-blue-gray-100 p-4 transition-colors bg-blue-gray-50
+                                        dark:bg-black dark:text-white
+                                        "
                                     >
                                         <Typography
                                             variant="small"
                                             color="blue-gray"
-                                            className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
+                                            className="flex items-center dark:text-white justify-between gap-2 font-normal leading-none opacity-70"
                                         >
                                             {header.isPlaceholder
                                                 ? null
@@ -119,8 +117,8 @@ export default function ListingProject(props) {
                     <tbody>
                         {table.getRowModel().rows.map((row,i) => {
                             return (
-                                <tr key={row.id} className={`py-5 items-start hover:bg-gray-400 ${i % 2 === 0
-                                    ? 'bg-gray-100 dark:bg-dark dark:text-white'
+                                <tr key={row.id} className={`py-5 items-start hover:bg-gray-50 ${i % 2 === 0
+                                    ? 'bg-white dark:bg-dark dark:text-white'
                                     : 'bg-gray-50 dark:bg-black dark:text-white'
                                     }`}>
                                     {row.getVisibleCells().map(cell => {

@@ -34,7 +34,7 @@ function Countdown({ targetDate }) {
 
 
 function Header(props) {
-    const {saving,timeline, title} =useProjectContext()
+    const { saving, timeline, title } = useProjectContext()
     return (
         <div className='flex flex-row items-end justify-between'>
             <div className='flex flex-col gap-2'>
@@ -103,8 +103,9 @@ function Header(props) {
             </div>
             <div className='flex items-center gap-3'>
                 {saving && <Loader />}
-                <AiOutlineStar className='w-6 h-6 hover:text-yellow-700 dark:text-white' />
-                <span className='flex items-center gap-2 hover:bg-gray-50 p-2 rounded-lg'><AiOutlineClockCircle className='w-6 h-6  dark:text-white' />
+                <AiOutlineStar className='w-6 h-6 hover:text-yellow-700' />
+                <span className='flex items-center gap-2 p-2 rounded-lg'>
+                    <AiOutlineClockCircle className='w-6 h-6  dark:text-white' />
                     <Countdown targetDate={timeline} />
                 </span>
                 <AiOutlineShareAlt className='w-6 h-6 hover:text-blue-700 dark:text-white' />

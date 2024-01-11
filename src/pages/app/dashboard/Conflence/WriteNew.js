@@ -2,10 +2,7 @@ import React from 'react'
 import { ConfluenceContextProvider, useConfluenceContext } from '../../../../utils/WriteContext/ConfluenceContext'
 import WriteDoc from '../../../../components/dashboard/Confluence/WriteDoc'
 import {
-    Button, Typography, Dialog,
-    DialogHeader,
-    DialogBody,
-    DialogFooter,
+    Button, Typography
 } from '@material-tailwind/react'
 import { TbSettings } from "react-icons/tb";
 import { Combobox } from '@headlessui/react'
@@ -13,6 +10,9 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import CSettings from '../../../../components/dashboard/Confluence/CSettings';
+import { Loading } from '../../../../components/Misc/Loadings';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../../../components/ui/dialog';
+import { Separator } from '../../../../components/ui/separator';
 
 
 function WriteNew() {
@@ -23,11 +23,9 @@ function WriteNew() {
         folders, setChange,
         published,
         setFolder, loading, setLoading,
-        group, setGroup, setDocId, doc_id,HandleUpdate
+        group, setGroup, setDocId, doc_id, HandleUpdate
     } = useConfluenceContext()
-    const [open, setOpen] = useState(false);
 
-    const handleOpen = () => setOpen(!open);
     const [query, setQuery] = useState('')
 
     useEffect(() => {
@@ -36,10 +34,9 @@ function WriteNew() {
 
     const HandlePublish = async () => {
         HandleUpdate({ published: true })
-        handleOpen()
     }
 
-    if (loading) { return "loading" }
+    if (loading) { return <><Loading /></> }
     return (
         <>
             <div className='px-5'>
@@ -51,7 +48,25 @@ function WriteNew() {
                         <button className="text-white bg-gradient-to-r from-blue-700 via-blue-800 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center" onClick={HandlePublish}>
                             {published ? 'Published' : 'Publish'}
                         </button>
-                        <TbSettings className='h-10 w-10 cursor-pointer hover:bg-blue-gray-50 rounded-md hover:scale-105 p-1 duration-150' onClick={handleOpen} />
+
+
+
+                        <Dialog>
+                            <DialogTrigger>
+                                <TbSettings className='h-10 w-10 cursor-pointer hover:bg-blue-gray-50 rounded-md hover:scale-105 p-1 duration-150' />
+
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Additional Settings</DialogTitle>
+                                    <Separator/>
+                                    <DialogDescription>
+                                        <CSettings  setQuery={setQuery} HandlePublish={HandlePublish} />
+
+                                    </DialogDescription>
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </div>
                 <div class="my-5">
@@ -71,14 +86,8 @@ function WriteNew() {
                 </div>
 
             </div>
-            <Dialog open={open} handler={handleOpen}>
-                <DialogHeader className='bg-gray-50'>Additional Info...</DialogHeader>
-                <DialogBody>
-                    <CSettings handleOpen={handleOpen} setQuery={setQuery} HandlePublish={HandlePublish}/>
 
-                </DialogBody>
 
-            </Dialog>
         </>
     )
 }

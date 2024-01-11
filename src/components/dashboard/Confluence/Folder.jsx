@@ -8,6 +8,9 @@ import { useConfluenceContext } from '../../../utils/WriteContext/ConfluenceCont
 import { CiCirclePlus } from "react-icons/ci";
 import { v4 as uuidv4 } from 'uuid';
 import ListDocs from './ListDocs';
+import { Card } from '../../ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../ui/accordion';
+import { FcOpenedFolder } from "react-icons/fc";
 
 function Folder(props) {
   // const { folders } = useConfluenceContext()
@@ -15,29 +18,35 @@ function Folder(props) {
   const navigate = useNavigate();
 
   const navigateToNewDoc = () => {
-    // 👇️ navigate to /contacts
     navigate('/dashboard/user/documentation/new/' + randomId);
   };
 
   return (
 
     <div className='p-5 w-full overflow-y-auto'>
-      <div className='p-2 bg-blue-100 rounded-md'>
-        <h1 className='text-2xl font-bold'>Write Documentations </h1>
-        <p>Documentation is the cornerstone of effective collaboration within a team.
-          It serves as a shared knowledge base, providing a clear roadmap for understanding processes,
-          procedures, and project details. A well-documented project not only captures the 'what' and 'how,'
-          but also embodies the collective wisdom and insights of the team. It is a testament to
-          the team's commitment to clarity, efficiency, and success."</p>
+      <Card className='px-5 py-2  rounded-md'>
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1"  className='border-b-0'>
+            <AccordionTrigger>Why Write Documentations? </AccordionTrigger>
+            <AccordionContent>
+              Documentation is the cornerstone of effective collaboration within a team.
+              It serves as a shared knowledge base, providing a clear roadmap for understanding processes,
+              procedures, and project details. A well-documented project not only captures the 'what' and 'how,'
+              but also embodies the collective wisdom and insights of the team. It is a testament to
+              the team's commitment to clarity, efficiency, and success.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
 
-      </div>
+
+      </Card>
 
       <div className='block py-10'>
         <div>
 
-          <Typography variant='h4' className='text-primary flex gap-2'>
-            <TbEaseInOutControlPoints />
+          <Typography variant='h4' className='text-primary flex item-center gap-2'>
+            <FcOpenedFolder />
             Your Folders</Typography>
         </div>
         <div className='grid lg:grid-cols-5 grid-cols-2 gap-2 mt-2 mb-10'>
@@ -56,7 +65,7 @@ function Folder(props) {
 
 
           <button onClick={navigateToNewDoc} className='flex flex-col gap-2 items-center 
-        p-2 rounded-lg bg-gray-200
+        p-2 rounded-lg bg-gray-200 dark:bg-gray-800
         justify-between 
         hover:bg-blue-gray-50
         '>
@@ -66,7 +75,7 @@ function Folder(props) {
         </div>
         {/* <Write /> */}
         <div>
-          <Typography variant='h4' className='text-black flex gap-2 items-center'>
+          <Typography variant='h4' className='text-black flex gap-2 items-center dark:text-white'>
             <MdOutlineArticle />
             Recently Edited</Typography>
           {props.recentlyEdited && <ListDocs docs={props.recentlyEdited} />

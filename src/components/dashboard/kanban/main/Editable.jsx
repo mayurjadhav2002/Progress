@@ -1,6 +1,7 @@
-import { Button, Input } from "@material-tailwind/react";
+import { Input } from "@material-tailwind/react";
 import React, { useState } from "react";
 import { Plus, X } from "react-feather";
+import { Button } from "../../../ui/button";
 
 const Editable = (props) => {
   const [show, setShow] = useState(props?.handler || false);
@@ -16,7 +17,7 @@ const Editable = (props) => {
   };
 
   return (
-    <div className={`editable ${props.parentClass} p-5 text-lg flex gap-5`}>
+    <div className={`editable ${props.parentClass}`}>
       {show ? (
         <form onSubmit={handleOnSubmit}>
           <div className={`editable__input ${props.class} p-5 border-2 `}>
@@ -28,12 +29,9 @@ const Editable = (props) => {
               onChange={(e) => setText(e.target.value)}
             />
             <div className="btn__control flex gap-2 items-center mt-5 justify-end">
-              <Button  className="add__btn" type="submit">
-                {`${props.btnName}` || "Add"}
-              </Button>
-              <Button
+            <Button
                 className="close"
-                color="red"
+                variant="destructive"
                 onClick={() => {
                   setShow(false);
                 }}
@@ -41,11 +39,15 @@ const Editable = (props) => {
 
                 Cancel
               </Button>
+              <Button className="add__btn" type="submit">
+                {`${props.btnName}` || "Add"}
+              </Button>
+            
             </div>
           </div>
         </form>
       ) : (
-        <Button variant="outlined"
+        <Button
           onClick={() => {
             setShow(true);
           }}
