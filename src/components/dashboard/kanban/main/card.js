@@ -79,7 +79,7 @@ const Card = (props) => {
             ref={provided.innerRef}
           >
         
-        <CardforDrag {...props} HandleRemoveCard={HandleRemoveCard} location={location.href}/>
+        <CardforDrag {...props} HandleRemoveCard={HandleRemoveCard} />
 
 
 

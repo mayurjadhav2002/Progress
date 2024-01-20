@@ -12,7 +12,6 @@ import {
 import { SiGoogledocs } from "react-icons/si";
 import { MdOutlineStorage } from "react-icons/md";
 import { GrStorage } from "react-icons/gr";
-import { HiOutlineCalendarDays } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 
 import { Loading } from "../../Misc/Loadings";
