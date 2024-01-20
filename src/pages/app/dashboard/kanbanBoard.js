@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import Board from '../kanban/board';
 import Header from '../../../components/dashboard/kanban/header';
 import Search from '../../../components/dashboard/kanban/search';
@@ -35,6 +35,7 @@ function KanbanBoard() {
           <Board board={board.data.board} id={params.id} setSaving={setSaving} collab={collaborators} />
         }
       </div>
+      <Outlet/>
     </>
 
   );

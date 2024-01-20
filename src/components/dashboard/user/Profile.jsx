@@ -1,58 +1,62 @@
-import { Input, Typography } from '@material-tailwind/react';
-import React from 'react'
-import { useState } from 'react';
+import { Avatar, Typography } from "@material-tailwind/react";
+import React from "react";
+import { useState } from "react";
 
-import { useUserContext } from '../../../utils/UserContext/UserContext';
-import { Avatar } from '@files-ui/react';
-import { TfiEmail } from 'react-icons/tfi';
+import { useUserContext } from "../../../utils/UserContext/UserContext";
+import { TfiEmail } from "react-icons/tfi";
 import { GoOrganization } from "react-icons/go";
 import { RxCalendar } from "react-icons/rx";
-import moment from 'moment';
+import moment from "moment";
+import { Label } from "../../ui/label";
+import { Input } from "../../ui/input";
+import { Textarea } from "../../ui/textarea";
+import { Button } from "../../ui/button";
 
 function Profile(props) {
-  const { user } = useUserContext()
-  const [ImageSource2, setImageSource2] = useState(user?.avatar)
+  const { user } = useUserContext();
 
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(user?.avatar);
   function handleChange(e) {
-    console.log(e.target.files);
-    setFile(URL.createObjectURL(e.target.files[0]));
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(URL.createObjectURL(selectedFile));
+      // You may want to save the selected file to use it when updating the avatar on the server
+      // For example: uploadAvatar(selectedFile);
+    }
   }
   return (
-    <div>
-      <div className='container w-3/4 mx-auto bg-gray-50 py-10 text-center '>
-        <div className='flex justify-center w-full '>
-        <Avatar
-          src={ImageSource2 || user?.avatar}
-          emptyLabel={"You can choose an image..."}
-
-          onError={() => setImageSource2(user?.avatar)}
-          onChange={(imgSource) => setImageSource2(imgSource)}
-          accept=".jpg, .jpeg, .gif ,.png"
-          alt="Avatar2"
-          smartImgFit={"center"}
-          variant="circle"
-          changeLabel={"Click Here to Upload New Image"}
-          loadingLabel={"You can drink a cup of coffee in the meanwhile"}
+    <div className="flex flex-col gap-5 mt-5">
 
 
-        />
-        </div>
-     <div className='py-1'>
-        <Typography variant='h3'>{user?.name}</Typography>
-     </div>
-     <div className='w-full flex flex-col items-center justify-center gap-4 py-2'>
-      <Typography variant='h6' className='flex items-center gap-2 text-center'> <TfiEmail/> {user?.email}</Typography>
-      <Typography variant='h6' className='flex items-center gap-2 text-center'> <GoOrganization/> {user?.organization ? user?.organization_name : 'Individual Account'}</Typography>
-      <Typography variant='h6' className='flex items-center gap-2 text-center'> <RxCalendar/> Joined on {moment(user?.createdAt).format('DD MMMM YYYY')}</Typography>
-
-     </div>
-
-     
+      <div>
+        <Label>Name </Label>
+        <Input value={user?.name} />
       </div>
-
+      <div className="grid w-full max-w-sm items-center gap-1.5">
+        <Label htmlFor="picture">Avatar</Label>
+        <div className="flex items-center gap-5 ">
+          <Avatar
+            src={file || user?.avatar}
+      
+            className="w-10 h-10"
+          />{" "}
+          <Input id="picture" type="file" onChange={handleChange} />
+        </div>
+      </div>
+      <div>
+        <Label>Email </Label>
+        <Input value={user?.email} />
+      </div>
+      <div>
+        <Label>Bio </Label>
+        <Textarea
+                  placeholder="Tell us a little bit about yourself"
+                  className="resize-none"
+                />
+      </div>
+      <Button>Update Profile</Button>
     </div>
-  )
+  );
 }
 
-export default Profile
+export default Profile;

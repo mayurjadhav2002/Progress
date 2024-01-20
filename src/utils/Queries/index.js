@@ -231,9 +231,9 @@ export const CreateOrUpdateDoc = async (props) => {
 };
 
 
-export const GetDocumentbyID = async (doc_id, userId) => {
+export const GetDocumentbyID = async (docID, created_by) => {
     try {
-        const response = await axios.post('/document/getDocumentById', { doc_id: doc_id, created_by: userId });
+        const response = await axios.post('/document/getDocumentById', { docID , created_by });
         if (response.status === 200) {
             console.log(response);
             return response.data; // Return the actual data instead of true

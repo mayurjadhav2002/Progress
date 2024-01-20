@@ -1,11 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { CreateDoc, CreateOrUpdateDoc, GetDocumentbyID, GetFolderDoc, fetchAllDocuments, getDocumentByFolder } from '../Queries';
+import {  CreateOrUpdateDoc, GetDocumentbyID, GetFolderDoc, fetchAllDocuments } from '../Queries';
 import { useUserContext } from '../UserContext/UserContext';
 
-// Create the context
 const ConfluenceContext = createContext();
 
-// Create the context provider component
 export function ConfluenceContextProvider({ children }) {
     const { user } = useUserContext()
     const [doc_id, setDocId] = useState('')
@@ -120,10 +118,8 @@ export function ConfluenceContextProvider({ children }) {
         };
 
 
-        // Set a timeout to delay the data fetching
-        const timeoutId = setTimeout(fetchData, 10000); // Adjust the delay time as needed (e.g., 1000 milliseconds)
+        const timeoutId = setTimeout(fetchData, 10000); 
 
-        // Cleanup function to clear the timeout if the component unmounts
         return () => {
             clearTimeout(timeoutId);
         };
@@ -145,7 +141,6 @@ export function ConfluenceContextProvider({ children }) {
     );
 }
 
-// Custom hook to use the context
 export function useConfluenceContext() {
     return useContext(ConfluenceContext);
 }

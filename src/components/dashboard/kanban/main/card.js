@@ -79,7 +79,7 @@ const Card = (props) => {
             ref={provided.innerRef}
           >
         
-        <CardforDrag {...props} HandleRemoveCard={HandleRemoveCard} />
+        <CardforDrag {...props} HandleRemoveCard={HandleRemoveCard} location={location.href}/>
 
 
 
@@ -90,7 +90,7 @@ const Card = (props) => {
             overlay={false}
             open={openRight}
             onClose={closeDrawerRight}
-            className="p-4 bg-gray-50 dark:bg-[#242323] dark:rounded-none rounded-s-xl"
+            className="p-4 bg-[#e9e9ea] dark:bg-[#242323] dark:rounded-none rounded-s-xl scrollbar-hidden"
           >
             <div className="mb-6 flex w-full   items-center justify-between ">
 
@@ -111,7 +111,7 @@ const Card = (props) => {
             <hr />
 
 
-            <div className="h-[calc(100vh-20vh)] w-full flex flex-col gap-5 overflow-y-scroll py-1 custom-scrollbar">
+            <div className="h-[calc(100vh-20vh)] w-full flex flex-col gap-5 overflow-y-scroll py-1 scrollbar-hidden">
 
               <Input
                 defaultValue={title}
@@ -149,13 +149,13 @@ const Card = (props) => {
                     ))
                     : "No user Found"}
                 </Select>
-                <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
+                <div class="flex items-center cursor-pointer mb-4 text-gray-600 rounded-lg px-1 mt-1  dark:text-gray-700" role="alert">
                   <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                   </svg>
                   <span class="sr-only">Info</span>
                   <div class="ms-1 text-xs font-medium">
-                    Assign task to someone  <span className="text-blue-400 font-semibold">(hover me)</span>
+                    Assign task to someone  <span className="text-gray-700 font-semibold">(hover me)</span>
                   </div>
 
                 </div>
@@ -175,13 +175,13 @@ const Card = (props) => {
                     ))
                     : "No user Found"}
                 </Select>
-                <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
+                <div class="flex items-center cursor-pointer mb-4 text-gray-600 rounded-lg px-1 mt-1  dark:text-gray-700" role="alert">
                   <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                   </svg>
                   <span class="sr-only">Info</span>
                   <div class="ms-1 text-xs font-medium">
-                    Choose whom to report <span className="text-blue-400 font-semibold">(hover me)</span>
+                    Choose whom to report <span className="text-gray-700 font-semibold">(hover me)</span>
                   </div>
 
                 </div>
@@ -197,13 +197,13 @@ const Card = (props) => {
                   <Option value="medium">Medium</Option>
                   <Option value="high">High</Option>
                 </Select>
-                <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
+                <div class="flex items-center cursor-pointer mb-4 text-gray-600 rounded-lg px-1 mt-1  dark:text-gray-700" role="alert">
                   <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                   </svg>
                   <span class="sr-only">Info</span>
                   <div class="ms-1 text-xs font-medium">
-                    Select Priority of this task <span className="text-blue-400 font-semibold">(hover me)</span>
+                    Select Priority of this task <span className="text-gray-700 font-semibold">(hover me)</span>
                   </div>
 
                 </div>
@@ -227,13 +227,13 @@ const Card = (props) => {
                   }
                   )}
                 </Select>
-                <div class="flex items-center cursor-pointer mb-4 text-blue-800 rounded-lg px-1 mt-1  dark:text-blue-400" role="alert">
+                <div class="flex items-center cursor-pointer mb-4 text-gray-600 rounded-lg px-1 mt-1  dark:text-gray-700" role="alert">
                   <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                   </svg>
                   <span class="sr-only">Info</span>
                   <div class="ms-1 text-xs font-medium">
-                    helps to understand the tasks <span className="text-blue-400 font-semibold">(hover me)</span>
+                    helps to understand the tasks <span className="text-gray-700 font-semibold">(hover me)</span>
                   </div>
 
                 </div>

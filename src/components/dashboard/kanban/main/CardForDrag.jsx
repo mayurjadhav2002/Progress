@@ -17,8 +17,13 @@ import { RiDeleteBack2Fill } from 'react-icons/ri';
 import { Avatar, AvatarFallback, AvatarImage } from '../../../ui/avatar';
 
 const CardHeaderContent = (props) => (
+  
   <div>
-    <CardTitle className="text-lg text-semibold">{props.title}</CardTitle>
+    <CardTitle className="text-lg text-semibold">
+    <Link to={props.location+'/edit/'+props.id}>
+    {props.title}
+                    </Link>
+     </CardTitle>
     <CardDescription className="text-extralight text-start">{props.description || ''}</CardDescription>
   </div>
 );
@@ -111,5 +116,6 @@ const CardContextMenu = (props) => (
 );
 
 export const CardforDrag = (props) => (
+  
   <CardContextMenu {...props} />
 );

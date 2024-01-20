@@ -383,3 +383,15 @@ background-blend-mode: darken;
  0%,33%   {background-position: 0    0,50% 100%,100% 100%}
  66%,100% {background-position: 100% 0,0   100%,50%  100%}
 }
+
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+

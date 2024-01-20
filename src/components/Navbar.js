@@ -54,9 +54,9 @@ function Navbar() {
           </button>
           <Link to="/" >
 
-            <h3 className="text-md lg:text-3xl items-start">
+            <span className="text-md lg:text-2xl items-start">
               <span className="text-blue-600">P</span><span className="font-light">ro</span><span className="font-thin">gress</span>
-            </h3>
+            </span>
           </Link>
           <div className='lg:block hidden'>
 
