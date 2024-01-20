@@ -108,16 +108,18 @@ const ShareDocument = async (req, res) => {
 
 
 const getDocumentById = async (req, res) => {
+    console.log(req.body)
     try {
-        const result = await Documentation.find({
-            docID: req.body.doc_id,
+        const result = await Documentation.findOne({
+            docID: req.body.docID,
             created_by: req.body.created_by,
             deleted: false
         });
+
         if (result) {
             return res.status(200).send({ success: true, msg: "Document Fetched", data: result });
         } else {
-            return res.status(201).send({ success: false, msg: "Some error occurred" });
+            return res.status(404).send({ success: false, msg: "Document not found" });
         }
     } catch (error) {
         console.error("Error occurred while fetching the document", error);
@@ -142,12 +144,12 @@ const getRecentlyEditedDoc = async (req, res) => {
         }).sort({ updatedAt: 'desc' }).limit(10); // Adjust the limit as needed
 
         // Get all folder names
-        const distinctGroupNames = await Documentation.distinct('group.name', {
+        let distinctGroupNames = await Documentation.distinct('group.name', {
             created_by: userId,
         });
         // Handle the case when there are no distinct group names
         if (distinctGroupNames.length === 0) {
-            distinctGroupNames = ['main']
+            distinctGroupNames = ['main'];
         }
         // Handle other response scenarios based on your requirements
 

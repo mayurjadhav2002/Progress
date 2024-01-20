@@ -16,7 +16,7 @@ const dbStats = async () => {
         const stats = await mongoose.connection.db.command({ dbStats: 1, scale: 1024 }); // scale: 1024 to get sizes in KB
         return stats;
     } catch (error) {
-        console.error("Error fetching dbStats:", error);
+        // console.error("Error fetching dbStats:", error);
         throw error;
     }
 }
@@ -241,38 +241,66 @@ const create_user_using_gauth = async (req, res) => {
 
 
     } catch (error) {
-        console.error("Error:", error);
+        // console.error("Error:", error);
         return res.status(500).send({ success: false, msg: "Failed to load, some error occurred" });
 
     }
 
 }
 
-
 const getCountofUserActivity = async (req, res) => {
     try {
         const userId = req.params.id;
-        const ProjectCount = await Project.countDocuments({ created_by: userId, deleted: false })
-        const DocumentsCount = await Documentation.countDocuments({ created_by: userId, deleted: false })
+        
+        // Count user's projects
+        const ProjectCount = await Project.countDocuments({ created_by: userId, deleted: false });
+
+        // Count user's documents
+        const DocumentsCount = await Documentation.countDocuments({ created_by: userId, deleted: false });
+
+        // Get database stats
         const stats = await dbStats();
 
+        // Calculate storage stats for projects and documents
         const projectStorageStats = ProjectCount * stats.storageSize;
         const documentsStorageStats = DocumentsCount * stats.storageSize;
 
+        // Count shared documents
         const SharedDocuments = await Documentation.countDocuments({
             shared_with: userId,
-        })
+        });
+
+        // Fetch recently edited documentations (adjust the sort and limit as needed)
+        const recentlyEditedDocs = await Documentation.find({
+            created_by: userId,
+        }).select('docID document_title updatedAt').sort({ updatedAt: 'desc' }).limit(5);
+
+        // Fetch names and dates of up to 5 shared projects
+        const sharedProjects = await Project.find({
+            'collaborators.userId': userId,
+            deleted: false,
+        }).select('title description timeline createdAt keyword _id created_by').populate('created_by', 'name avatar').limit(5);
+
+        
+        
+
         return res.status(200).send({
             success: true,
             projectCount: ProjectCount,
             documentCount: DocumentsCount,
             sharedDocuments: SharedDocuments,
             projectStorageStats: projectStorageStats,
-            documentsStorageStats: documentsStorageStats
-        })
+            documentsStorageStats: documentsStorageStats,
+            sharedProjects: sharedProjects,
+            recentlyEditedDocs: recentlyEditedDocs,
+        });
     } catch (error) {
-        return res.status(500).send({ success: false, msg: "Failed to load, some errored occured" });
+        // console.error("Error occurred while fetching user activity", error);
+        return res.status(500).send({ success: false, msg: "Failed to load, some error occurred" });
     }
 }
+
+module.exports = { getCountofUserActivity };
+
 
 module.exports = { register_new_user, signin, verifyEmail, create_user_using_gauth, getCountofUserActivity }

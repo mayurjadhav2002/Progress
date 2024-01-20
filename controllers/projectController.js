@@ -13,7 +13,6 @@ const newProject = async (req, res) => {
             timeline: req.body.timeline, // Parse the timeline string to Date
             keyword: req.body.keyword,
             color: req.body.color,
-            collaborators: req.body.collaborators
         })
         const result = await new_Project.save()
         if (result) {

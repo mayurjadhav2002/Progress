@@ -1,6 +1,6 @@
-const mongoose = require("mongoose")
-const gitRepo = require("./gitRepo")
-const { v4 } = require("uuid")
+const mongoose = require("mongoose");
+const gitRepo = require("./gitRepo");
+const { v4 } = require("uuid");
 
 const Project = mongoose.Schema({
     created_by: {
@@ -16,7 +16,6 @@ const Project = mongoose.Schema({
         type: String,
         default: ""
     },
-
     description: {
         type: String,
         default: ""
@@ -36,7 +35,6 @@ const Project = mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "User"
             },
-
         }
     ],
     invite: { type: [String] },
@@ -48,6 +46,18 @@ const Project = mongoose.Schema({
         type: Boolean,
         default: false
     }
-}, { timestamps: true })
+}, {
+    timestamps: true,
+    validate: {
+        validator: async function () {
+            // Check if created_by user's ID is in collaborators array
+            const createdByUserId = this.created_by.toString();
+            const hasCreatedByUser = this.collaborators.some(collaborator => collaborator.userId.toString() === createdByUserId);
 
-module.exports = mongoose.model("Project", Project)
+            return !hasCreatedByUser; // Return true if the validation passes
+        },
+        message: "The created_by user cannot be in the collaborators array."
+    }
+});
+
+module.exports = mongoose.model("Project", Project);
