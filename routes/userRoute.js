@@ -19,4 +19,7 @@ user_route.post('/create-session', user_controller.create_user_using_gauth)
 
 user_route.get('/getProjectCounts/:id', user_controller.getCountofUserActivity);
 
+user_route.put('/updateAccount/:userId', user_controller.UpdateAccount)
+
+user_route.delete('/deleteAccount/:userId',  user_controller.DeleteAccount)
 module.exports = user_route

@@ -119,7 +119,7 @@ const getDocumentById = async (req, res) => {
         if (result) {
             return res.status(200).send({ success: true, msg: "Document Fetched", data: result });
         } else {
-            return res.status(404).send({ success: false, msg: "Document not found" });
+            return res.status(200).send({ success: false, msg: "Document not found" });
         }
     } catch (error) {
         console.error("Error occurred while fetching the document", error);

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const defaultAvatar = `${process.env.BACKEND_URL}/static/newUser.jpg`
 const User = mongoose.Schema({
     name:{
         type:String,
@@ -20,7 +21,7 @@ const User = mongoose.Schema({
     },
     avatar:{
         type:String,
-        default: `${process.env.BACKEND_URL}/static/newUser.jpg`
+        default: defaultAvatar
     },
     password_reset:{
         type:String,
