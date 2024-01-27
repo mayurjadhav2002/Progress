@@ -18,6 +18,7 @@ import { Loading } from "../../Misc/Loadings";
 import { Badge } from "../../ui/badge";
 import { Avatar, AvatarImage } from "../../ui/avatar";
 import { Typography } from "@material-tailwind/react";
+import { toast } from "react-toastify";
 
 const CardComponent = (props) => {
   const { user, userActivityCount, setUserActivityCount } = useUserContext();
@@ -33,7 +34,6 @@ const CardComponent = (props) => {
 
           .catch((error) => {
             setDataFetched(true);
-            console.error("Error fetching user activity counts:", error);
           });
         const timeoutId = setTimeout(() => {
           setDataFetched(false);
@@ -43,7 +43,7 @@ const CardComponent = (props) => {
         return () => clearTimeout(timeoutId);
       }
     } catch (error) {
-      console.log("Some error occured", error);
+      toast.error("Some Error Occured");
     }
   }
   if (!userActivityCount || !userActivityCount.success) {
@@ -54,7 +54,6 @@ const CardComponent = (props) => {
     );
   }
 
-  console.log(userActivityCount);
   return (
     <section>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 px-5">
@@ -169,19 +168,19 @@ const CardComponent = (props) => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-           
-
-            {userActivityCount.recentlyEditedDocs 
-              ? userActivityCount.recentlyEditedDocs.map((docs,index)=> (
-                <div className="py-2 hover:bg-muted -px-2" key={index}>
-                <Link to={`/dashboard/user/documentation/doc/${docs.docID}`}>
-                  <Typography variant="h7">
-                    {docs.document_title}
-                    <small className="ml-2">Edited on 12 Feb</small>
-                  </Typography>
-                </Link>
-              </div>
-              ))
+            {userActivityCount.recentlyEditedDocs
+              ? userActivityCount.recentlyEditedDocs.map((docs, index) => (
+                  <div className="py-2 hover:bg-muted -px-2" key={index}>
+                    <Link
+                      to={`/dashboard/user/documentation/doc/${docs.docID}`}
+                    >
+                      <Typography variant="h7">
+                        {docs.document_title}
+                        <small className="ml-2">Edited on 12 Feb</small>
+                      </Typography>
+                    </Link>
+                  </div>
+                ))
               : "No Documentations Created Yet"}
           </CardContent>
         </Card>

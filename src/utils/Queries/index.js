@@ -44,6 +44,7 @@ export const LoginWithoutGoogle = async (props) => {
 export const LoginWithGoogle = async (props) => {
     try {
         const result = await axios.post('/create-session', { credentials: props.credential })
+        console.log(result)
         return result
     } catch (error) {
         throw new Error()

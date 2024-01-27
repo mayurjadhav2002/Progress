@@ -27,24 +27,30 @@ function Login() {
     }, [loggedin])
 
     const responseMessage = async (response) => {
-        const result = await LoginWithGoogle(response)
-        console.log("Result: ", result.data)
-        if (result.data.success) {
-            const userData = result.data.data; // Assuming user information is in data
-
-            await setUser(userData)
-            await handleAccessToken({ access_token: result.data.data.access_token, user: userData });
-            await handleLoggedin(true)
+        try {
+            const result = await LoginWithGoogle(response);
+            console.log("Result: ", result);
+    
+            if (result.data.success) {
+                const userData = result.data.data;
+    
+                setUser(userData);
+                handleAccessToken({
+                    access_token: result.data.data.access_token,
+                    user: userData,
+                });
+                handleLoggedin(true);
+            } else {
+                console.log("Some Unexpected error occurred");
+            }
+        } catch (error) {
+            console.error("Error in LoginWithGoogle:", error);
         }
-        else {
-            console.log("Some Unexpected error occured")
-        }
-
     };
+    
     const errorMessage = (error) => {
-        console.log(error);
+        console.error("Error in GoogleLogin:", error);
     };
-
 
     const handleSubmit = async () => {
         try {

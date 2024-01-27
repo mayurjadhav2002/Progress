@@ -13,10 +13,10 @@ import { Textarea } from "../../ui/textarea";
 import { Button } from "../../ui/button";
 
 function Profile(props) {
-  const { user } = useUserContext();
+  const { user,setUser, HandleAccountUpdate } = useUserContext();
 
   const [file, setFile] = useState(user?.avatar);
-  function handleChange(e) {
+  function ImgChange(e) {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(URL.createObjectURL(selectedFile));
@@ -24,13 +24,19 @@ function Profile(props) {
       // For example: uploadAvatar(selectedFile);
     }
   }
+  const HandleChange = async(event) => {
+    setUser((prevUser) => {
+      // Using spread operator to create a new user object with updated name
+      return { ...prevUser, [event.target.name]: event.target.value };
+    });
+  }
   return (
     <div className="flex flex-col gap-5 mt-5">
 
 
       <div>
         <Label>Name </Label>
-        <Input value={user?.name} />
+        <Input name="name" value={user?.name} onChange={HandleChange} />
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
         <Label htmlFor="picture">Avatar</Label>
@@ -40,21 +46,23 @@ function Profile(props) {
       
             className="w-10 h-10"
           />{" "}
-          <Input id="picture" type="file" onChange={handleChange} />
+          <Input id="picture" type="file" onChange={ImgChange} />
         </div>
       </div>
       <div>
         <Label>Email </Label>
-        <Input value={user?.email} />
+        <Input name="email" value={user?.email} onChange={HandleChange}/>
       </div>
       <div>
         <Label>Bio </Label>
         <Textarea
+        name="bio"
+        onChange={HandleChange}
                   placeholder="Tell us a little bit about yourself"
                   className="resize-none"
                 />
       </div>
-      <Button>Update Profile</Button>
+      <Button onClick={HandleAccountUpdate}>Update Profile</Button>
     </div>
   );
 }

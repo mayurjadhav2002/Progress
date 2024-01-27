@@ -16,7 +16,6 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from "../ui/menubar";
-import { ModeToggle } from "../themeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarImage } from "../ui/avatar";
+import { v4 as uuidv4 } from 'uuid';
 
 const NavLink = ({ href, className, children }) => (
   <Link
@@ -40,6 +40,7 @@ const NavLink = ({ href, className, children }) => (
 );
 
 export const AfterLoginMenu = () => {
+  const randomId = uuidv4();  
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -88,7 +89,7 @@ export const AfterLoginMenu = () => {
               <MenubarTrigger>Documentation</MenubarTrigger>
               <MenubarContent>
                 <Link
-                  to="/dashboard/user/project/new"
+                  to={'/dashboard/user/documentation/new/' + randomId}
                   className="cursor-pointer"
                 >
                   <MenubarItem>
@@ -145,16 +146,19 @@ export const UserMenu = (props) => {
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <Link to="/dashboard/profile/user">Profile</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link to="/dashboard/profile/user/account">Account</Link>
-          </DropdownMenuItem>
+          <Link to="/dashboard/profile/user">
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+          </Link>
+          <Link to="/dashboard/profile/user/account">
+            <DropdownMenuItem>Account</DropdownMenuItem>
+          </Link>
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem className="text-red-600">
+          <DropdownMenuItem
+            className="text-red-600"
+            onClick={props.handleLogout}
+          >
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>

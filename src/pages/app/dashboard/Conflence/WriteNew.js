@@ -70,14 +70,12 @@ function WriteNew() {
         setDocument_title(res.data.document_title);
         setGroup(res.data.group)
       }
-      else{
-        alert("Some error occured")
-      }
+   
 
     };
 
     // Check if the route contains "update/:id"
-    if (location.pathname.includes("doc") && id && user?._id) {
+    if (location.pathname.includes("/doc/") && id) {
       handleUpdateRoute();
     }
   }, [id, location.pathname, user]);
@@ -128,11 +126,11 @@ function WriteNew() {
             </Dialog>
           </div>
         </div>
-        <div className="bg-gray-100 py-2 px-2 my-3 rounded-t-2xl">
-          <div class="my-5">
+        <div className="bg-gray-100 py-2 px-2 my-3 rounded-t-2xl dark:bg-[#111115ee]">
+          <div className="my-5">
             <Input
-              placeholder="Headline or Tilte of the Documentations"
-              className="border-0 border-b-2 dark:border-[#1e1e1e] text-xl bg-transparent"
+              placeholder="Headline or Title of the Document"
+              className="border-0 border-b-2 dark:border-[#1e1e1e] dark:bg-[#1e1e1e] text-xl bg-transparent"
               value={document_title}
               onChange={(e) => {
                 setDocument_title(e.target.value);
@@ -140,7 +138,7 @@ function WriteNew() {
               }}
             />
           </div>
-          <div className=" p-3 px-20 rounded dark:bg-[#1e1e1e] dark:text-white">
+          <div className=" px-20 rounded dark:bg-[#1e1e1e] dark:text-white">
             <Editor
               data={data|| INITIAL_DATA}
               onChange={setData}
