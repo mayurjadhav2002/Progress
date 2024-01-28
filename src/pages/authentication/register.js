@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import {
     Card,
     Input,
@@ -58,7 +58,6 @@ function Register() {
         try {
             if (tc) {
                 const res = await registerUser({ name: name, email: email, password: password, tc: tc });
-                console.log(res)
                 if (res.data.success == false && res.data.code == "exists") {
                     toast.error("User with This Email already Exists, please login")
                 }
@@ -151,7 +150,7 @@ function Register() {
                                 <hr class="w-full h-2 bg-gray-200 border-0 dark:bg-gray-700" />
                                 <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">OR</span>
                             </div>
-                            <form className="mt-8 mb-2 w-full">
+                            <div className="mt-8 mb-2 w-full">
                                 <div className="mb-1 flex flex-col gap-6">
                                     <Label className="-mb-3 dark:text-white">
                                         Your Name
@@ -222,7 +221,7 @@ function Register() {
                                         Sign In
                                     </Link>
                                 </Typography>
-                            </form>
+                            </div>
                         </Card>
                     </main>
                 </div>

@@ -75,7 +75,7 @@ function WriteNew() {
     };
 
     // Check if the route contains "update/:id"
-    if (location.pathname.includes("/doc/") && id) {
+    if (location.pathname.includes("/doc/pm ") && id) {
       handleUpdateRoute();
     }
   }, [id, location.pathname, user]);
