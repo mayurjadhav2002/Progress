@@ -2,13 +2,16 @@ var bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const randomstring = require("randomstring");
-const { VerifyEmail } = require("../config/mails");
+const { VerifyEmail } = require("../mails/verifyAccount");
 const { OAuth2Client } = require("google-auth-library");
 const Project = require("../models/Project");
 const Documentation = require("../models/Documentation");
 const { default: mongoose } = require("mongoose");
 const client_id = process.env.GOOGLE_AUTH_CLIENT_ID;
 const client = new OAuth2Client(client_id);
+const GOOGLE_DISCOVERY_URL =
+  "https://accounts.google.com/.well-known/openid-configuration";
+const axios = require("axios");
 
 const dbStats = async () => {
   try {
@@ -97,7 +100,11 @@ const register_new_user = async (req, res) => {
       });
 
       // Then handle the asynchronous operation
-      await VerifyEmail({ token: account_verification_token, email: email });
+      await VerifyEmail({
+        token: account_verification_token,
+        email: email,
+        name: req.body.name,
+      });
     } else {
       res.status(400).send({
         success: false,
@@ -136,7 +143,6 @@ const signin = async (req, res) => {
         msg: "Please Sign in using Google or github",
       });
     }
-
 
     // If user Exists
 
@@ -181,13 +187,47 @@ const signin = async (req, res) => {
   }
 };
 
+const requestNewVerificationToken = async (req, res) => {
+  try {
+    const token = await token_generation(req.body.id);
+    let user2 = await User.findOneAndUpdate(
+      { email: req.body.email },
+      { access_token: token },
+      {
+        new: true,
+      }
+    );
+    if (!user2) {
+      return res.status(200).send({ succes: false, msg: "No Account found" });
+    }
+
+    res.status(200).send({
+      success: true,
+      code: "success",
+      msg: "New Account Created",
+      data: user2,
+    });
+
+    // Then handle the asynchronous operation
+    await VerifyEmail({
+      token: account_verification_token,
+      email: email,
+      name: req.body.name,
+    });
+  } catch (error) {
+    return res
+      .status(400)
+      .send({ success: false, msg: "unexpected error occured" });
+  }
+};
+
 const verifyEmail = async (req, res) => {
   try {
-    let user = await User.findOne({ email: email });
+    let user = await User.findOne({ email: req.params.email });
     if (!user) {
       return res.status(400).send({ success: false, msg: "User Not exists" });
     }
-    if (user.verification_token === req.body.verification_token) {
+    if (user.verification_token === req.params.verification_token) {
       user = await User.findOneAndUpdate(
         { email: email },
         { verified_account: true },
@@ -213,24 +253,29 @@ const verifyEmail = async (req, res) => {
 const create_user_using_gauth = async (req, res) => {
   try {
     const jwtToken = req.body.credentials;
-    const ticket = await client.verifyIdToken({
-      idToken: jwtToken,
-      audience: client_id,
-    });
 
-    const payload = ticket.getPayload();
+    const { data: googleOpenIdConfig } = await axios.get(GOOGLE_DISCOVERY_URL);
 
-    let token_generator = await User.findOne({ email: payload.email });
+    const decodedToken = jwt.decode(jwtToken, { complete: true });
 
-    if (payload) {
+    if (!decodedToken || !decodedToken.header || !decodedToken.payload) {
+      return res.status(400).send({
+        success: false,
+        msg: "Invalid JWT structure",
+      });
+    }
+
+    const payload = decodedToken.payload;
+
+    if (payload && payload.email) {
+      let token_generator = await User.findOne({ email: payload.email });
+
       if (token_generator) {
         const token = await token_generation(token_generator._id);
         const user = await User.findOneAndUpdate(
           { email: payload.email },
           { access_token: token },
-          {
-            new: true,
-          }
+          { new: true }
         );
 
         const userAccount = {
@@ -243,13 +288,11 @@ const create_user_using_gauth = async (req, res) => {
           organization_name: user.organization_name,
           access_token: user.access_token,
         };
-        return res
-          .status(200)
-          .send({
-            success: true,
-            msg: "Login successfully",
-            data: userAccount,
-          });
+        return res.status(200).send({
+          success: true,
+          msg: "Login successfully",
+          data: userAccount,
+        });
       } else {
         const guser = new User({
           name: payload.name,
@@ -269,9 +312,7 @@ const create_user_using_gauth = async (req, res) => {
           const user = await User.findOneAndUpdate(
             { email: userSaveResult.email },
             { access_token: token },
-            {
-              new: true,
-            }
+            { new: true }
           );
           const userAccount = {
             _id: user._id,
@@ -283,28 +324,25 @@ const create_user_using_gauth = async (req, res) => {
             organization_name: user.organization_name,
             access_token: user.access_token,
           };
-          return res
-            .status(200)
-            .send({
-              success: true,
-              msg: "account created successfully",
-              data: userAccount,
-            });
+          return res.status(200).send({
+            success: true,
+            msg: "account created successfully",
+            data: userAccount,
+          });
         } else {
-          return res
-            .status(400)
-            .send({
-              succes: false,
-              msg: "some error occured while creating new user with google",
-            });
+          return res.status(400).send({
+            success: false,
+            msg: "some error occurred while creating a new user with Google",
+          });
         }
       }
     }
   } catch (error) {
-    // console.error("Error:", error);
-    return res
-      .status(500)
-      .send({ success: false, msg: "Failed to load, some error occurred" });
+    console.error("Error:", error);
+    return res.status(500).send({
+      success: false,
+      msg: "Failed to load, some error occurred",
+    });
   }
 };
 
@@ -371,51 +409,52 @@ const getCountofUserActivity = async (req, res) => {
   }
 };
 
+const UpdateAccount = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const updateData = req.body; // Update data from request body
 
-const UpdateAccount = async(req, res)=>{
-    try {
-        const userId = req.params.userId;
-        const updateData = req.body; // Update data from request body
+    // Update the user using findOneAndUpdate
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: userId },
+      { $set: updateData },
+      { new: true } // Return the modified document
+    );
 
-        // Update the user using findOneAndUpdate
-        const updatedUser = await User.findOneAndUpdate(
-            { _id: userId },
-            { $set: updateData },
-            { new: true } // Return the modified document
-        );
-
-        // Check if the user exists and was updated successfully
-        if (updatedUser) {
-            return res.status(200).json({ success: true, data: updatedUser });
-        } else {
-            return res.status(404).json({ success: false, msg: 'User not found' });
-        }
-    } catch (error) {
-        console.error('Error updating user:', error);
-        return res.status(500).json({ success: false, msg: 'Internal server error' });
+    // Check if the user exists and was updated successfully
+    if (updatedUser) {
+      return res.status(200).json({ success: true, data: updatedUser });
+    } else {
+      return res.status(404).json({ success: false, msg: "User not found" });
     }
+  } catch (error) {
+    console.error("Error updating user:", error);
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal server error" });
+  }
+};
 
-}
+const DeleteAccount = async (req, res) => {
+  try {
+    const userId = req.params.userId;
 
-const DeleteAccount = async(req, res) => {
-    try {
-        const userId = req.params.userId;
+    // Delete the user using findOneAndDelete
+    const deletedUser = await User.findOneAndDelete({ _id: userId });
 
-        // Delete the user using findOneAndDelete
-        const deletedUser = await User.findOneAndDelete({ _id: userId });
-
-        // Check if the user exists and was deleted successfully
-        if (deletedUser) {
-            return res.status(200).json({ success: true, data: deletedUser });
-        } else {
-            return res.status(404).json({ success: false, msg: 'User not found' });
-        }
-    } catch (error) {
-        console.error('Error deleting user:', error);
-        return res.status(500).json({ success: false, msg: 'Internal server error' });
+    // Check if the user exists and was deleted successfully
+    if (deletedUser) {
+      return res.status(200).json({ success: true, data: deletedUser });
+    } else {
+      return res.status(404).json({ success: false, msg: "User not found" });
     }
-}
-
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal server error" });
+  }
+};
 
 module.exports = {
   register_new_user,
@@ -424,5 +463,6 @@ module.exports = {
   UpdateAccount,
   create_user_using_gauth,
   getCountofUserActivity,
-  DeleteAccount
+  DeleteAccount,
+  requestNewVerificationToken,
 };

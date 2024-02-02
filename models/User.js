@@ -62,7 +62,7 @@ const User = mongoose.Schema({
     }],
     verified_account: {
         type:Boolean,
-        default: false
+        default: true // for demo purpose
     },
     verification_token:{
         type:String,
