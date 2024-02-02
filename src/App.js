@@ -21,6 +21,7 @@ import ProfileOutlet from "./pages/app/dashboard/ProfileOutlet";
 import Apprearance from "./components/dashboard/user/Appearance/Apprearance";
 import Account from "./components/dashboard/user/Appearance/Account";
 import Notifications from "./components/dashboard/user/Notifications";
+import VerifyAccount from "./pages/app/VerifyAccount";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/verify/account/:email/:verification_token" element={<VerifyAccount />} />
 
         <Route path="/dashboard" element={<Main />}>
           <Route
