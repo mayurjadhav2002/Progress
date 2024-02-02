@@ -189,47 +189,55 @@ const signin = async (req, res) => {
 
 const requestNewVerificationToken = async (req, res) => {
   try {
-    const token = await token_generation(req.body.id);
+    const token = await Math.floor(10000000 + Math.random() * 90000000);    ;
     let user2 = await User.findOneAndUpdate(
-      { email: req.body.email },
-      { access_token: token },
+      { _id: req.body.id, email: req.body.email },
+      { verification_token: token },
       {
         new: true,
       }
     );
     if (!user2) {
-      return res.status(200).send({ succes: false, msg: "No Account found" });
+      return res.status(201).send({ success: false, msg: "No Account found" });
     }
 
-    res.status(200).send({
-      success: true,
-      code: "success",
-      msg: "New Account Created",
-      data: user2,
-    });
-
-    // Then handle the asynchronous operation
     await VerifyEmail({
-      token: account_verification_token,
-      email: email,
+      token: token,
+      email: req.body.email, 
       name: req.body.name,
     });
+
+    return res.status(200).send({
+      success: true,
+      code: "success",
+      msg: "Verification link send to "+ req.body.name,
+      data: user2,
+    });
   } catch (error) {
+    console.log(error)
     return res
       .status(400)
-      .send({ success: false, msg: "unexpected error occured" });
+      .send({ success: false, msg: "Unexpected Error Occurred" });
   }
 };
 
 const verifyEmail = async (req, res) => {
+
   try {
     let user = await User.findOne({ email: req.params.email });
+
     if (!user) {
-      return res.status(400).send({ success: false, msg: "User Not exists" });
+      return res.status(404).send({ success: false, msg: "User does not exist" });
     }
+
+    if (user.verified_account) {
+      return res.status(200).send({ success: true, msg: "Account Already Verified ✅" });
+    }
+
     if (user.verification_token === req.params.verification_token) {
+      // Corrected variable from 'email' to 'req.params.email'
       user = await User.findOneAndUpdate(
-        { email: email },
+        { email: req.params.email },
         { verified_account: true },
         {
           new: true,
@@ -237,18 +245,21 @@ const verifyEmail = async (req, res) => {
       );
       return res.status(200).send({ success: true, msg: "Account Verified" });
     }
-    if (user.verification_token !== req.body.verification_token) {
+
+    // Changed 'req.body.verification_token' to 'req.params.verification_token'
+    if (user.verification_token !== req.params.verification_token) {
       return res.status(400).send({
         success: false,
-        msg: `Verification token is Expired or Does not match.`,
+        msg: "Verification token is Expired or Does not match.",
       });
     }
   } catch (error) {
     return res
       .status(500)
-      .send({ success: false, msg: "Failed to load, some errored occured" });
+      .send({ success: false, msg: "Failed to load, some error occurred" });
   }
 };
+
 
 const create_user_using_gauth = async (req, res) => {
   try {
@@ -338,7 +349,6 @@ const create_user_using_gauth = async (req, res) => {
       }
     }
   } catch (error) {
-    console.error("Error:", error);
     return res.status(500).send({
       success: false,
       msg: "Failed to load, some error occurred",
@@ -428,7 +438,6 @@ const UpdateAccount = async (req, res) => {
       return res.status(404).json({ success: false, msg: "User not found" });
     }
   } catch (error) {
-    console.error("Error updating user:", error);
     return res
       .status(500)
       .json({ success: false, msg: "Internal server error" });
@@ -449,7 +458,6 @@ const DeleteAccount = async (req, res) => {
       return res.status(404).json({ success: false, msg: "User not found" });
     }
   } catch (error) {
-    console.error("Error deleting user:", error);
     return res
       .status(500)
       .json({ success: false, msg: "Internal server error" });
