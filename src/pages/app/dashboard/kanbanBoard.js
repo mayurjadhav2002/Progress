@@ -27,7 +27,7 @@ function KanbanBoard() {
         <Header />
         <div className='flex gap-4 justify-start items-center'>
           {/* Menu bars */}
-          <Search />
+          <Search className="hidden lg:block xl:block"/>
           <Users collab={collaborators} />
         </div>
         {/* Check if board.data and board.data.board exist before rendering */}

@@ -73,7 +73,7 @@ function Settings(props) {
                 <DialogTrigger>
                     <Button variant="secondary" title={"Setting"}>
 
-                        <RiSettings3Fill className='w-6 h-6'/>
+                        <RiSettings3Fill className='w-4 h-4 lg:w-6 lg:h-6'/>
 
                     </Button>
                 </DialogTrigger>

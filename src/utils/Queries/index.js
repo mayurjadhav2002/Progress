@@ -56,7 +56,7 @@ export const verifyemail = async (verification_token, email) => {
     const res = await axios.get(
       "/verifyEmail/" + verification_token + "/" + email
     );
-    console.log(res)
+    console.log(res);
     if (res.data.success) {
       return res.data;
     }
@@ -66,20 +66,40 @@ export const verifyemail = async (verification_token, email) => {
   }
 };
 export const requestNewVerification = async (id, name, email) => {
-    
   try {
     const res = await axios.post("/requestNewVerificationToken", {
       id: id,
       email: email,
-      name: name
+      name: name,
     });
     if (res.data.success) {
       return true;
     }
     return false;
   } catch (error) {
-    console.log(error)
     console.log("Error while requesting new Verification Token");
+  }
+};
+
+export const ImageUploader = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await axios.post("/other/upload-image", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (res.data) {
+      return res.data;
+    }
+
+    return false;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
 };
 
@@ -108,7 +128,6 @@ export const getprojects = async (userId) => {
 // keyword: req.body.keyword,
 // // color: req.body.color
 export const createProject = async (props) => {
-  console.log(props);
   try {
     const response = await axios.post("/project/newproject", {
       created_by: props.created_by,
@@ -116,16 +135,15 @@ export const createProject = async (props) => {
       description: props.description,
       timeline: props.timeline,
       keyword: props.keyword,
-      collaborators: [
-        { userId: props.created_by },
-        { userId: props.created_by },
-      ],
     });
-
     if (response.status === 200) {
-      return response; // Return the actual data instead of true
+      return response;
     }
-  } catch (error) {}
+  } catch (error) {
+    toast.error(
+      "Some unexpected Error Occured, please refresh page and try again "
+    );
+  }
 };
 export const UpdateProject = async (props) => {
   try {

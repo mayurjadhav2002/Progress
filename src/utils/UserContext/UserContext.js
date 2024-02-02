@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
 
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ export function UserContextProvider({ children }) {
   const [loggedin, setLoggedin] = useState(false);
   const [APIAwake, setAPIAwake] = useState(false); // use to check whether the api endpoints working or not
   const [userActivityCount, setUserActivityCount] = useState([]);
+
   const HandleGetAPIStatus = async () => {
     try {
       if (Cookies.get("APIAwake")) {
@@ -34,28 +35,31 @@ export function UserContextProvider({ children }) {
     axios
       .delete(`/delete/${user._id}`)
       .then((response) => {
-        toast.success("Account Deleted")
+        toast.success("Account Deleted");
         console.log("Delete User Response:", response.data);
-      }).then((E)=>handleLogout)
+      })
+      .then((E) => handleLogout)
       .catch((error) => {
-        toast.errorr("Error deleting user, please contact us")
+        toast.errorr("Error deleting user, please contact us");
         console.error("Error deleting user:", error.response.data);
       });
   };
-  const HandleAccountUpdate = async() => {
-    axios.put(`/updateAccount/${user._id}`, user)
-    .then(response => {
-        toast.success("Profile Updated")
-    })
-    .catch(error => {
-        toast.error("Error Updating the Profile")
-    });
-
-  }
+  const HandleAccountUpdate = async () => {
+    axios
+      .put(`/updateAccount/${user._id}`, user)
+      .then(async(response) => {
+        await setUser(response.data.data);
+        Cookies.set('user', JSON.stringify(user));
+        toast.success("Profile Updated");
+      })
+      .catch((error) => {
+        toast.error("Error Updating the Profile");
+      });
+  };
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     handleLoggedin();
     HandleGetAPIStatus();
     // Check login status when component mounts
@@ -78,18 +82,31 @@ export function UserContextProvider({ children }) {
 
   const handleLoggedin = () => {
     try {
-      if (Cookies.get("access_token")) {
+      const accessToken = Cookies.get("access_token");
+      if (accessToken) {
         setLoggedin(true);
-        const userCookie = JSON.parse(Cookies.get("user"));
-        setUser(userCookie);
-        setAccessToken(Cookies.get("access_token"));
+        const userCookie = Cookies.get("user");
+        if (userCookie) {
+          try {
+            const parsedUserCookie = JSON.parse(userCookie);
+            setUser(parsedUserCookie);
+          } catch (parseError) {
+            console.error("Error parsing userCookie:", parseError);
+          }
+        }
+        setAccessToken(accessToken);
       } else {
         setLoggedin(false);
+        // Redirect to the home page if not logged in
+        navigate("/");
       }
     } catch (error) {
+      console.error("Error in handleLoggedin:", error);
       throw new Error("Some Unexpected error occurred");
     }
   };
+
+
 
   const handleAccessToken = (props) => {
     try {
@@ -136,7 +153,7 @@ export function UserContextProvider({ children }) {
     userActivityCount,
     setUserActivityCount,
     HandleAccountDelete,
-    HandleAccountUpdate
+    HandleAccountUpdate,
   };
   return (
     <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>

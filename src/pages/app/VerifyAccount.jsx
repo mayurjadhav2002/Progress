@@ -40,16 +40,16 @@ function VerifyAccount() {
   };
 
   return (
-    <div className="relative flex min-h-full flex-col items-center justify-center overflow-hidden py-6 sm:py-12 bg-white">
+    <div className="relative flex min-h-full flex-col items-center justify-center overflow-hidden py-6 sm:py-12 bg-white dark:bg-dark" >
       <div className="max-w-xl px-5 text-center">
         {verified ? (
           <>
             {" "}
-            <h2 className="mb-2 text-[42px] font-bold text-zinc-800">
+            <h2 className="mb-2 text-[42px] font-bold text-zinc-800 dark:text-blue-700">
               {msg.length > 0 ? msg : "Your Account is Now Verified"}
             </h2>
             <p className="mb-2 text-lg text-zinc-500">
-              We are glad, that you’re making Progress! Email Verified{" "}
+            We are glad that you're making progress! Email Verified 🌟 
               <span className="font-medium text-indigo-500">{user.email}</span>.
             </p>
           </>

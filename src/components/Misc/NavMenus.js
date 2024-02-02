@@ -25,13 +25,13 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Avatar, AvatarImage } from "../ui/avatar";
-import { v4 as uuidv4 } from 'uuid';
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { v4 as uuidv4 } from "uuid";
 
-const NavLink = ({ href, className, children }) => (
+const NavLink = ({ to, className, children }) => (
   <Link
-    to={href}
-    className={` font-medium transition-colors hover:text-primary ${
+    to={to}
+    className={`font-medium transition-colors hover:text-primary ${
       className || ""
     }`}
   >
@@ -39,77 +39,87 @@ const NavLink = ({ href, className, children }) => (
   </Link>
 );
 
+const MenubarLink = ({ to, children, shortcut }) => (
+  <Link to={to} className="cursor-pointer">
+    <MenubarItem>
+      {children} {shortcut && <MenubarShortcut>{shortcut}</MenubarShortcut>}
+    </MenubarItem>
+  </Link>
+);
+
+const DocumentationLink = ({ to, children, shortcut }) => (
+  <Link to={to} className="cursor-pointer">
+    <MenubarItem>
+      {children} {shortcut && <MenubarShortcut>{shortcut}</MenubarShortcut>}
+    </MenubarItem>
+  </Link>
+);
+
 export const AfterLoginMenu = () => {
-  const randomId = uuidv4();  
+  const randomId = uuidv4();
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <Link to="/dashboard">
+          <NavLink to="/dashboard">
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Dashboard
             </NavigationMenuLink>
-          </Link>
+          </NavLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Menubar className="border-0  border-transparent">
+          <Menubar className="border-0 border-transparent">
             <MenubarMenu>
               <MenubarTrigger>Boards</MenubarTrigger>
               <MenubarContent>
-                <Link
-                  to="/dashboard/user/project/new"
-                  className="cursor-pointer"
-                >
-                  <MenubarItem>
-                    New <MenubarShortcut>⌘N</MenubarShortcut>
-                  </MenubarItem>
-                </Link>
+                <MenubarLink to="/dashboard/user/project/new" shortcut="⌘N">
+                  New
+                </MenubarLink>
 
-                <Link to="/dashboard/user/project">
+                <NavLink to="/dashboard/user/project">
                   <MenubarItem>All Boards</MenubarItem>
-                </Link>
+                </NavLink>
                 <MenubarSeparator />
-                <Link>
+                <NavLink>
                   <MenubarItem>Shared with you</MenubarItem>
-                </Link>
+                </NavLink>
                 <MenubarSeparator />
-                <Link>
+                <NavLink>
                   <MenubarItem className="text-red-500">
                     Deleted Boards
                   </MenubarItem>
-                </Link>
+                </NavLink>
               </MenubarContent>
             </MenubarMenu>
           </Menubar>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <Menubar className="border-0  border-transparent">
+          <Menubar className="border-0 border-transparent">
             <MenubarMenu>
               <MenubarTrigger>Documentation</MenubarTrigger>
               <MenubarContent>
-                <Link
-                  to={'/dashboard/user/documentation/new/' + randomId}
-                  className="cursor-pointer"
+                <DocumentationLink
+                  to={`/dashboard/user/documentation/new/${randomId}`}
+                  shortcut="Ctrl + N + D"
                 >
-                  <MenubarItem>
-                    Write New <MenubarShortcut>Ctrl + N + D</MenubarShortcut>
-                  </MenubarItem>
-                </Link>
+                  Write New
+                </DocumentationLink>
 
-                <Link to="/dashboard/user/documentation/">
+                <NavLink to="/dashboard/user/documentation/">
                   <MenubarItem>All Documentations</MenubarItem>
-                </Link>
+                </NavLink>
                 <MenubarSeparator />
-                <Link>
+                <NavLink>
                   <MenubarItem>Shared with you</MenubarItem>
-                </Link>
+                </NavLink>
                 <MenubarSeparator />
-                <Link>
+                <NavLink>
                   <MenubarItem className="text-red-500">
                     Deleted Docs
                   </MenubarItem>
-                </Link>
+                </NavLink>
               </MenubarContent>
             </MenubarMenu>
           </Menubar>
@@ -120,18 +130,32 @@ export const AfterLoginMenu = () => {
 };
 
 export const BeforeLoginMenu = () => {
+  const links = [
+    { to: "/examples/dashboard", text: "Overview" },
+    {
+      to: "/examples/dashboard",
+      text: "Use Cases",
+      className: "text-muted-foreground",
+    },
+    {
+      to: "/examples/dashboard",
+      text: "Features",
+      className: "text-muted-foreground",
+    },
+    {
+      to: "/examples/dashboard",
+      text: "Setup Locally",
+      className: "text-muted-foreground",
+    },
+  ];
+
   return (
-    <nav className="flex items-center space-x-4 lg:space-x-6 ">
-      <NavLink href="/examples/dashboard">Overview</NavLink>
-      <NavLink href="/examples/dashboard" className="text-muted-foreground">
-        Customers
-      </NavLink>
-      <NavLink href="/examples/dashboard" className="text-muted-foreground">
-        Products
-      </NavLink>
-      <NavLink href="/examples/dashboard" className="text-muted-foreground">
-        Settings
-      </NavLink>
+    <nav className="flex items-center space-x-4 lg:space-x-6">
+      {links.map((link, index) => (
+        <NavLink key={index} to={link.to} className={link.className}>
+          {link.text}
+        </NavLink>
+      ))}
     </nav>
   );
 };
@@ -142,16 +166,17 @@ export const UserMenu = (props) => {
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar>
-            <AvatarImage src={props.avatar} alt="@shadcn" />
+            <AvatarImage src={props.avatar} alt="user" />
+            <AvatarFallback>MJ</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <Link to="/dashboard/profile/user">
+          <NavLink to="/dashboard/profile/user">
             <DropdownMenuItem>Profile</DropdownMenuItem>
-          </Link>
-          <Link to="/dashboard/profile/user/account">
+          </NavLink>
+          <NavLink to="/dashboard/profile/user/account">
             <DropdownMenuItem>Account</DropdownMenuItem>
-          </Link>
+          </NavLink>
 
           <DropdownMenuSeparator />
 
@@ -170,15 +195,13 @@ export const UserMenu = (props) => {
 
 export const APIstatusAnnouncBar = () => {
   return (
-    <>
-      <div className="bg-indigo-600 my-0 text-white">
-        <p className="text-center text-sm font-medium py-3">
-          Checking Status of API...
-          <Link to="#" className="inline-block underline ml-4">
-            Demo API deployed on Render
-          </Link>
-        </p>
-      </div>
-    </>
+    <div className="bg-indigo-600 my-0 text-white">
+      <p className="text-center text-sm font-medium py-3">
+        Checking Status of API...
+        <Link to="#" className="inline-block underline ml-4">
+          Demo API deployed on Render
+        </Link>
+      </p>
+    </div>
   );
 };

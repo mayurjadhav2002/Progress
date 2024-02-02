@@ -40,9 +40,9 @@ export default function KanbanBoard(props) {
   };
 
   return (
-    <div className="board w-96  flex-shrink-0  ">
+    <div className="board lg:w-96 xl:w-96 md:w-80 w-64  flex-shrink-0  ">
       <div
-        className="col-span-1 h-[calc(100vh-250px)] border-[1px]
+        className="col-span-1 h-[calc(100vh-180px)]  xl:h-[calc(100vh-250px)]  lg:h-[calc(100vh-250px)] border-[1px]
             shadow-md
             border-[#d5d2d2]
             

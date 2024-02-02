@@ -4,7 +4,7 @@ import { AiOutlineSearch } from 'react-icons/ai'
 
 function Search() {
     return (
-        <div className="p-2">
+        <div className="py-2 hidden lg:block xl:block">
             <Input icon={<AiOutlineSearch className="h-5 w-5" />} label="Search" />
         </div>)
 }

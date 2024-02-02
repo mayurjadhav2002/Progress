@@ -94,7 +94,7 @@ function Login() {
     - @tailwindcss/forms
 */}
 
-            <section className="bg-white dark:bg-dark">
+            <section className="bg-white dark:bg-dark ">
                 <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
                     <aside
                         className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6"
@@ -130,7 +130,7 @@ function Login() {
                             <div className='my-5 mx-auto'>
 
 
-                                <GoogleLogin onSuccess={responseMessage} onError={errorMessage} className="flex items-center
+                                <GoogleLogin onSuccess={responseMessage} onError={errorMessage} className="flex items-center 
                                 bg-white border border-gray-300 rounded-lg shadow-md px-6 py-4 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"/>
                             </div>
 
@@ -149,7 +149,7 @@ function Login() {
                                     <Input
                                         size="lg"
                                         placeholder="name@mail.com"
-                                        className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                                        className=" !border-t-blue-gray-200 focus:!border-t-gray-900 dark:text-white"
                                         labelProps={{
                                             className: "before:content-none after:content-none",
                                         }}
@@ -165,7 +165,7 @@ function Login() {
                                         type="password"
                                         size="lg"
                                         placeholder="********"
-                                        className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                                        className=" !border-t-blue-gray-200 focus:!border-t-gray-900 dark:text-white"
                                         labelProps={{
                                             className: "before:content-none after:content-none",
                                         }}

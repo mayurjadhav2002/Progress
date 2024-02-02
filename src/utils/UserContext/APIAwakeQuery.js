@@ -10,7 +10,6 @@ export const APIAwakeQuery = (APIAwake, setAPIAwake) => {
         .get(process.env.REACT_APP_BACKEND_URL)
         .then((res) => {
           setAPIAwake(true);
-          console.log(res);
           Cookies.set('APIAwake', currentTime, { expires: new Date(currentTime + 3600000) }); // 1 hour
 
         })
