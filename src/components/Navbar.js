@@ -1,13 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../utils/UserContext/UserContext";
-import { APIstatusAnnouncBar, AfterLoginMenu, BeforeLoginMenu, UserMenu } from "./Misc/NavMenus";
+import { APIstatusAnnouncBar, AfterLoginMenu, BeforeLoginMenu, MobileMenu, UserMenu } from "./Misc/NavMenus";
 import { Button } from "./ui/button";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 
 function Navbar() {
   const { loggedin, user, handleLogout, APIAwake } = useUserContext();
-
+  const [open, setOpen] = React.useState(false);
+  const openDrawer = () => setOpen(true);
+  const closeDrawer = () => setOpen(false);
   const renderAuthButtons = () => {
     return loggedin ? (
       <UserMenu avatar={user?.avatar} handleLogout={handleLogout} />
@@ -30,6 +32,7 @@ function Navbar() {
         <div className="flex items-center space-x-2 gap-1">
           <button
             type="button"
+            onClick={openDrawer}
             className="flex appearance-none p-1 text-gray-500 md:hidden justify-center items-center gap-2 rounded-md border border-transparent font-semibold"
             data-hs-overlay="#hs-overlay-example"
           >
@@ -50,6 +53,7 @@ function Navbar() {
           {renderAuthButtons()}
         </nav>
       </div>
+      <MobileMenu open={open} closeDrawer={closeDrawer} loggedIn={loggedin} />
     </div>
   );
 }

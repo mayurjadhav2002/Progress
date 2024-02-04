@@ -23,7 +23,7 @@ function Hero() {
               featuring dynamic sprint planning, team collaboration, and an
               intuitive interface.
             </p>
-            <div className="mb-4 space-x-0 md:space-x-2 md:mb-8">
+            <div className=" flex items-center justify-center mb-4 space-x-0 md:space-x-2 md:mb-8">
               <Link to="/login" className="pr-2">
                 <Button>
                   Get Started
