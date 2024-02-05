@@ -397,7 +397,7 @@ const getCountofUserActivity = async (req, res) => {
       "collaborators.userId": userId,
       deleted: false,
     })
-      .select("title description timeline createdAt keyword _id created_by")
+      .select("title description timeline createdAt keyword _id created_by updatedAt")
       .populate("created_by", "name avatar")
       .limit(5);
 

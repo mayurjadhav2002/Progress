@@ -78,6 +78,7 @@ const CreateDocument = async (req, res) => {
 
 const UpdateDocument = async (req, res) => {
     try {
+        console.log(req.body)
         const filter = { docID: req.body.doc_id, created_by: req.body.created_by };
         const update = { ...req.body };
         const options = { new: true, upsert: true };
@@ -119,7 +120,7 @@ const getDocumentById = async (req, res) => {
         if (result) {
             return res.status(200).send({ success: true, msg: "Document Fetched", data: result });
         } else {
-            return res.status(200).send({ success: false, msg: "Document not found" });
+            return res.status(201).send({ success: false, msg: "Document not found" });
         }
     } catch (error) {
         console.error("Error occurred while fetching the document", error);

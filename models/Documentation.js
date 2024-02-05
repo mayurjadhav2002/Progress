@@ -3,9 +3,8 @@ const mongoose = require('mongoose');
 const Documentation = new mongoose.Schema({
     docID: {
         type: String,
-        require: true
-    }
-    ,
+        required: true
+    },
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -27,13 +26,12 @@ const Documentation = new mongoose.Schema({
         type: String,
     },
     document: {
-        type: String
+        type: mongoose.Schema.Types.Mixed, 
     },
     deleted: {
         type: Boolean,
         default: false
     }
-
 }, { timestamps: true });
 
 module.exports = mongoose.model('Documentation', Documentation);
