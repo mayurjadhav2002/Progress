@@ -14,71 +14,68 @@ export function UserContextProvider({ children }) {
   const [user, setUser] = useState();
   const [accessToken, setAccessToken] = useState();
   const [loggedin, setLoggedin] = useState(false);
-  const [APIAwake, setAPIAwake] = useState(false); // use to check whether the api endpoints working or not
+  const [APIAwake, setAPIAwake] = useState(false);
   const [userActivityCount, setUserActivityCount] = useState([]);
-
-  const HandleGetAPIStatus = async () => {
-    try {
-      if (Cookies.get("APIAwake")) {
-        setAPIAwake(true);
-      } else {
-        APIAwakeQuery(APIAwake, setAPIAwake);
-      }
-    } catch (error) {
-      console.error(
-        "Unexpected Error from Application while checking API status",
-        APIAwake
-      );
-    }
-  };
-  const HandleAccountDelete = () => {
-    axios
-      .delete(`/delete/${user._id}`)
-      .then((response) => {
-        toast.success("Account Deleted");
-        console.log("Delete User Response:", response.data);
-      })
-      .then((E) => handleLogout)
-      .catch((error) => {
-        toast.errorr("Error deleting user, please contact us");
-        console.error("Error deleting user:", error.response.data);
-      });
-  };
-  const HandleAccountUpdate = async () => {
-    axios
-      .put(`/updateAccount/${user._id}`, user)
-      .then(async(response) => {
-        await setUser(response.data.data);
-        Cookies.set('user', JSON.stringify(user));
-        toast.success("Profile Updated");
-      })
-      .catch((error) => {
-        toast.error("Error Updating the Profile");
-      });
-  };
 
   const navigate = useNavigate();
 
-  useLayoutEffect(() => {
-    handleLoggedin();
-    HandleGetAPIStatus();
-    // Check login status when component mounts
+  // Check login status when component mounts
+  useEffect(() => {
+  handleLoggedin();
+    handleGetAPIStatus();
   }, []);
 
+  // Cleanup on component unmount
   useEffect(() => {
     const intervalId = setInterval(() => {
       const cookieTime = parseInt(Cookies.get("APIAwake"));
       const currentTime = new Date().getTime();
 
       if (currentTime - cookieTime > 3600000) {
-        // Delete the cookie after one hour
         Cookies.remove("APIAwake");
         clearInterval(intervalId);
       }
-    }, 3600000); // Check every minute (60000 milliseconds) for expiration
+    }, 3600000);
 
-    return () => clearInterval(intervalId); // Cleanup on component unmount
+    return () => clearInterval(intervalId);
   }, []);
+
+  const handleGetAPIStatus = async () => {
+    try {
+      if (!Cookies.get("APIAwake")) {
+        APIAwakeQuery(APIAwake, setAPIAwake);
+      } else {
+        setAPIAwake(true);
+      }
+    } catch (error) {
+      console.error("Unexpected Error while checking API status", APIAwake);
+    }
+  };
+
+  const handleAccountDelete = () => {
+    axios
+      .delete(`/delete/${user._id}`)
+      .then((response) => {
+        toast.success("Account Deleted");
+        console.log("Delete User Response:", response.data);
+      })
+      .then(handleLogout)
+      .catch((error) => {
+        toast.error("Error deleting user, please contact us");
+        console.error("Error deleting user:", error.response.data);
+      });
+  };
+
+  const handleAccountUpdate = async () => {
+    try {
+      const response = await axios.put(`/updateAccount/${user._id}`, user);
+      setUser(response.data.data);
+      Cookies.set('user', JSON.stringify(user));
+      toast.success("Profile Updated");
+    } catch (error) {
+      toast.error("Error Updating the Profile");
+    }
+  };
 
   const handleLoggedin = () => {
     try {
@@ -97,7 +94,6 @@ export function UserContextProvider({ children }) {
         setAccessToken(accessToken);
       } else {
         setLoggedin(false);
-        // Redirect to the home page if not logged in
         navigate("/");
       }
     } catch (error) {
@@ -106,13 +102,11 @@ export function UserContextProvider({ children }) {
     }
   };
 
-
-
   const handleAccessToken = (props) => {
     try {
       if (props) {
         const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 31); // expires in 31 days
+        expirationDate.setDate(expirationDate.getDate() + 31);
 
         Cookies.set("access_token", props.access_token, {
           expires: expirationDate,
@@ -139,7 +133,6 @@ export function UserContextProvider({ children }) {
     navigate("/");
   };
 
-  // The context value should be an object
   const contextValue = {
     user,
     accessToken,
@@ -152,9 +145,10 @@ export function UserContextProvider({ children }) {
     APIAwake,
     userActivityCount,
     setUserActivityCount,
-    HandleAccountDelete,
-    HandleAccountUpdate,
+    handleAccountDelete,
+    handleAccountUpdate,
   };
+
   return (
     <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   );

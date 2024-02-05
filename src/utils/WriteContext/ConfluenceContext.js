@@ -1,146 +1,170 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import {  CreateOrUpdateDoc, GetDocumentbyID, GetFolderDoc, fetchAllDocuments } from '../Queries';
-import { useUserContext } from '../UserContext/UserContext';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  CreateOrUpdateDoc,
+  GetDocumentbyID,
+  GetFolderDoc,
+  fetchAllDocuments,
+} from "../Queries";
+import { useUserContext } from "../UserContext/UserContext";
+import { toast } from "react-toastify";
 
 const ConfluenceContext = createContext();
 
 export function ConfluenceContextProvider({ children }) {
-    const { user } = useUserContext()
-    const [doc_id, setDocId] = useState('')
-    const [document_title, setDocument_title] = useState('')
-    const [doc, setDocument] = useState('')
-    const [group, setGroup] = useState({ name: 'main', color: '#1565cf' })
-    const [published, setPublished] = useState(false)
-    const [shared_with, setShared_with] = useState('')
-    const [folders, setFolder] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [saving, setSaving] = useState(false)
-    const [change, setChange] = useState(false)
-    const [folderFetched, setFolderFetched] = useState(false)
-    const [docCreate, setDocCreate] = useState(false)
-    const [userAllDocs, setUserAllDocs] = useState()
-    const [deleted, setDeleted] = useState(false)
-    const HandleGetFolders = async () => {
-        const res = await GetFolderDoc({ userId: user._id })
-        if (res) {
-            setFolder(res.data)
-        } else {
-            console.log("Some error occured")
-        }
+  const { user } = useUserContext();
+  const [confluenceState, setConfluenceState] = useState({
+    doc_id: "",
+    document_title: "",
+    doc: "",
+    group: { name: "main", color: "#1565cf" },
+    published: false,
+    shared_with: "",
+    folders: [],
+    loading: true,
+    saving: false,
+    change: false,
+    folderFetched: false,
+    docCreate: false,
+    userAllDocs: [],
+    deleted: false,
+  });
+
+  const {
+    doc_id,
+    document_title,
+    doc,
+    group,
+    published,
+    folders,
+    loading,
+    saving,
+    change,
+    folderFetched,
+    docCreate,
+    userAllDocs,
+    deleted,
+  } = confluenceState;
+
+  const setConfluenceStateValues = (values) => {
+    setConfluenceState((prevState) => ({ ...prevState, ...values }));
+  };
+
+  const HandleGetFolders = async () => {
+    const res = await GetFolderDoc({ userId: user._id });
+    if (res) {
+      setConfluenceStateValues({ folders: res.data });
+    } else {
+      console.log("Some error occurred");
     }
+  };
 
+  const HandleUpdate = async (props) => {
+    try {
+      setConfluenceStateValues({ saving: true });
+      const res = await CreateOrUpdateDoc({
+        doc_id: doc_id,
+        created_by: user._id,
+        document_title: document_title,
+        document: props.doc,
+        group: group,
+        published: props.published,
+        deleted: deleted,
+      });
 
+      setConfluenceStateValues({ published: props.published });
 
+      if (res) {
+        console.log("New blog Created/Updated", res);
+      } else {
+        console.log("Some error occurred");
+      }
 
-    const HandleUpdate = async (props) => {
-        try {
-            setSaving(true)
-            const res = await CreateOrUpdateDoc({
-                doc_id: doc_id, created_by: user._id,
-                document_title: document_title,
-                document: doc,
-                group: group,
-                published: props.published,
-                deleted: deleted
-            })
-            setPublished(props.published)
-            if (res) {
-                console.log("new blog Created /Updated", res)
-            } else {
-                console.log("Some error occured")
-            }
-            setSaving(false)
-
-
-        } catch (error) {
-            console.log("unexpected error occured", error)
-        }
+      setConfluenceStateValues({ saving: false });
+    } catch (error) {
+      console.log("Unexpected error occurred", error);
     }
+  };
 
-    const HandleDelete = async (props) => {
-        try {
-            console.log("Delete blog")
-        } catch (error) {
-            console.log("Error while Deleting new Blog")
-            throw new Error()
-        }
+  const HandleGetDocs = async (props) => {
+    try {
+      const Doc = await GetDocumentbyID(props.id, props.userId);
+      if (Doc.status === 200) {
+        
+        return Doc;
+      }else{
+        toast.error("Error Fetching your Doc! please try after some time!")
+      }
+    } catch (error) {
+      toast.error("Some Expected Error Occured!")
+
+      console.log("Some error occurred", error);
     }
+  };
 
-    const HandleGetDocs = async (props) => {
-        try {
-            const Doc = await GetDocumentbyID(props?.doc_id, user?._id)
-            if (Doc) {
-                console.log(Doc)
-            }
-        } catch (error) {
-            console.log("Some error occured", error)
-        }
+  const HandleFetchAllDocuments = async () => {
+    try {
+      setConfluenceStateValues({ loading: true });
+
+      if (user._id) {
+        const alldoc = await fetchAllDocuments(user._id);
+        setConfluenceStateValues({ userAllDocs: alldoc });
+      } else {
+        console.log("Cannot fetch user Data.");
+      }
+
+      setConfluenceStateValues({ loading: false });
+    } catch (error) {
+      toast.error("Some Expected Error Occured!")
+
+      console.log("Error while fetching documents", error);
     }
+  };
 
-    const HandleShare = async (props) => {
-        try {
-            console.log("Shared doc with User")
-        } catch (error) {
-            console.log("Error while Sharing Doc")
-            throw new Error()
-        }
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!folderFetched) {
+        await HandleGetFolders();
+        setConfluenceStateValues({ loading: false, folderFetched: true });
+      }
 
-    const HandleFetchAllDocuments = async (props) => {
-        try {
-            setLoading(true)
-            if (user._id) {
-                const alldoc = await fetchAllDocuments(user._id)
-                setUserAllDocs(alldoc)
-            } else {
-                console.log("Cannot fetch user Data.")
-            }
-            setLoading(false)
-        } catch (error) {
-            console.log("Error while Sharing Doc")
-            throw new Error()
-        }
-    }
+      if (change) {
+        await HandleUpdate();
+        setConfluenceStateValues({ change: false });
+      }
+    };
 
-    useEffect(() => {
+    const timeoutId = setTimeout(fetchData, 10000);
 
-        const fetchData = async () => {
-            if (!folderFetched) {
-                await HandleGetFolders();
-                setLoading(false);
-                setFolderFetched(true)
-            }
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [
+    change,
+    folderFetched,
+    HandleUpdate,
+    setConfluenceStateValues,
+    HandleGetFolders,
+  ]);
 
-            if (change) {
-                await HandleUpdate()
-                setChange(false)
-            }
-        };
+  const exportValues = {
+    ...confluenceState,
+    confluenceState,
+    setConfluenceState,
+    setConfluenceStateValues,
+    HandleGetFolders,
+    HandleUpdate,
+    HandleGetDocs,
 
+    HandleFetchAllDocuments,
+  };
 
-        const timeoutId = setTimeout(fetchData, 10000); 
-
-        return () => {
-            clearTimeout(timeoutId);
-        };
-
-    }, [change, folderFetched, setFolderFetched, HandleUpdate, setChange, HandleGetFolders]);
-
-    const exportValues = {
-        document_title, setDocument_title, HandleGetFolders, folders, setFolder,
-        doc, setDocument, loading, setLoading,
-        group, setGroup, saving, setSaving,
-        published, setPublished, doc_id, setDocId,
-        shared_with, setShared_with, change, setChange, setDocCreate, docCreate,
-        HandleUpdate, HandleDelete, HandleShare, HandleGetDocs, HandleFetchAllDocuments, userAllDocs, setUserAllDocs, deleted, setDeleted
-    }
-    return (
-        <ConfluenceContext.Provider value={exportValues}>
-            {children}
-        </ConfluenceContext.Provider>
-    );
+  return (
+    <ConfluenceContext.Provider value={exportValues}>
+      {children}
+    </ConfluenceContext.Provider>
+  );
 }
 
 export function useConfluenceContext() {
-    return useContext(ConfluenceContext);
+  return useContext(ConfluenceContext);
 }

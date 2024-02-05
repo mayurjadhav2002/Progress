@@ -1,70 +1,112 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Progress
 
-## Available Scripts
+Progress is a Kanban-based sprint tracking facilitates streamlined planning and execution of tasks, providing a visual representation of work, tasks, and progress to facilitate seamless project monitoring. The incorporation of features such as resource sharing with documentation feature akin to Confluence enhances collaborative efforts, fostering a culture of teamwork and knowledge-sharing.
 
-In the project directory, you can run:
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+## Demo
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Find Demo at - https://progress-two.vercel.app/
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![Alt Text](https://i.ibb.co/BLG8HjK/progress-App-Task.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Usage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Once the backend and frontend servers are running in development Environment, you can access the Progress application on [http://localhost:3000](http://localhost:3000).
 
-### `npm run eject`
+For Production Environment please check your domain name associated with it.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Tech Stack
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+**Client:** React, Shadcn, TailwindCSS, Material Tailwind, React DnD, headlessUI, react-tables, react-icons, react-toastify, Redux
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+**Server:** Node.js, Express.js, mongoose, Docker, nodemailer, multer
 
-## Learn More
+**Other:** Axios, nodemon, jwt, moment, Google Auth, editorjs, imgbb
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Run Locally
 
-### Code Splitting
+1. Clone the repository from
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
+```bash
+  git clone https://github.com/mayurjadhav2002/progress
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. Close the Backend branch
+```bash
+  git clone https://github.com/mayurjadhav2002/progress -b backend
+```
 
-### Making a Progressive Web App
+3. Unzip both files then open the folders in terminal and run following command
+```bash
+  npm install
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+4. To run this project, you will need to add the following environment variables to your `.env` file
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Create  `.env` files in both repo and insert following credentials in it.
+- Frontend
+``` env  
+REACT_APP_GOOGLE_CLIENT_ID=
+REACT_APP_GOOGLE_CLIENT_SECRET=
+REACT_APP_IMGBB_CRED=
+REACT_APP_BACKEND_URL=
+REACT_APP_BACKEND_URL_PROD=
+```
 
-### Deployment
+- Backend 
+```env
+PORT=
+ENVIRONMENT=prod/dev
+BACKEND_URL=
+APP_URL=
+MONGO_INITDB_ROOT_USERNAME=
+MONGO_INITDB_ROOT_PASSWORD=
+MONGO_INITDB_DATABASE=
+MONGO_URL=
+MONGO_LOCAL_URL=
+JWT_SECRET_KEY=
+EMAIL_ADDRESS=
+EMAIL_PASSWORD=
+IMGBB_API_KEY=
+GOOGLE_AUTH_CLIENT_ID=
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+5. Once done Run following commands to start your application.
+- Frontend
+```bash
+ npm start
+ ---- or ---
+ npm install -g serve
+ serve -s build
+```
+- Backend
+```bash
+npm run start:dev
+```
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+
+## Authors
+
+- [@mayurjadhav2002](https://www.github.com/mayurjadhav2002)
+
+
+## Feedback
+
+If you have any feedback, please reach out to us at mayurshrikantjadhav@gmail.com
+

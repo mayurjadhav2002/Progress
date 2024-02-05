@@ -19,6 +19,7 @@ import { Badge } from "../../ui/badge";
 import { Avatar, AvatarImage } from "../../ui/avatar";
 import { Typography } from "@material-tailwind/react";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 const CardComponent = (props) => {
   const { user, userActivityCount, setUserActivityCount } = useUserContext();
@@ -128,7 +129,7 @@ const CardComponent = (props) => {
                     <Link
                       to={`/dashboard/user/board/${project._id}`}
                       key={index}
-                      className="flex w-full flex-col gap-1 bg-gray-50 hover:bg-muted p-5 rounded-md"
+                      className="flex w-full flex-col gap-1 bg-gray-50 hover:bg-muted p-5 rounded-md dark:bg-[#1e1e1e]"
                     >
                       <div className="flex items-center">
                         <div className="flex items-center gap-2">
@@ -137,7 +138,7 @@ const CardComponent = (props) => {
                         <div
                           className={"ml-auto text-xs text-muted-foreground"}
                         >
-                          3 day ago
+                          {moment(project.updatedAt).fromNow()}
                         </div>
                       </div>
                       <div className="text-xs font-medium flex gap-1">
@@ -176,7 +177,7 @@ const CardComponent = (props) => {
                     >
                       <Typography variant="h7">
                         {docs.document_title}
-                        <small className="ml-2">Edited on 12 Feb</small>
+                        <small className="ml-2">Edited on {moment(docs.updatedAt).format('D MMM')}</small>
                       </Typography>
                     </Link>
                   </div>

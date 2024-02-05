@@ -17,8 +17,20 @@ import InlineCode from "@editorjs/inline-code";
 import SimpleImage from "@editorjs/simple-image";
 import CodeTool from "@calumk/editorjs-codeflask";
 import styles from "../../../styles/editorjs.module.css"; 
-
+const INITIAL_DATA = {
+  time: new Date().getTime(),
+  blocks: [
+    {
+      type: "header",
+      data: {
+        text: "Start writing from here!",
+        level: 3,
+      },
+    },
+  ],
+};
 const Editor = ({ data, onChange, editorblock }) => {
+
   const ref = useRef();
   useEffect(() => {
     //Initialize editorjs if we don't have a reference
@@ -59,7 +71,7 @@ const Editor = ({ data, onChange, editorblock }) => {
           inlineCode: InlineCode,
           simpleImage: SimpleImage,
         },
-        data: data,
+        data: {time: new Date().getTime(), blocks:data.blocks} || INITIAL_DATA,
         async onChange(api, event) {
           const data = await api.saver.save();
           onChange(data);
@@ -70,14 +82,13 @@ const Editor = ({ data, onChange, editorblock }) => {
         ref();
       }
     }
-
     return () => {
       if (ref.current && ref.current.destroy) {
         ref.current.destroy();
       }
     };
-  }, []);
+  }, [data]);
   return <div id={editorblock} className={styles.editorContainer}  />;
 };
 
-export default memo(Editor);
+export default Editor

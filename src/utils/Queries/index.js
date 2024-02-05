@@ -140,9 +140,9 @@ export const createProject = async (props) => {
       return response;
     }
   } catch (error) {
-    toast.error(
-      "Some unexpected Error Occured, please refresh page and try again "
-    );
+    // toast.error(
+    //   "Some unexpected Error Occured, please refresh page and try again "
+    // );
   }
 };
 export const UpdateProject = async (props) => {
