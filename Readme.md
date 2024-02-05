@@ -1,4 +1,19 @@
 
+# Progress
+
+Progress is a Kanban-based sprint tracking facilitates streamlined planning and execution of tasks, providing a visual representation of work, tasks, and progress to facilitate seamless project monitoring. The incorporation of features such as resource sharing with documentation feature akin to Confluence enhances collaborative efforts, fostering a culture of teamwork and knowledge-sharing.
+
+
+
+
+
+## Demo
+
+Find Demo at - https://progress-two.vercel.app/
+
+
+![Alt Text](https://i.ibb.co/BLG8HjK/progress-App-Task.png)
+
 ## API Reference
 
 ### 1.  User
@@ -74,3 +89,17 @@ POST /project/newproject
 ```http
 PUT project/updateproject/:id
 ```
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+
+## Authors
+
+- [@mayurjadhav2002](https://www.github.com/mayurjadhav2002)
+
+
+## Feedback
+
+If you have any feedback, please reach out to us at mayurshrikantjadhav@gmail.com
+
